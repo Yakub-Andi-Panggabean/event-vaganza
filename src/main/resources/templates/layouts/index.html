@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Insert title here</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+
+<style>
+body {
+	padding-top: 70px;
+}
+</style>
+</head>
+<body>
+	<header th:replace="fragments/header :: header">
+		<p>This is default header area for default layout</p>
+	</header>
+	<section th:replace="${view} :: content">
+		<p>This is default content area for default layout</p>
+	</section>
+	<footer th:replace="fragments/footer :: footer">
+		<p>This is default footer area for default layout</p>
+	</footer>
+</body>
+</html>

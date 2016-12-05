@@ -6,10 +6,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -18,10 +21,10 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = Role.TABLE_NAME)
-public class Role {
+@Table(name = ApplicationMenu.TABLE_NAME)
+public class ApplicationMenu {
 
-  public static final String TABLE_NAME = "role";
+  public static final String TABLE_NAME = "application_menu";
 
   @Id
   @GeneratedValue(generator = "uuid")
@@ -29,21 +32,24 @@ public class Role {
   @Column(columnDefinition = "CHAR(32)")
   private String id;
 
-  @Column(name = "role_name", nullable = false)
-  private String roleName;
+  @Column(name = "label", unique = true, nullable = false)
+  private String label;
+
+  @Column(name = "url", unique = true, nullable = false)
+  private String url;
 
   @Column(name = "active", nullable = false)
   private boolean active;
 
-  @Column(name = "created_datetime", nullable = false)
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "created_datetime", columnDefinition = "DATETIME")
+  @Temporal(TemporalType.DATE)
   private Date createdDate;
 
   @Column(name = "created_by", nullable = false)
   private String createdBy;
 
-  @Column(name = "updated_datetime", nullable = false)
-  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "updated_datetime", columnDefinition = "DATETIME")
+  @Temporal(TemporalType.DATE)
   private Date updatedDate;
 
   @Column(name = "updated_by", nullable = true)
@@ -52,29 +58,39 @@ public class Role {
   @Column(name = "description", nullable = false)
   private String description;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinTable(name = "user_role",
-      joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},
-      inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
-  private List<User> users;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "parent_id")
+  private ApplicationMenu parent;
 
-  public Role() {
+  @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER)
+  private List<ApplicationMenu> children;
+
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinTable(name = "role_menu",
+      joinColumns = {@JoinColumn(name = "menu_id", referencedColumnName = "id")},
+      inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+  private List<Role> role;
+
+
+  public ApplicationMenu() {
     super();
     // TODO Auto-generated constructor stub
   }
 
-  public Role(String id, String roleName, boolean active, Date createdDate, String createdBy,
-      Date updatedDate, String updatedBy, String description, List<User> users) {
-    super();
-    this.id = id;
-    this.roleName = roleName;
-    this.active = active;
-    this.createdDate = createdDate;
-    this.createdBy = createdBy;
-    this.updatedDate = updatedDate;
-    this.updatedBy = updatedBy;
-    this.description = description;
-    this.users = users;
+  public ApplicationMenu getParent() {
+    return parent;
+  }
+
+  public void setParent(ApplicationMenu parent) {
+    this.parent = parent;
+  }
+
+  public List<Role> getRole() {
+    return role;
+  }
+
+  public void setRole(List<Role> role) {
+    this.role = role;
   }
 
   public String getDescription() {
@@ -85,6 +101,7 @@ public class Role {
     this.description = description;
   }
 
+
   public String getId() {
     return id;
   }
@@ -93,12 +110,20 @@ public class Role {
     this.id = id;
   }
 
-  public String getRoleName() {
-    return roleName;
+  public String getLabel() {
+    return label;
   }
 
-  public void setRoleName(String roleName) {
-    this.roleName = roleName;
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
   }
 
   public boolean isActive() {
@@ -107,6 +132,14 @@ public class Role {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public List<ApplicationMenu> getChildren() {
+    return children;
+  }
+
+  public void setChildren(List<ApplicationMenu> children) {
+    this.children = children;
   }
 
   public Date getCreatedDate() {
@@ -141,19 +174,12 @@ public class Role {
     this.updatedBy = updatedBy;
   }
 
-  public List<User> getUsers() {
-    return users;
-  }
-
-  public void setUsers(List<User> users) {
-    this.users = users;
-  }
-
   @Override
   public String toString() {
-    return "Role [id=" + id + ", roleName=" + roleName + ", active=" + active + ", createdDate="
-        + createdDate + ", createdBy=" + createdBy + ", updatedDate=" + updatedDate + ", updatedBy="
-        + updatedBy + ", description=" + description + ", users=" + users + "]";
+    return "ApplicationMenu [id=" + id + ", label=" + label + ", url=" + url + ", active=" + active
+        + ", createdDate=" + createdDate + ", createdBy=" + createdBy + ", updatedDate="
+        + updatedDate + ", updatedBy=" + updatedBy + ", description=" + description + ", parent="
+        + parent + ", children=" + children + ", role=" + role + "]";
   }
 
 

@@ -5,8 +5,50 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div class="container" th:fragment="content">
-	<h1>this is register page</h1>
-</div>
+	<div class="container" th:fragment="content">
+		<div class="row">
+			<div class="col-sm-6">
+				<h1>Event Vaganza</h1>
+				<h3>Registration for free in Event Vaganza</h3>
+				<p>
+					Already have an account? Sign in <a href="/login">here<a></a>
+				</p>
+				<br />
+				<button type="button" class="btn btn-primary btn-lg">Register
+					with Facebook</button>
+				<br /> <br />
+				<button type="button" class="btn btn-danger btn-lg">Register
+					with Google</button>
+				<br /> <br />
+				<button type="button" class="btn btn-info btn-lg">Register
+					with Twitter</button>
+			</div>
+			<div class="col-sm-4">
+				<form>
+					<div class="form-group">
+						<label for="usr">Name:</label> <input type="text"
+							class="form-control" id="usr">
+					</div>
+					<div class="form-group">
+						<label for="phone">Mobile Number:</label> <input type="text"
+							class="form-control" id="usr">
+					</div>
+					<div class="form-group">
+						<label for="email">Email address:</label> <input type="email"
+							class="form-control" id="email">
+					</div>
+					<div class="form-group">
+						<label for="pwd">Password:</label> <input type="password"
+							class="form-control" id="pwd">
+					</div>
+					<div class="checkbox">
+						<label><input type="checkbox"> Remember me</label>
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+	</div>
 </body>
 </html>

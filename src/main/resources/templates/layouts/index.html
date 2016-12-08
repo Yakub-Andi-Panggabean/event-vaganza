@@ -4,15 +4,23 @@
 <title>Insert title here</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
-
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="http://cdn.phpoll.com/css/animate.css" rel="stylesheet">
 <style>
 body {
 	padding-top: 70px;
 }
+
+<
+style>.carousel-inner>.item>img, .carousel-inner>.item>a>img {
+	width: 70%;
+	margin: auto;
+}
+</style>
 </style>
 </head>
 <body>
-	<header th:replace="fragments/header :: header">
+	<header th:include="fragments/header :: header">
 		<p>This is default header area for default layout</p>
 	</header>
 	<section th:replace="${view} :: content">
@@ -21,5 +29,63 @@ body {
 	<footer th:replace="fragments/footer :: footer">
 		<p>This is default footer area for default layout</p>
 	</footer>
+
+
+	<div id="myModal" class="modal fade " role="dialog">
+		<div class="modal-dialog modal-sm">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-body">
+					<br />
+					<div align="center">
+						<img class="img-responsive" src="image/login-icon.png"
+							alt="Chania" width="100" height="150">
+						<div>
+							<h4>Masuk ke Akun Anda</h4>
+						</div>
+					</div>
+					<br />
+					<form>
+						<div class="input-group">
+
+							<div class="input-group-addon">
+								<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+							</div>
+							<input type="text" placeholder="Masukan Email"
+								class="form-control" id="usr">
+						</div>
+						<br />
+						<div class="input-group">
+							<div class="input-group-addon">
+								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+							</div>
+							<input type="password" placeholder="Kata Sandi"
+								class="form-control" id="password">
+						</div>
+						<br />
+						<div align="center">
+							<button type="submit" class="btn btn-primary"
+								style="width: 100%; margin-bottom: 0.5em">
+								<i class="fa fa-facebook-official" aria-hidden="true"></i>  Masuk
+								Dengan Facebook
+							</button>
+							<button type="submit" class="btn btn-default"
+								style="width: 100%; margin-bottom: 0.5em">Masuk</button>
+							<button type="submit" class="btn btn-warning"
+								style="width: 100%; margin-bottom: 1em">Lupa Kata Sandi</button>
+							<span>Belum Punya Akun ? <a href="/register">Daftar
+									disini</a></span>
+						</div>
+					</form>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
 </body>
+<script src="js/jquery.js"></script>
+<script src="js/app.js"></script>
+<script src="js/bootstrap.min.js"></script>
 </html>

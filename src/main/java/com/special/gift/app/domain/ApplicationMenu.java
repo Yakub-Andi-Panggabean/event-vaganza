@@ -29,7 +29,6 @@ public class ApplicationMenu {
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid")
-  @Column(columnDefinition = "CHAR(32)")
   private String id;
 
   @Column(name = "label", unique = true, nullable = false)
@@ -181,7 +180,5 @@ public class ApplicationMenu {
         + updatedDate + ", updatedBy=" + updatedBy + ", description=" + description + ", parent="
         + parent + ", children=" + children + ", role=" + role + "]";
   }
-
-
 
 }

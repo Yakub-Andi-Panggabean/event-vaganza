@@ -1,6 +1,7 @@
 package com.special.gift.app.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,19 +28,19 @@ public class User {
   @Column(columnDefinition = "CHAR(32)")
   private String id;
 
-  @Column(name = "username", nullable = false)
+  @Column(name = "username", nullable = false, unique = true)
   private String username;
 
   @Column(name = "fullname", nullable = false)
   private String fullName;
 
-  @Column(name = "email", nullable = false)
+  @Column(name = "email", nullable = false, unique = true)
   private String email;
 
   @Column(name = "phone", nullable = false)
   private String phone;
 
-  @Column(name = "password", nullable = false)
+  @Column(name = "password", nullable = false, length = 60)
   private String password;
 
   @Column(name = "active", nullable = false)
@@ -52,21 +53,21 @@ public class User {
   @Temporal(TemporalType.TIMESTAMP)
   private Date createdDate;
 
-  @Column(name = "created_by", nullable = false)
+  @Column(name = "created_by", nullable = true)
   private String createdBy;
 
-  @Column(name = "updated_datetime", nullable = false)
+  @Column(name = "updated_datetime", nullable = true)
   @Temporal(TemporalType.TIMESTAMP)
   private Date updatedDate;
 
   @Column(name = "updated_by", nullable = true)
   private String updatedBy;
 
-  @ManyToOne
+  @ManyToMany
   @JoinTable(name = "user_role",
       joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
       inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-  private Role role;
+  private List<Role> roles;
 
 
 
@@ -164,6 +165,14 @@ public class User {
 
   public void setUpdatedBy(String updatedBy) {
     this.updatedBy = updatedBy;
+  }
+
+  public List<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
   }
 
 

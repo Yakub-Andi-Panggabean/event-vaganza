@@ -2,6 +2,10 @@
 	color: #ffffff;
 }
 
+.navbar-default .navbar-nav .navbar-right>li>a {
+	color: #ffffff;
+}
+
 .navbar-default .navbar-brand {
 	color: #ffffff;
 }

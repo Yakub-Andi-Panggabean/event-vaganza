@@ -1,7 +1,9 @@
-package com.special.gift.app.controller;
+package com.special.gift.app.controller.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,31 +18,31 @@ import com.special.gift.app.domain.ApplicationMenu;
 import com.special.gift.app.service.ApplicationMenuService;
 
 @Controller
-@SessionAttributes("menus")
-@RequestMapping(value = HomeController.PATH)
-public class HomeController {
+@SessionAttributes(value = {"menus"})
+@RequestMapping(value = UiController.PATH)
+public class UiController {
 
-  private static final Logger log = LoggerFactory.getLogger(HomeController.class);
+  private static final Logger log = LoggerFactory.getLogger(UiController.class);
 
   public static final String PATH = "/";
   public static final String REGISTER = PATH + "register";
   public static final String HELP = PATH + "help";
-  public static final String LOGIN = PATH + "login";
   public static final String SEARCH = PATH + "search";
 
   @Autowired
   private ApplicationMenuService applicationMenuService;
 
   @RequestMapping(method = RequestMethod.GET)
-  public String renderIndex(Model model) {
+  public String renderIndex(Model model, HttpSession session) {
     final List<ApplicationMenu> menus = applicationMenuService.fetchApplicationMenu();
     final List<ApplicationMenu> parentMenus = new ArrayList<>();
     for (final ApplicationMenu menu : menus) {
       if (menu.getChildren() == null || menu.getChildren().size() == 0)
         parentMenus.add(menu);
     }
-    log.debug(menus.toString());
+
     model.addAttribute("menus", parentMenus);
+    model.addAttribute("user", session.getAttribute("user"));
     return "fragments/main";
   }
 
@@ -54,14 +56,14 @@ public class HomeController {
     return "/contents/help";
   }
 
-  @RequestMapping(value = LOGIN, method = RequestMethod.GET)
-  public String renderLoginPage(Model model) {
-    return "/contents/login";
-  }
-
-  @RequestMapping(value = SEARCH, method = RequestMethod.POST)
+  @RequestMapping(value = SEARCH, method = RequestMethod.GET)
   public String renderSearchPage(Model model) {
     return "/contents/search";
   }
+
+  // @RequestMapping(value = SEARCH, method = RequestMethod.GET)
+  // public String renderErrorPage(Model model) {
+  // return "/contents/search";
+  // }
 
 }

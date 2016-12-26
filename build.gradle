@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
-	//compile('org.springframework.boot:spring-boot-starter-security')
+	compile ('org.springframework.security:spring-security-core:4.2.0.RELEASE')
 	//add nekohtml manually because spring boot does not include it with thymeleaf starter
 	compile ('net.sourceforge.nekohtml:nekohtml:1.9.22')
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -36,5 +36,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-websocket')
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile ('mysql:mysql-connector-java:5.1.6')
+	compile ('javax.inject:javax.inject:1')
+	compile("org.springframework.social:spring-social-facebook")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

@@ -20,6 +20,16 @@
 						th:id="${menu.label}">Register</a></li>
 				</ul>
 
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown"><a class="dropdown-toggle navbar-brand"
+						data-toggle="dropdown" th:text="${user}"></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Profile</a></li>
+							<li><a href="#">Setting</a></li>
+							<li><a onclick="invalidate()">Logout</a></li>
+						</ul></li>
+				</ul>
+
 				<form class="navbar-form" role="search" method="GET"
 					action="/search">
 					<div class="input-group">

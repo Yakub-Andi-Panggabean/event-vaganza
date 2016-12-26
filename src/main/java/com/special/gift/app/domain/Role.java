@@ -42,7 +42,7 @@ public class Role {
   @Column(name = "created_by", nullable = false)
   private String createdBy;
 
-  @Column(name = "updated_datetime", nullable = false)
+  @Column(name = "updated_datetime", nullable = true)
   @Temporal(TemporalType.TIMESTAMP)
   private Date updatedDate;
 

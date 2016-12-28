@@ -1,18 +1,10 @@
 package com.special.gift.app.domain;
 
-import java.util.Date;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -25,51 +17,35 @@ public class User {
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid")
-  @Column(columnDefinition = "CHAR(32)")
+  @Column(name = "user_id", columnDefinition = "CHAR(32)")
   private String id;
 
-  @Column(name = "username", nullable = false, unique = true)
-  private String username;
-
-  @Column(name = "fullname", nullable = false)
-  private String fullName;
-
-  @Column(name = "email", nullable = false, unique = true)
-  private String email;
-
-  @Column(name = "phone", nullable = false)
-  private String phone;
-
-  @Column(name = "password", nullable = false, length = 60)
+  @Column(name = "user_password", nullable = false, length = 64)
   private String password;
 
-  @Column(name = "active", nullable = false)
-  private boolean active;
+  @Column(name = "vendor_id", nullable = false, length = 10)
+  private String vendorId;
 
-  @Column(name = "age", nullable = false)
-  private int age;
+  @Column(name = "user_name", nullable = false, length = 10, unique = true)
+  private String username;
 
-  @Column(name = "created_datetime", nullable = false)
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date createdDate;
+  @Column(name = "user_zip", nullable = false, length = 10, unique = true)
+  private String userZip;
 
-  @Column(name = "created_by", nullable = true)
-  private String createdBy;
+  @Column(name = "user_address", nullable = false, length = 100, unique = true)
+  private String userAddress;
 
-  @Column(name = "updated_datetime", nullable = true)
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date updatedDate;
+  @Column(name = "user_hp", nullable = false, length = 15)
+  private String handphone;
 
-  @Column(name = "updated_by", nullable = true)
-  private String updatedBy;
+  @Column(name = "user_telp", nullable = false, length = 15)
+  private String phone;
 
-  @ManyToMany
-  @JoinTable(name = "user_role",
-      joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-      inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-  private List<Role> roles;
+  @Column(name = "user_email", nullable = false, unique = true)
+  private String email;
 
-
+  @Column(name = "user_status", nullable = false, unique = true)
+  private char status;
 
   public String getId() {
     return id;
@@ -77,38 +53,6 @@ public class User {
 
   public void setId(String id) {
     this.id = id;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
   }
 
   public String getPassword() {
@@ -119,60 +63,68 @@ public class User {
     this.password = password;
   }
 
-  public boolean isActive() {
-    return active;
+  public String getVendorId() {
+    return vendorId;
   }
 
-  public void setActive(boolean active) {
-    this.active = active;
+  public void setVendorId(String vendorId) {
+    this.vendorId = vendorId;
   }
 
-  public int getAge() {
-    return age;
+  public String getUsername() {
+    return username;
   }
 
-  public void setAge(int age) {
-    this.age = age;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
-  public Date getCreatedDate() {
-    return createdDate;
+  public String getUserZip() {
+    return userZip;
   }
 
-  public void setCreatedDate(Date createdDate) {
-    this.createdDate = createdDate;
+  public void setUserZip(String userZip) {
+    this.userZip = userZip;
   }
 
-  public String getCreatedBy() {
-    return createdBy;
+  public String getUserAddress() {
+    return userAddress;
   }
 
-  public void setCreatedBy(String createdBy) {
-    this.createdBy = createdBy;
+  public void setUserAddress(String userAddress) {
+    this.userAddress = userAddress;
   }
 
-  public Date getUpdatedDate() {
-    return updatedDate;
+  public String getHandphone() {
+    return handphone;
   }
 
-  public void setUpdatedDate(Date updatedDate) {
-    this.updatedDate = updatedDate;
+  public void setHandphone(String handphone) {
+    this.handphone = handphone;
   }
 
-  public String getUpdatedBy() {
-    return updatedBy;
+  public String getPhone() {
+    return phone;
   }
 
-  public void setUpdatedBy(String updatedBy) {
-    this.updatedBy = updatedBy;
+  public void setPhone(String phone) {
+    this.phone = phone;
   }
 
-  public List<Role> getRoles() {
-    return roles;
+  public String getEmail() {
+    return email;
   }
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public char getStatus() {
+    return status;
+  }
+
+  public void setStatus(char status) {
+    this.status = status;
   }
 
 

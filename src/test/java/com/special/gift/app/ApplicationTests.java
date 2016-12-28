@@ -1,7 +1,5 @@
 package com.special.gift.app;
 
-import java.util.Date;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.special.gift.app.domain.User;
 import com.special.gift.app.repository.UserRepository;
 
 @RunWith(SpringRunner.class)
@@ -48,19 +45,19 @@ public class ApplicationTests {
 
 
     try {
-      final User user = new User();
-      user.setActive(true);
-      user.setAge(12);
-      user.setCreatedBy("Kotaro Minami");
-      user.setCreatedDate(new Date());
-      user.setEmail("yakub.jobs@gmail.com");
-      user.setFullName("the last man in the wood");
-      user.setPassword(bcryptEncoder.encode("mamaapakabar"));
-      user.setPhone("081213741988");
-      user.setUsername("yucav");
+      // final User user = new User();
+      // user.setActive(true);
+      // user.setAge(12);
+      // user.setCreatedBy("Kotaro Minami");
+      // user.setCreatedDate(new Date());
+      // user.setEmail("yakub.jobs@gmail.com");
+      // user.setFullName("the last man in the wood");
+      // user.setPassword(bcryptEncoder.encode("mamaapakabar"));
+      // user.setPhone("081213741988");
+      // user.setUsername("yucav");
 
 
-      userRepository.save(user);
+      // userRepository.save(user);
     } catch (final Exception e) {
       e.printStackTrace();
     }

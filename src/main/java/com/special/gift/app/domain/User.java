@@ -1,12 +1,14 @@
 package com.special.gift.app.domain;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = User.TABLE_NAME)
@@ -15,16 +17,11 @@ public class User {
   public static final String TABLE_NAME = "user";
 
   @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid")
-  @Column(name = "user_id", columnDefinition = "CHAR(32)")
-  private String id;
+  @Column(name = "user_id", length = 10, nullable = false)
+  private String userId;
 
   @Column(name = "user_password", nullable = false, length = 64)
   private String password;
-
-  @Column(name = "vendor_id", nullable = false, length = 10)
-  private String vendorId;
 
   @Column(name = "user_name", nullable = false, length = 10, unique = true)
   private String username;
@@ -47,12 +44,16 @@ public class User {
   @Column(name = "user_status", nullable = false, unique = true)
   private char status;
 
-  public String getId() {
-    return id;
+  @OneToMany(targetEntity = Vendor.class, cascade = CascadeType.ALL, mappedBy = "user",
+      fetch = FetchType.LAZY)
+  private List<Vendor> vendor;
+
+  public String getUserId() {
+    return userId;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setUserId(String userId) {
+    this.userId = userId;
   }
 
   public String getPassword() {
@@ -61,14 +62,6 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public String getVendorId() {
-    return vendorId;
-  }
-
-  public void setVendorId(String vendorId) {
-    this.vendorId = vendorId;
   }
 
   public String getUsername() {
@@ -125,6 +118,14 @@ public class User {
 
   public void setStatus(char status) {
     this.status = status;
+  }
+
+  public List<Vendor> getVendor() {
+    return vendor;
+  }
+
+  public void setVendor(List<Vendor> vendor) {
+    this.vendor = vendor;
   }
 
 

@@ -19,8 +19,6 @@ import com.special.gift.app.response.AuthenticationResponse;
 @RequestMapping(path = AuthenticationController.PATH)
 public class AuthenticationController {
 
-
-
   private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
 
   public static final String PATH = "/";

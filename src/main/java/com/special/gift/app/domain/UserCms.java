@@ -2,6 +2,7 @@ package com.special.gift.app.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -10,6 +11,7 @@ public class UserCms {
 
   public static final String TABLE_NAME = "user_cms";
 
+  @Id
   @Column(name = "user_id", nullable = false, length = 10)
   private String userId;
   @Column(name = "user_password", nullable = false, length = 64)

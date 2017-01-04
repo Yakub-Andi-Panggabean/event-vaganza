@@ -11,6 +11,10 @@ import com.special.gift.app.config.MvcConfig;
 public class Application {
 
   public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
+    try {
+      SpringApplication.run(Application.class, args);
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
   }
 }

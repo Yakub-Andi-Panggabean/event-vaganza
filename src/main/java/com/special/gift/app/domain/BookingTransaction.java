@@ -1,7 +1,12 @@
 package com.special.gift.app.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -10,34 +15,54 @@ public class BookingTransaction {
 
   public static final String TABLE_NAME = "booking_transaction";
 
+  @Id
   @Column(name = "transaction_id", nullable = false, length = 20)
   private String transactionId;
+
   @Column(name = "transaction_date", nullable = false, length = 6)
   private String transactionDate;
+
   @Column(name = "transaction_time", nullable = false, length = 6)
   private String transactionTime;
-  @Column(name = "user_id", nullable = false, length = 10)
-  private String userId;
-  @Column(name = "vendor_id", nullable = false, length = 10)
-  private String vendorId;
+
   @Column(name = "event_id", nullable = false, length = 10)
   private String eventId;
+
   @Column(name = "date_booking", nullable = false, length = 6)
   private String dateBooking;
+
   @Column(name = "time_booking", nullable = false, length = 6)
   private String timeBooking;
-  @Column(name = "date_booking", nullable = false, length = 6)
+
+  @Column(name = "status_transaction", nullable = false, length = 6)
   private char statusTransaction;
+
   @Column(name = "status_payment", nullable = false)
   private char statuspayment;
+
   @Column(name = "price_all", nullable = false)
   private int priceAll;
+
   @Column(name = "method_payment", nullable = false)
   private char methodPayment;
+
   @Column(name = "vendor_type", nullable = false, length = 2)
   private String vendorType;
-  @Column(name = "vendor_type", nullable = false)
+
+  @Column(name = "price_payment", nullable = false)
   private int pricePayment;
+
+  @OneToOne
+  @JoinColumn(name = "user_id")
+  private User user;
+
+  @OneToOne
+  @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "type")})
+  private Vendor vendor;
+
+  @OneToOne(targetEntity = TransactionConfirmation.class, cascade = CascadeType.ALL,
+      mappedBy = "transaction")
+  private TransactionConfirmation transactionConfirmation;
 
   public String getTransactionId() {
     return transactionId;
@@ -61,22 +86,6 @@ public class BookingTransaction {
 
   public void setTransactionTime(String transactionTime) {
     this.transactionTime = transactionTime;
-  }
-
-  public String getUserId() {
-    return userId;
-  }
-
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
-
-  public String getVendorId() {
-    return vendorId;
-  }
-
-  public void setVendorId(String vendorId) {
-    this.vendorId = vendorId;
   }
 
   public String getEventId() {
@@ -149,6 +158,30 @@ public class BookingTransaction {
 
   public void setPricePayment(int pricePayment) {
     this.pricePayment = pricePayment;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public Vendor getVendor() {
+    return vendor;
+  }
+
+  public void setVendor(Vendor vendor) {
+    this.vendor = vendor;
+  }
+
+  public TransactionConfirmation getTransactionConfirmation() {
+    return transactionConfirmation;
+  }
+
+  public void setTransactionConfirmation(TransactionConfirmation transactionConfirmation) {
+    this.transactionConfirmation = transactionConfirmation;
   }
 
 

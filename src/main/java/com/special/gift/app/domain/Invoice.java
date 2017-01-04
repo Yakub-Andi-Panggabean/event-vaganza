@@ -2,6 +2,9 @@ package com.special.gift.app.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -10,30 +13,43 @@ public class Invoice {
 
   public static final String TABLE_NAME = "invoice_user";
 
+  @Id
   @Column(name = "no_invoice", nullable = false, length = 10)
   private String invoiceNo;
+
   @Column(name = "date_booking", nullable = false, length = 8)
   private String dateBooking;
+
   @Column(name = "time_booking", nullable = false, length = 6)
   private String timeBooking;
+
   @Column(name = "name_booking", nullable = false, length = 50)
   private String nameBooking;
+
   @Column(name = "event_type", nullable = false, length = 20)
   private String eventType;
+
   @Column(name = "event_place", nullable = false, length = 50)
   private String eventPlace;
+
   @Column(name = "address_booking", nullable = false, length = 100)
   private String addressBooking;
+
   @Column(name = "style_event", nullable = false, length = 10)
   private String eventStyle;
+
   @Column(name = "type_decoration", nullable = false, length = 20)
   private String decorationType;
+
   @Column(name = "price", nullable = false)
   private int price;
+
   @Column(name = "total_price", nullable = false)
   private int totalPrice;
-  @Column(name = "transaction_id", nullable = false)
-  private String transactionId;
+
+  @OneToOne
+  @JoinColumn(name = "transaction_id")
+  private BookingTransaction transaction;
 
   public String getInvoiceNo() {
     return invoiceNo;
@@ -123,12 +139,12 @@ public class Invoice {
     this.totalPrice = totalPrice;
   }
 
-  public String getTransactionId() {
-    return transactionId;
+  public BookingTransaction getTransaction() {
+    return transaction;
   }
 
-  public void setTransactionId(String transactionId) {
-    this.transactionId = transactionId;
+  public void setTransaction(BookingTransaction transaction) {
+    this.transaction = transaction;
   }
 
 

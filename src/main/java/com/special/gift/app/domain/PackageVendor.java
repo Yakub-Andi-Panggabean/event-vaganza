@@ -2,6 +2,10 @@ package com.special.gift.app.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -10,42 +14,49 @@ public class PackageVendor {
 
   public static final String TABLE_NAME = "package_vendor";
 
-  @Column(name = "vendor_id", nullable = false, length = 10)
-  private String vendorId;
+  @Id
   @Column(name = "package_id", nullable = false, length = 10)
   private String packageId;
+
   @Column(name = "package_name", nullable = false, length = 10)
   private String packageName;
+
   @Column(name = "package_capacity", nullable = false)
   private int packageCapacity;
+
   @Column(name = "package_desc", nullable = false, length = 300)
   private String packageDesc;
+
   @Column(name = "package_category", nullable = false, length = 20)
   private String packageCategory;
+
   @Column(name = "package_style", nullable = false, length = 20)
   private String packageStyle;
+
   @Column(name = "package_price", nullable = false)
   private int packagePrice;
+
   @Column(name = "package_img", nullable = false, length = 100)
   private String packageImg;
+
   @Column(name = "package_promo", nullable = false, length = 100)
   private String packagePromo;
+
   @Column(name = "discount_rate", nullable = false)
   private int discountRate;
+
   @Column(name = "vendor_type", nullable = false, length = 3)
   private String vendorType;
+
   @Column(name = "minimum_payment", nullable = false)
   private int minimumPayment;
+
   @Column(name = "time_package", nullable = false)
   private int timePackage;
 
-  public String getVendorId() {
-    return vendorId;
-  }
-
-  public void setVendorId(String vendorId) {
-    this.vendorId = vendorId;
-  }
+  @OneToOne
+  @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "type")})
+  private Vendor vendor;
 
   public String getPackageId() {
     return packageId;

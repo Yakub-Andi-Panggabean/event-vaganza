@@ -2,6 +2,10 @@ package com.special.gift.app.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -10,42 +14,49 @@ public class PackageVenue {
 
   public static final String TABLE_NAME = "package_venue";
 
-  @Column(name = "vendor_id", nullable = false, length = 10)
-  private String vendorId;
+  @OneToOne
+  @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "type")})
+  Vendor vendor;
+
+  @Id
   @Column(name = "venue_id", nullable = false, length = 10)
   private String venueId;
+
   @Column(name = "venue_room", nullable = false, length = 50)
   private String venueRoom;
+
   @Column(name = "room_capacity", nullable = false, length = 5)
   private String roomCapacity;
+
   @Column(name = "venue_package", nullable = false, length = 100)
   private String venuePackage;
+
   @Column(name = "venue_portofolio", nullable = false, length = 200)
   private String venuePortofolio;
+
   @Column(name = "venue_promo", nullable = false, length = 100)
   private String venuePromo;
+
   @Column(name = "discount_rate", nullable = false)
   private int discountRate;
+
   @Column(name = "rental_price", nullable = false)
   private int rentalPrice;
+
   @Column(name = "time_rent", nullable = false, length = 10)
   private String timeRent;
+
   @Column(name = "city", nullable = false, length = 20)
   private String city;
+
   @Column(name = "pax_price", nullable = false)
   private int paxPrice;
+
   @Column(name = "minimum_payment", nullable = false)
   private int minimumPayment;
-  @Column(name = "venue_promo", nullable = false, length = 2)
+
+  @Column(name = "vendor_type", nullable = false, length = 2)
   private String vendorType;
-
-  public String getVendorId() {
-    return vendorId;
-  }
-
-  public void setVendorId(String vendorId) {
-    this.vendorId = vendorId;
-  }
 
   public String getVenueId() {
     return venueId;
@@ -151,6 +162,12 @@ public class PackageVenue {
     this.vendorType = vendorType;
   }
 
+  public Vendor getVendor() {
+    return vendor;
+  }
 
+  public void setVendor(Vendor vendor) {
+    this.vendor = vendor;
+  }
 
 }

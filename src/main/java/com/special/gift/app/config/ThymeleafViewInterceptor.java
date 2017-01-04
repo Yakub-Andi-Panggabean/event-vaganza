@@ -24,7 +24,7 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
       "fragments/authenticated-header";
   private static final String DEFAULT_FOOTER_ATTRIBUTE_VALUE = "fragments/footer";
 
-  private static final String ERROR_VIEW = "error/404";
+  // private static final String ERROR_VIEW = "error/404";
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,

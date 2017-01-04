@@ -2,6 +2,7 @@ package com.special.gift.app.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -10,6 +11,7 @@ public class VendorDesc {
 
   public static final String TABLE_NAME = "vendor_desc";
 
+  @Id
   @Column(name = "vendor_type", nullable = false, length = 2)
   private String vendorType;
 

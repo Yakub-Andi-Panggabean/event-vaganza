@@ -1,12 +1,13 @@
 package com.special.gift.app.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = Vendor.TABLE_NAME)
@@ -14,17 +15,8 @@ public class Vendor {
 
   public static final String TABLE_NAME = "vendor";
 
-  @Id
-  @GeneratedValue(generator = "uuid")
-  @GenericGenerator(name = "uuid", strategy = "uuid")
-  @Column(name = "vendor_id", columnDefinition = "CHAR(32)")
-  private String id;
-
-  @Column(name = "vendor_type", nullable = false, length = 2)
-  private String type;
-
-  @Column(name = "user_id", nullable = false, length = 10)
-  private String userId;
+  @EmbeddedId
+  private VendorId vendorId;
 
   @Column(name = "vendor_name", nullable = false, length = 50)
   private String name;
@@ -47,29 +39,10 @@ public class Vendor {
   @Column(name = "vendor_email", nullable = false, length = 100)
   private String email;
 
-  public String getId() {
-    return id;
-  }
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public String getUserId() {
-    return userId;
-  }
-
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
 
   public String getName() {
     return name;
@@ -125,6 +98,22 @@ public class Vendor {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public VendorId getVendorId() {
+    return vendorId;
+  }
+
+  public void setVendorId(VendorId vendorId) {
+    this.vendorId = vendorId;
   }
 
 }

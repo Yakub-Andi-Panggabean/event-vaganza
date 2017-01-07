@@ -1,53 +1,44 @@
-package com.special.gift.app.domain;
+package com.special.gift.app.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import com.special.gift.app.domain.Vendor;
 
-@Entity
-@Table(name = User.TABLE_NAME)
-public class User {
+public class UserDto implements Serializable {
 
-  public static final String TABLE_NAME = "user";
-
-  @Id
-  @Column(name = "user_id", length = 10, nullable = false)
+  private static final long serialVersionUID = -7186951818484201746L;
   private String userId;
-
-  @Column(name = "user_password", nullable = false, length = 64)
   private String password;
-
-  @Column(name = "user_name", nullable = false, length = 50, unique = true)
   private String username;
-
-  @Column(name = "user_zip", nullable = false, length = 10)
   private String userZip;
-
-  @Column(name = "user_address", nullable = false, length = 100)
   private String userAddress;
-
-  @Column(name = "user_hp", nullable = false, length = 15)
   private String handphone;
-
-  @Column(name = "user_telp", length = 15)
   private String phone;
-
-  @Column(name = "user_email", nullable = false, unique = true)
   private String email;
-
-  @Column(name = "user_status", nullable = false)
   private char status;
-
-  @OneToMany(targetEntity = Vendor.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-      mappedBy = "user")
-  // @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "vendor_type")})
   private List<Vendor> vendor;
+
+  public UserDto() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
+
+  public UserDto(String userId, String password, String username, String userZip,
+      String userAddress, String handphone, String phone, String email, char status,
+      List<Vendor> vendor) {
+    super();
+    this.userId = userId;
+    this.password = password;
+    this.username = username;
+    this.userZip = userZip;
+    this.userAddress = userAddress;
+    this.handphone = handphone;
+    this.phone = phone;
+    this.email = email;
+    this.status = status;
+    this.vendor = vendor;
+  }
 
   public String getUserId() {
     return userId;
@@ -131,7 +122,7 @@ public class User {
 
   @Override
   public String toString() {
-    return "User [userId=" + userId + ", password=" + password + ", username=" + username
+    return "UserDto [userId=" + userId + ", password=" + password + ", username=" + username
         + ", userZip=" + userZip + ", userAddress=" + userAddress + ", handphone=" + handphone
         + ", phone=" + phone + ", email=" + email + ", status=" + status + ", vendor=" + vendor
         + "]";

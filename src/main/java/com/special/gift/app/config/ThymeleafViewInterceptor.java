@@ -22,9 +22,9 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
   private static final String DEFAULT_HEADER_ATTRIBUTE_VALUE = "fragments/header";
   private static final String AUTHENTICATED_HEADER_ATTRIBUTE_VALUE =
       "fragments/authenticated-header";
-  private static final String DEFAULT_FOOTER_ATTRIBUTE_VALUE = "fragments/footer";
+  private static final String OUTER_HEADER_VALUE = "fragments/outer-header";
 
-  // private static final String ERROR_VIEW = "error/404";
+  private static final String DEFAULT_FOOTER_ATTRIBUTE_VALUE = "fragments/footer";
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -40,24 +40,33 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
     log.debug("view name : {}", originalViewName);
     log.debug("request attribute user : {}", request.getSession().getAttribute("user"));
 
-    if (!originalViewName.contains("connect")) {
-      // define header
-      if (principal == null) {
-        modelAndView.addObject(DEFAULT_HEADER_ATTRIBUTE_NAME, DEFAULT_HEADER_ATTRIBUTE_VALUE);
+    if (!originalViewName.contains("redirect:")) {
+
+      if (originalViewName.contains("404")) {
+
+      } else if (originalViewName.contains("/outer")) {
+        // define header
+        modelAndView.addObject(DEFAULT_HEADER_ATTRIBUTE_NAME, OUTER_HEADER_VALUE);
+
+        // define footer
+        modelAndView.addObject(DEFAULT_FOOTER_ATTRIBUTE_NAME, DEFAULT_FOOTER_ATTRIBUTE_VALUE);
       } else {
-        modelAndView.addObject(DEFAULT_HEADER_ATTRIBUTE_NAME, AUTHENTICATED_HEADER_ATTRIBUTE_VALUE);
+        // define header
+        if (principal == null) {
+          modelAndView.addObject(DEFAULT_HEADER_ATTRIBUTE_NAME, DEFAULT_HEADER_ATTRIBUTE_VALUE);
+        } else {
+          modelAndView.addObject(DEFAULT_HEADER_ATTRIBUTE_NAME,
+              AUTHENTICATED_HEADER_ATTRIBUTE_VALUE);
+        }
+
+        // define footer
+        modelAndView.addObject(DEFAULT_FOOTER_ATTRIBUTE_NAME, DEFAULT_FOOTER_ATTRIBUTE_VALUE);
       }
 
-      // define content
       modelAndView.setViewName(DEFAULT_LAYOUT);
+      // define content
       modelAndView.addObject(DEFAULT_VIEW_ATTRIBUTE_NAME, originalViewName);
 
-
-      // define footer
-      modelAndView.addObject(DEFAULT_FOOTER_ATTRIBUTE_NAME, DEFAULT_FOOTER_ATTRIBUTE_VALUE);
-    } else {
-      // response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-      // response.setHeader("Location", "/404");
 
     }
 

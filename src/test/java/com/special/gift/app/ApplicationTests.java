@@ -2,21 +2,25 @@ package com.special.gift.app;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.special.gift.app.domain.User;
+import com.special.gift.app.repository.UserRepository;
+import com.special.gift.app.util.CommonUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ApplicationTests {
 
-  // @Autowired
-  // private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
-  // @Autowired
-  // private PasswordEncoder bcryptEncoder;
+  @Autowired
+  private ShaPasswordEncoder passwordEncoder;
 
-  // @Autowired
-  // private ApplicationMenuRepository repository;
   //
   // @Test
   // public void insertApplicationMenu() {
@@ -41,19 +45,18 @@ public class ApplicationTests {
 
 
     try {
-      // final User user = new User();
-      // user.setActive(true);
-      // user.setAge(12);
-      // user.setCreatedBy("Kotaro Minami");
-      // user.setCreatedDate(new Date());
-      // user.setEmail("yakub.jobs@gmail.com");
-      // user.setFullName("the last man in the wood");
-      // user.setPassword(bcryptEncoder.encode("mamaapakabar"));
-      // user.setPhone("081213741988");
-      // user.setUsername("yucav");
-
-
-      // userRepository.save(user);
+      final User user = new User();
+      user.setEmail("yakub.jobs@gmail.com");
+      user.setHandphone("081213741988");
+      user.setPassword(passwordEncoder.encodePassword("mamaapakabar", CommonUtil.SALT));
+      user.setPhone("0212067899");
+      user.setStatus('1');
+      user.setUserAddress("pandawa streen no 312");
+      user.setUserId("1000000001");
+      user.setUsername("yakub");
+      user.setUserZip("30118");
+      user.setVendor(null);
+      userRepository.save(user);
     } catch (final Exception e) {
       e.printStackTrace();
     }

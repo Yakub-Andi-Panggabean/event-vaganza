@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container" th:fragment="content">
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<div class="shadow" style="padding: 2%">
+					<div>
+						<center>
+							<h3 style="color: #505050; font-size: 1.3em">Akun Anda Sudah
+								Pernah Terdaftar</h3>
+						</center>
+					</div>
+					<hr />
+					<div>
+						<p align="center" th:inline="text">
+							Anda sudah pernah melakukan pendaftaran akun event-vaganza dengan
+							[[${existKey}]] <b>[[${existValue}]]</b>. Untuk alasan keamanan
+							kami mengirimkan petunjuk ubah kata sandi ke email. Silahkan
+							periksa kotak pesan anda dan ikuti petunjuk yang ada di email
+							tersebut.
+						</p>
+
+					</div>
+				</div>
+			</div>
+			<br />
+		</div>
+	</div>
+	</div>
+</body>
+</html>

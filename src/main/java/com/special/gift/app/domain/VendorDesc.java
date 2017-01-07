@@ -34,6 +34,12 @@ public class VendorDesc {
     this.vendorDescription = vendorDescription;
   }
 
+  @Override
+  public String toString() {
+    return "VendorDesc [vendorType=" + vendorType + ", vendorDescription=" + vendorDescription
+        + "]";
+  }
+
 
 
 }

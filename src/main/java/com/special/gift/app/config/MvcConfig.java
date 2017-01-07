@@ -1,16 +1,16 @@
 package com.special.gift.app.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-// @ServletComponentScan(value = MvcConfig.SERVLET_PACKAGE)
+@ServletComponentScan(value = MvcConfig.SERVLET_PACKAGE)
 @ComponentScan({MvcConfig.CONTROLLER_PACKAGE, MvcConfig.SERVICE_PACKAGE,
     MvcConfig.REPOSITORY_PACKAGE, MvcConfig.UTIL_PACKAGE})
 public class MvcConfig extends WebMvcConfigurerAdapter {
@@ -37,8 +37,8 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
   }
 
   @Bean
-  PasswordEncoder initPasswordEncoder() {
-    return new BCryptPasswordEncoder(12);
+  ShaPasswordEncoder initPasswordEncoder() {
+    return new ShaPasswordEncoder(256);
   }
 
 

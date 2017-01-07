@@ -16,9 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.crypto.codec.Base64;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.special.gift.app.domain.User;
+import com.special.gift.app.service.UserService;
 import com.special.gift.app.util.CommonUtil;
 
 @WebFilter(urlPatterns = "/login")
@@ -26,12 +28,12 @@ public class AuthenticationFilter implements Filter {
 
   private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 
-  // @Inject
-  // private UserService userService;
+  @Inject
+  private UserService userService;
 
 
   @Inject
-  private PasswordEncoder bcryptEncoder;
+  private ShaPasswordEncoder passwordEncoder;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
@@ -60,27 +62,27 @@ public class AuthenticationFilter implements Filter {
         final String principal = auth[0];
         final String credential = auth[1];
         // check is user is exist or not by username
-        // if (userService.checkUserByPrincipal(principal)) {
-        //
-        // final User user = userService.findUserByPrincipal(principal);
-        //
-        // if (bcryptEncoder.matches(credential, user.getPassword())) {
-        //
-        // request.setAttribute("user", user.getUsername());
-        //
-        // chain.doFilter(request, response);
-        //
-        // } else {
-        // printResponse(res, HttpServletResponse.SC_FORBIDDEN, new StringBuilder("user : ")
-        // .append(principal).append(" username and password is not matched").toString());
-        // }
-        //
-        // } else {
-        // printResponse(res, HttpServletResponse.SC_FORBIDDEN, "email is not valid or registered");
-        // }
-        //
-        // } else {
-        // printResponse(res, HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+        if (userService.checkUserByPrincipal(principal)) {
+
+          final User user = userService.findUserByPrincipal(principal);
+
+          if (passwordEncoder.isPasswordValid(user.getPassword(), credential, CommonUtil.SALT)) {
+
+            request.setAttribute("user", user.getUsername());
+
+            chain.doFilter(request, response);
+
+          } else {
+            printResponse(res, HttpServletResponse.SC_FORBIDDEN, new StringBuilder("user : ")
+                .append(principal).append(" username and password is not matched").toString());
+          }
+
+        } else {
+          printResponse(res, HttpServletResponse.SC_FORBIDDEN, "email is not valid or registered");
+        }
+
+      } else {
+        printResponse(res, HttpServletResponse.SC_FORBIDDEN, "Forbidden");
       }
 
     } catch (final Exception exception) {

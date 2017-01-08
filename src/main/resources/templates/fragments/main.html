@@ -1,6 +1,6 @@
 <section th:fragment="content">
 
-	<div class="container-fluid">
+	<div class="container">
 		<br> <br>
 		<div id="myCarousel" class="carousel slide" data-ride="carousel">
 			<!-- Indicators -->
@@ -14,22 +14,22 @@
 			<!-- Wrapper for slides -->
 			<div class="carousel-inner" role="listbox">
 				<div class="item active">
-					<img src="image/img1.jpg" alt="Chania"
+					<img th:src="@{image/img1.jpg}" alt="Chania"
 						style="min-width: 100%; height: 300px;">
 				</div>
 
 				<div class="item">
-					<img src="image/img2.jpg" alt="Chania"
+					<img th:src="@{image/img2.jpg}" alt="Chania"
 						style="min-width: 100%; height: 300px;">
 				</div>
 
 				<div class="item">
-					<img src="image/img3.jpg" alt="Flower"
+					<img th:src="@{image/img3.jpg}" alt="Flower"
 						style="min-width: 100%; height: 300px;">
 				</div>
 
 				<div class="item">
-					<img src="image/img2.jpg" alt="Flower"
+					<img th:src="@{image/img2.jpg}" alt="Flower"
 						style="min-width: 100%; height: 300px;">
 				</div>
 			</div>
@@ -61,8 +61,9 @@
 					<ul class="list-group">
 						<li class="list-group-item"
 							th:each="category,rowStat : ${categories1}"
-							th:id="${category.vendorType}""><a
-							th:text="${category.vendorDescription}"></a></li>
+							th:id="${category.vendorType}"><a
+							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorDescription,' ','-')},c=${category.vendorType})}"
+							th:text="${#strings.capitalize(category.vendorDescription)}"></a></li>
 					</ul>
 				</div>
 				<div class="col-md-4">
@@ -70,7 +71,8 @@
 						<li class="list-group-item"
 							th:each="category,rowStat : ${categories2}"
 							th:id="${category.vendorType}"><a
-							th:text="${category.vendorDescription}"></a></li>
+							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorDescription,' ','-')},c=${category.vendorType})}"
+							th:text="${#strings.capitalize(category.vendorDescription)}"></a></li>
 					</ul>
 				</div>
 				<div class="col-md-4">
@@ -78,14 +80,14 @@
 						<li class="list-group-item"
 							th:each="category,rowStat : ${categories3}"
 							th:id="${category.vendorType}"><a
-							th:text="${category.vendorDescription}"></a></li>
+							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorDescription,' ','-')},c=${category.vendorType})}"
+							th:text="${#strings.capitalize(category.vendorDescription)}"></a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 
 		<br />
-
 		<div class="row">
 			<!-- end of category -->
 			<div class="col-md-12">
@@ -104,7 +106,7 @@
 			<div class="col-md-12">
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/pakaian-dalam-sorex.jpg"
+						<img class="img-fluid" th:src="@{/image/pakaian-dalam-sorex.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -116,7 +118,7 @@
 
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/pakaian-dalam-sorex.jpg"
+						<img class="img-fluid" th:src="@{/image/pakaian-dalam-sorex.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -128,7 +130,7 @@
 
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/pakaian-dalam-sorex.jpg"
+						<img class="img-fluid" th:src="@{/image/pakaian-dalam-sorex.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -143,7 +145,7 @@
 			<div class="col-md-12">
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/celana-yoga.jpg"
+						<img class="img-fluid" th:src="@{/image/celana-yoga.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -155,7 +157,7 @@
 
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/celana-yoga.jpg"
+						<img class="img-fluid" th:src="@{/image/celana-yoga.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -167,7 +169,7 @@
 
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/celana-yoga.jpg"
+						<img class="img-fluid" th:src="@{/image/celana-yoga.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -183,7 +185,7 @@
 			<div class="col-md-12">
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/flare-skirt.jpg"
+						<img class="img-fluid" th:src="@{/image/flare-skirt.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -195,7 +197,7 @@
 
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/flare-skirt.jpg"
+						<img class="img-fluid" th:src="@{/image/flare-skirt.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -207,7 +209,7 @@
 
 				<div class="col-sm-6 col-md-4">
 					<div class="thumbnail">
-						<img class="img-fluid" src="/image/flare-skirt.jpg"
+						<img class="img-fluid" th:src="@{/image/flare-skirt.jpg}"
 							alt="Responsive image">
 					</div>
 
@@ -217,7 +219,6 @@
 					</div>
 				</div>
 			</div>
-
 			<!-- end of third thumbnail row -->
 
 		</div>

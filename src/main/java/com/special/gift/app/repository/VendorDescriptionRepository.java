@@ -10,4 +10,5 @@ public interface VendorDescriptionRepository extends CrudRepository<VendorDesc, 
 
   Page<VendorDesc> findAll(Pageable pageable);
 
+  VendorDesc findByVendorDescription(String vendorDesc);
 }

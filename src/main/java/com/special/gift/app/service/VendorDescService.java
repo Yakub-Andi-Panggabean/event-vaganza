@@ -9,4 +9,7 @@ public interface VendorDescService {
 
   Page<VendorDesc> findAllParents(long start, long limit);
 
+  Page<VendorDesc> findAllChildren(String parent, long start, long limit);
+
+  VendorDesc findById(String id);
 }

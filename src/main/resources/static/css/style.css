@@ -111,3 +111,65 @@ code {
 	background: #fff;
 	padding: 0 10px;
 }
+
+.yellow-link {
+	padding: 5px 15px;
+	display: block;
+	line-height: 16px;
+	font-size: 12px;
+	color: #fadb05;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/*used in finder*/
+/*copas dari tokopedia ... pengakuan */
+.box-white {
+	background-color: #fff !important;
+}
+
+.box-shadow-light {
+	-webkit-box-shadow: 2px 2px 0 0 rgba(166, 166, 166, .1);
+	-moz-box-shadow: 2px 2px 0 0 rgba(166, 166, 166, .1);
+	box-shadow: 2px 2px 0 0 rgba(166, 166, 166, .1);
+}
+
+.box-category--nopadding {
+	padding: 0;
+}
+
+.box-category {
+	padding: 12px 20px;
+	border-left: 4px solid #2ab4c2;
+}
+
+.box {
+	min-height: 20px;
+	padding: 15px 25px;
+	background-color: #f7f7f7;
+	border: 1px solid #e4e4e4;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	position: relative;
+	word-break: break-word;
+}
+
+.rel-category-wrapper {
+	margin: 0 auto !important;
+	padding: 12px 20px;
+	text-align: left !important;
+}
+
+.rel-category-wrapper h1 {
+	padding-bottom: 0;
+	line-height: 35px;
+}
+
+.fs-12 {
+	font-size: 12px !important;
+}
+
+.mb-20 {
+	margin-bottom: 20px;
+}

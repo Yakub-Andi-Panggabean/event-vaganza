@@ -10,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.special.gift.app.domain.VendorDesc;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.service.VendorDescService;
 
@@ -27,7 +29,8 @@ public class UiController {
   public static final String HELP = PATH + "help";
   public static final String SEARCH = PATH + "search";
   public static final String NOTIFICATION = PATH + "notification";
-  public static final String FINDER = PATH + "find/{criteria}";
+  public static final String DETAIL = PATH + "categories/{criteria}";
+  public static final String DETAIL_CHILD = PATH + "categories/{criteria}/{child}";
 
   @Inject
   private VendorDescService vendorDescService;
@@ -48,8 +51,65 @@ public class UiController {
   }
 
   @RequestMapping(value = SEARCH, method = RequestMethod.GET)
-  public String renderSearchPage(Model model) {
+  public String renderSearchPage(Model model, HttpSession session) {
+    model.addAttribute("user", session.getAttribute("user"));
     return "/contents/search";
+  }
+
+  @RequestMapping(value = DETAIL, method = RequestMethod.GET)
+  public String renderDetailPage(Model model, @PathVariable(value = "criteria") String criteria,
+      @RequestParam(value = "c") String id, HttpSession session) {
+    model.addAttribute("user", session.getAttribute("user"));
+    model.addAttribute("parent", criteria.replace("-", " "));
+
+    final VendorDesc vendorDesc = vendorDescService.findById(id);
+
+    if (id == null || criteria == null || vendorDesc == null) {
+      return "redirect:/";
+    }
+
+    model.addAttribute("children1",
+        vendorDescService.findAllChildren(vendorDesc.getVendorType(), 0, 6));
+    model.addAttribute("children2",
+        vendorDescService.findAllChildren(vendorDesc.getVendorType(), 6, 13));
+    model.addAttribute("children3",
+        vendorDescService.findAllChildren(vendorDesc.getVendorType(), 13, 19));
+
+    log.debug("vendor desc : {}", vendorDesc.toString());
+
+    return "/contents/finder";
+  }
+
+
+  @RequestMapping(value = DETAIL_CHILD, method = RequestMethod.GET)
+  public String renderDetailChildPage(Model model,
+      @PathVariable(value = "criteria") String criteria,
+      @PathVariable(value = "child") String child, @RequestParam(value = "c") String id,
+      HttpSession session) {
+    final VendorDesc parent = vendorDescService.findById(id.substring(0, 1).concat("0"));
+
+    model.addAttribute("user", session.getAttribute("user"));
+    model.addAttribute("root", criteria.replace("-", " "));
+    model.addAttribute("root_type", parent.getVendorType());
+    model.addAttribute("parent", child.replace("-", " "));
+    model.addAttribute("parent_variable", parent.getVendorDescription().replace(" ", "-"));
+
+    final VendorDesc vendorDesc = vendorDescService.findById(id);
+
+    if (id == null || criteria == null || vendorDesc == null) {
+      return "redirect:/";
+    }
+
+    model.addAttribute("children1",
+        vendorDescService.findAllChildren(vendorDesc.getVendorType(), 0, 6));
+    model.addAttribute("children2",
+        vendorDescService.findAllChildren(vendorDesc.getVendorType(), 6, 13));
+    model.addAttribute("children3",
+        vendorDescService.findAllChildren(vendorDesc.getVendorType(), 13, 19));
+
+    log.debug("vendor desc : {}", vendorDesc.toString());
+
+    return "/contents/finder";
   }
 
   @RequestMapping(value = HELP, method = RequestMethod.GET)
@@ -61,17 +121,14 @@ public class UiController {
   public String renderNotificationPage(Model model) {
     log.debug("fetch flash attribute : {}", model.asMap().get("existKey"));
     log.debug("fetch flash attribute : {}", model.asMap().get("existValue"));
+
     if (model.asMap().get("existKey") == null || model.asMap().get("existValue") == null) {
       return "redirect:/";
     }
+
     return "/outer/notification";
   }
 
-  @RequestMapping(value = FINDER, method = RequestMethod.GET)
-  public String renderFinderPage(Model model, @PathVariable(value = "criteria") String criteria) {
-    log.debug("criteria : {}", criteria);
-    return "/contents/finder";
-  }
 
 
 }

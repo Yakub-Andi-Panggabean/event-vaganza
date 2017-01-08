@@ -26,26 +26,80 @@ public class VendorDescServiceBean implements VendorDescService {
   public Page<VendorDesc> findAllParents(long start, long limit) {
     final Iterable<VendorDesc> categories = repository.findAll();
 
-    log.debug("categories : {}", categories.toString());
-
-    final List<VendorDesc> contents = new ArrayList<>();
+    List<VendorDesc> contents = new ArrayList<>();
 
     for (final VendorDesc vendorDesc : categories) {
       if (vendorDesc.getVendorType().substring(1, 2).equals("0")) {
+        vendorDesc.setVendorDescription(vendorDesc.getVendorDescription().toLowerCase());
         contents.add(vendorDesc);
       }
     }
 
     log.debug("parent categories size : {}", contents.size());
 
-    if (limit > (contents.size() - 1)) {
-      limit = contents.size();
+    if (contents.size() > 0) {
+
+      if (limit > (contents.size() - 1)) {
+        limit = contents.size();
+      }
+
+      log.debug("start : {}, limit : {}", start, limit);
+
+      contents = contents.subList((int) start, (int) limit);
+
     }
 
-    log.debug("start : {}, limit : {}", start, limit);
-    final Page<VendorDesc> results =
-        new PageImpl<VendorDesc>(contents.subList((int) start, (int) limit));
+
+
+    final Page<VendorDesc> results = new PageImpl<VendorDesc>(contents);
+
     return results;
   }
+
+  @Override
+  public Page<VendorDesc> findAllChildren(String parent, long start, long limit) {
+    final Iterable<VendorDesc> categories = repository.findAll();
+
+    List<VendorDesc> contents = new ArrayList<>();
+
+    for (final VendorDesc vendorDesc : categories) {
+      if (vendorDesc.getVendorType().substring(0, 1).equals(parent.substring(0, 1))) {
+        vendorDesc.setVendorDescription(vendorDesc.getVendorDescription().toLowerCase());
+        if (!parent.equals(vendorDesc.getVendorType())
+            && !vendorDesc.getVendorType().substring(1, 2).equals("0")) {
+          contents.add(vendorDesc);
+        }
+      }
+    }
+
+    log.debug("children of {} category size : {}", parent, contents.size());
+
+    if (contents.size() > 0) {
+
+      if (limit > (contents.size() - 1)) {
+        limit = contents.size();
+      }
+
+      if (start > (contents.size() - 1)) {
+        start = contents.size();
+      }
+
+      log.debug("start : {}, limit : {}", start, limit);
+
+      contents = contents.subList((int) start, (int) limit);
+
+    }
+
+    final Page<VendorDesc> results = new PageImpl<VendorDesc>(contents);
+
+    return results;
+  }
+
+  @Override
+  public VendorDesc findById(String id) {
+    // TODO Auto-generated method stub
+    return repository.findOne(id);
+  }
+
 
 }

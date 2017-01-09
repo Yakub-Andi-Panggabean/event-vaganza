@@ -11,9 +11,11 @@
 				class="box box-white box-category box-category--nopadding box-shadow-light">
 				<div class="row rel-category-wrapper">
 					<div class="col col-md-4">
-						<span><a th:text="*{root != null}? *{root} : ''"
-							th:href="@{/categories/{category}(category=${root},c=${root_type})}"></a></span>
-						<h1 th:text="${#strings.capitalize(parent)}">Title</h1>
+						<span><a
+							th:text="*{parentName != null}? *{parentName} : ''"
+							th:href="@{/categories/{category}(category=${parent},c=${root_type})}"></a></span>
+						<h1
+							th:text="${#strings.capitalize(child_name!=null?child_name:category_name)}">Title</h1>
 						<p class="fs-12 mb-20">Lorem ipsum dolor sit amet, consectetur
 							adipiscing elit. Suspendisse cursus pharetra lectus accumsan
 							accumsan. Proin nec dui dapibus, accumsan magna a, ultricies mi.
@@ -39,7 +41,7 @@
 									<li class="list-group-item"
 										th:each="child,rowStat : ${children2}"><a
 										th:text="${#strings.capitalize(child.vendorDescription)}"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent_variablet,' ','-')},child=${#strings.replace(child.vendorDescription,' ','-')},c=${child.vendorType})}"></a></li>
+										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorDescription,' ','-')},c=${child.vendorType})}"></a></li>
 								</ul>
 							</div>
 							<div class="col col-md-4" align="center">
@@ -60,10 +62,10 @@
 
 		<div class="col col-md-12">
 			<ol class="breadcrumb">
-				<li><a href="#">Home</a></li>
-				<li><a href="#">Private</a></li>
-				<li><a href="#">Pictures</a></li>
-				<li class="active">Vacation</li>
+				<li><a th:href="@{/}">Home</a></li>
+				<li><a th:href="@{/categories}">Categories</a></li>
+				<li><a th:text="*{parentName != null}? *{parentName} : ''"
+					th:href="@{/categories/{category}(category=${parent},c=${root_type})}"></a></li>
 			</ol>
 		</div>
 		<!-- end of breadcumb -->

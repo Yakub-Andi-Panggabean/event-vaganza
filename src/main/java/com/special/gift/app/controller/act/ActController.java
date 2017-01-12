@@ -3,6 +3,7 @@ package com.special.gift.app.controller.act;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,23 +15,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.special.gift.app.domain.User;
+import com.special.gift.app.domain.Vendor;
+import com.special.gift.app.domain.VendorId;
 import com.special.gift.app.dto.UserDto;
+import com.special.gift.app.dto.VendorDto;
 import com.special.gift.app.service.UserService;
+import com.special.gift.app.service.VendorService;
 import com.special.gift.app.util.exception.DataAlreadyExistException;
 
 @Controller
-@RequestMapping(value = UserController.BASE_PATH)
-public class UserController {
+@RequestMapping(value = ActController.BASE_PATH)
+public class ActController {
 
-  private static final Logger log = LoggerFactory.getLogger(UserController.class);
+  private static final Logger log = LoggerFactory.getLogger(ActController.class);
 
-  public static final String BASE_PATH = "/user";
+  public static final String BASE_PATH = "/";
+  private static final String USER_ACT_PATH = "user";
+  private static final String VENDOR_ACT_PATH = "vendor";
 
   @Inject
   private UserService userService;
 
+  @Inject
+  private VendorService vendorService;
 
-  @PostMapping
+
+
+  @PostMapping(value = USER_ACT_PATH)
   public String addNewuser(@ModelAttribute UserDto user, RedirectAttributes redirectAttributes) {
     log.debug("user dto : {}", user.toString());
     try {
@@ -46,6 +57,34 @@ public class UserController {
         return "redirect:/notification";
       }
       return "redirect:/register";
+    }
+    return "redirect:/";
+  }
+
+
+  @PostMapping(value = VENDOR_ACT_PATH)
+  public String addNewVendor(@ModelAttribute VendorDto vendor, HttpSession session) {
+    log.debug("vendor dto : {}", vendor.toString());
+    try {
+      vendor.setUser(session.getAttribute("user").toString());
+      final User user = userService.findUserByPrincipal(vendor.getUser());
+      if (user != null) {
+        log.debug("user : {}", user.toString());
+        vendor.setPic(user.getUsername());
+        vendor.setUser(user.getUserId());
+        Vendor target = null;
+        for (final String type : vendor.getVendorType().split(",")) {
+          target = new Vendor();
+          final VendorId id = new VendorId();
+          id.setType(type);
+          id.setVendorId("5000000000");
+          BeanUtils.copyProperties(vendor, target);
+          target.setVendorId(id);
+          vendorService.addNewUserVendor(target);
+        }
+      }
+    } catch (final Exception e) {
+      e.printStackTrace();
     }
     return "redirect:/";
   }

@@ -16,15 +16,17 @@
 							th:href="@{/categories/{category}(category=${parent},c=${root_type})}"></a></span>
 						<h1
 							th:text="${#strings.capitalize(child_name!=null?child_name:category_name)}">Title</h1>
-						<p class="fs-12 mb-20">Lorem ipsum dolor sit amet, consectetur
-							adipiscing elit. Suspendisse cursus pharetra lectus accumsan
-							accumsan. Proin nec dui dapibus, accumsan magna a, ultricies mi.
-							Curabitur facilisis in nulla eu elementum. Donec vel eleifend
-							orci. Aliquam vel dolor neque. Aliquam eu turpis a urna gravida
-							volutpat vitae sed arcu. Mauris eget lorem sollicitudin arcu
-							aliquet dapibus vel nec enim. Aliquam sollicitudin lobortis
-							volutpat. Aliquam porta, orci non dictum congue, lectus metus
-							rhoncus risus, id accumsan turpis dolor vitae elit.</p>
+						<p class="fs-12 mb-20"
+							th:text="${#strings.capitalize(child_description!=null?child_description:category_description)}">Lorem
+							ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+							cursus pharetra lectus accumsan accumsan. Proin nec dui dapibus,
+							accumsan magna a, ultricies mi. Curabitur facilisis in nulla eu
+							elementum. Donec vel eleifend orci. Aliquam vel dolor neque.
+							Aliquam eu turpis a urna gravida volutpat vitae sed arcu. Mauris
+							eget lorem sollicitudin arcu aliquet dapibus vel nec enim.
+							Aliquam sollicitudin lobortis volutpat. Aliquam porta, orci non
+							dictum congue, lectus metus rhoncus risus, id accumsan turpis
+							dolor vitae elit.</p>
 					</div>
 					<div class="col col-md-8">
 						<div class="row" style="padding-top: 8%;">
@@ -32,24 +34,24 @@
 								<ul class="list-group">
 									<li class="list-group-item"
 										th:each="child,rowStat : ${children1}"><a
-										th:text="${#strings.capitalize(child.vendorDescription)}"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorDescription,' ','-')},c=${child.vendorType})}"></a></li>
+										th:text="${#strings.capitalize(child.vendorTypeName)}"
+										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}"></a></li>
 								</ul>
 							</div>
 							<div class="col col-md-4" align="center">
 								<ul class="list-group">
 									<li class="list-group-item"
 										th:each="child,rowStat : ${children2}"><a
-										th:text="${#strings.capitalize(child.vendorDescription)}"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorDescription,' ','-')},c=${child.vendorType})}"></a></li>
+										th:text="${#strings.capitalize(child.vendorTypeName)}"
+										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}"></a></li>
 								</ul>
 							</div>
 							<div class="col col-md-4" align="center">
 								<ul class="list-group">
 									<li class="list-group-item"
 										th:each="child,rowStat : ${children3}"><a
-										th:text="${#strings.capitalize(child.vendorDescription)}"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorDescription,' ','-')},c=${child.vendorType})}"></a></li>
+										th:text="${#strings.capitalize(child.vendorTypeName)}"
+										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}"></a></li>
 								</ul>
 							</div>
 						</div>

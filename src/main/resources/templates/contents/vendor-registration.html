@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container" th:fragment="content">
+		<br />
+		<div class="col-sm-2" style="padding: 0 auto">
+			<div class="panel panel-default">
+				<div class="panel-heading" th:text="${user}">User Information</div>
+				<div class="panel-body">Panel content</div>
+			</div>
+		</div>
+		<div class="col-sm-10">
+			<div class="panel panel-default">
+				<div class="panel-heading">Fill Vendor Information</div>
+				<div class="panel-body">
+					<form name="vendor_registration" action="#" th:action="@{/vendor}"
+						th:object="${vendor}" method="post">
+						<div class="col-sm-6">
+							<div id="form_group_vendorname" class="form-group has-feedback">
+								<i class="glyphicon glyphicon-user form-control-feedback"></i> <input
+									type="text" class="form-control" name="vendorname"
+									id="vendorname" placeholder="Name" th:field="*{name}">
+								<span class="error_message" id="vendorname_error_message"
+									hidden="true"></span>
+							</div>
+							<div id="form_group_vendor_handphone"
+								class="form-group has-feedback">
+								<i class="glyphicon glyphicon-phone form-control-feedback"></i>
+								<input type="text" class="form-control" name="vendor_handphone"
+									id="vendor_handphone" placeholder="Mobile Number"
+									th:field="*{handphone}"> <span class="error_message"
+									id="vendor_handphone_error_message" hidden="true"></span>
+							</div>
+							<div id="form_group_vendor_phone" class="form-group has-feedback">
+								<i class="glyphicon glyphicon-earphone form-control-feedback"></i>
+								<input type="text" class="form-control" id="vendor_phone" name="vendor_phone"
+									placeholder="Phone" th:field="*{phone}"> <span
+									class="error_message" id="vendor_phone_error_message"
+									hidden="true"></span>
+							</div>
+							<div id="form_group_vendor_email" class="form-group has-feedback">
+								<i class="glyphicon glyphicon-envelope form-control-feedback"></i>
+								<input type="email" class="form-control" id="vendor_email"
+									name="vendor_email" placeholder="email" th:field="*{email}">
+								<span class="error_message" id="vendor_email_error_message"
+									hidden="true"></span>
+							</div>
+							<div id="form_group_vendor_pic" class="form-group has-feedback">
+								<i class="glyphicon glyphicon-eye-close form-control-feedback"></i>
+								<input type="text" class="form-control" id="vendor_pic"
+									name="vendor_pic" placeholder="pic" th:field="*{pic}">
+								<span class="error_message" id="vendor_pic_error_message"
+									hidden="true"></span>
+							</div>
+							<div id="form_group_vendor_description" class="form-group">
+								<textarea class="form-control" th:field="*{desc}"
+									id="vendor_description" name="vendor_description" rows="3"
+									placeholder="description"></textarea>
+								<span class="error_message" id="vendor_descrption_error_message"
+									hidden="true"></span>
+							</div>
+							<div id="form_group_vendor_address" class="form-group">
+								<textarea class="form-control" th:field="*{address}"
+									id="vendor_address" name="vendor_address" rows="3"
+									placeholder="Address"></textarea>
+								<span class="error_message" id="vendor_address_error_message"
+									hidden="true"></span>
+							</div>
+							<button id="register_vendor_button" type="submit"
+								class="btn btn-warning" style="width: 100%" disabled="true">Submit</button>
+						</div>
+						<div class="col-sm-6">
+							<div class="col-sm-6">
+								<div class="panel panel-default">
+									<div class="panel-heading">Available Type</div>
+									<div class="panel-body" style="padding: 0%">
+										<select id="available_category_list" multiple
+											class="form-control" style="height: 200px">
+										</select>
+										<button onclick="pickCategory()" type="button"
+											class="btn btn-warning" style="width: 100%">pick >></button>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-6">
+								<div class="panel panel-default">
+									<div class="panel-heading">Picked Type</div>
+									<div class="panel-body" style="padding: 0%">
+										<select th:field="*{vendorType}" id="choosen_category_list"
+											multiple class="form-control" style="height: 200px">
+										</select>
+										<button onclick="cancelCategory()" type="button"
+											class="btn btn-warning" style="width: 100%">< cancel</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- end of panel body -->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

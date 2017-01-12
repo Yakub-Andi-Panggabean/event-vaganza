@@ -15,7 +15,8 @@ public class PackageVenue {
   public static final String TABLE_NAME = "package_venue";
 
   @OneToOne
-  @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "type")})
+  @JoinColumns({@JoinColumn(name = "vendor_id"),
+      @JoinColumn(name = "vendor_type", columnDefinition = "CHAR(2)")})
   Vendor vendor;
 
   @Id
@@ -54,9 +55,6 @@ public class PackageVenue {
 
   @Column(name = "minimum_payment", nullable = false)
   private int minimumPayment;
-
-  @Column(name = "vendor_type", nullable = false, length = 2)
-  private String vendorType;
 
   public String getVenueId() {
     return venueId;
@@ -152,14 +150,6 @@ public class PackageVenue {
 
   public void setMinimumPayment(int minimumPayment) {
     this.minimumPayment = minimumPayment;
-  }
-
-  public String getVendorType() {
-    return vendorType;
-  }
-
-  public void setVendorType(String vendorType) {
-    this.vendorType = vendorType;
   }
 
   public Vendor getVendor() {

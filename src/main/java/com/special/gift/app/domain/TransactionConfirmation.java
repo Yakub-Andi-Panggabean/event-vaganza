@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = TransactionConfirmation.TABLE_NAME)
 public class TransactionConfirmation {
 
-  public static final String TABLE_NAME = "need_confirm_transaction";
+  public static final String TABLE_NAME = "need_confirmation";
 
   @Id
   @Column(name = "transaction_id", nullable = false, length = 10)

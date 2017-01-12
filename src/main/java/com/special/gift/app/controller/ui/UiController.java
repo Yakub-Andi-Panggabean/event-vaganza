@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.special.gift.app.domain.VendorDesc;
 import com.special.gift.app.dto.UserDto;
+import com.special.gift.app.dto.VendorDto;
 import com.special.gift.app.service.VendorDescService;
 
 @Controller
@@ -29,6 +30,7 @@ public class UiController {
   public static final String HELP = PATH + "help";
   public static final String SEARCH = PATH + "search";
   public static final String NOTIFICATION = PATH + "notification";
+  public static final String VENDOR_REGISTER = PATH + "vendor-registration";
 
   // used for category > child > grandchild
   public static final String CATEGORIES = PATH + "categories";
@@ -38,6 +40,13 @@ public class UiController {
   @Inject
   private VendorDescService vendorDescService;
 
+  /**
+   * mapping for home page
+   *
+   * @param model
+   * @param session
+   * @return
+   */
   @RequestMapping(method = RequestMethod.GET)
   public String renderIndex(Model model, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
@@ -47,41 +56,77 @@ public class UiController {
     return "fragments/main";
   }
 
+  /**
+   *
+   * mapping for register page
+   *
+   * @param model
+   * @return
+   */
   @RequestMapping(value = REGISTER, method = RequestMethod.GET)
   public String renderRegisterPage(Model model) {
     model.addAttribute("user", new UserDto());
     return "/contents/register";
   }
 
+  /**
+   *
+   * mapping for search page
+   *
+   * @param model
+   * @param session
+   * @return
+   */
   @RequestMapping(value = SEARCH, method = RequestMethod.GET)
   public String renderSearchPage(Model model, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
     return "/contents/search";
   }
 
+
+  /**
+   *
+   * mapping for root category page
+   *
+   * @param model
+   * @param session
+   * @return
+   */
   @RequestMapping(value = CATEGORIES, method = RequestMethod.GET)
   public String renderCategoriesPage(Model model, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
     return "/contents/parent-categories";
   }
 
+  /**
+   *
+   * mapping for detail category page
+   *
+   * @param model
+   * @param criteria
+   * @param id
+   * @param session
+   * @return
+   */
   @RequestMapping(value = DETAIL, method = RequestMethod.GET)
-  public String renderDetailPage(Model model, @PathVariable(value = "criteria") String criteria,
+  public String renderDetailPage(Model model, @PathVariable(value = "criteria") String name,
       @RequestParam(value = "c") String id, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
 
-    if (id == null || criteria == null || id == null) {
+    if (id == null || name == null || id == null) {
       return "redirect:/";
     } else {
-      // used for url
-      model.addAttribute("parent", criteria.replace(" ", "-"));
-
-      // used for banner
-      model.addAttribute("category_name", criteria.replace("-", " "));
-
-      log.debug("parent_from detail : {}", criteria);
 
       final VendorDesc vendorDesc = vendorDescService.findById(id);
+
+      // used for url
+      model.addAttribute("parent", name.replace(" ", "-"));
+
+      // used for banner
+      model.addAttribute("category_name", name.replace("-", " "));
+      model.addAttribute("category_description", vendorDesc.getVendorDescription());
+
+      log.debug("parent_from detail : {}", name);
 
       if (vendorDesc == null) {
         return "redirect:/";
@@ -102,13 +147,23 @@ public class UiController {
   }
 
 
+  /**
+   *
+   * mapping for second level detail category page
+   *
+   * @param model
+   * @param criteria
+   * @param child
+   * @param id
+   * @param session
+   * @return
+   */
   @RequestMapping(value = DETAIL_CHILD, method = RequestMethod.GET)
-  public String renderDetailChildPage(Model model,
-      @PathVariable(value = "criteria") String criteria,
+  public String renderDetailChildPage(Model model, @PathVariable(value = "criteria") String name,
       @PathVariable(value = "child") String child, @RequestParam(value = "c") String id,
       HttpSession session) {
 
-    if (id == null || criteria == null || id == null) {
+    if (id == null || name == null || id == null) {
       return "redirect:/";
     } else {
 
@@ -117,6 +172,7 @@ public class UiController {
       if (parent == null) {
         return "redirect:/";
       } else {
+        final VendorDesc vendorDesc = vendorDescService.findById(id);
 
         model.addAttribute("user", session.getAttribute("user"));
 
@@ -127,18 +183,19 @@ public class UiController {
         log.debug("child name : {}", child.replace("-", " "));
         model.addAttribute("child_name", child.replace("-", " "));
 
+        model.addAttribute("child_description", vendorDesc.getVendorDescription());
+
         // parent for parent url
-        model.addAttribute("parent", parent.getVendorDescription().replace(" ", "-").toLowerCase());
+        model.addAttribute("parent", parent.getVendorTypeName().replace(" ", "-").toLowerCase());
 
         // parent for parent banner
-        model.addAttribute("parentName", parent.getVendorDescription());
+        model.addAttribute("parentName", parent.getVendorTypeName());
 
 
-        final VendorDesc vendorDesc = vendorDescService.findById(id);
 
         if (vendorDesc == null) {
           return "redirect:/".concat("categories/")
-              .concat(parent.getVendorDescription().replace(" ", "-").toLowerCase()).concat("?")
+              .concat(parent.getVendorTypeName().replace(" ", "-").toLowerCase()).concat("?")
               .concat("c=").concat(parent.getVendorType());
         }
 
@@ -156,11 +213,26 @@ public class UiController {
     }
   }
 
+  /**
+   *
+   * mapping for help page
+   *
+   * @param model
+   * @return
+   */
   @RequestMapping(value = HELP, method = RequestMethod.GET)
   public String renderHelpPage(Model model) {
     return "/outer/help";
   }
 
+
+  /**
+   *
+   * mapping for notification page
+   *
+   * @param model
+   * @return
+   */
   @RequestMapping(value = NOTIFICATION, method = RequestMethod.GET)
   public String renderNotificationPage(Model model) {
     log.debug("fetch flash attribute : {}", model.asMap().get("existKey"));
@@ -173,6 +245,17 @@ public class UiController {
     return "/outer/notification";
   }
 
+
+  @RequestMapping(value = VENDOR_REGISTER, method = RequestMethod.GET)
+  public String renderVendorRegistrationPage(Model model, HttpSession session) {
+    if (session.getAttribute("user") == null) {
+      return "redirect:/";
+    } else {
+      model.addAttribute("user", session.getAttribute("user"));
+      model.addAttribute("vendor", new VendorDto());
+      return "/contents/vendor-registration";
+    }
+  }
 
 
 }

@@ -43,11 +43,8 @@ public class BookingTransaction {
   @Column(name = "price_all", nullable = false)
   private int priceAll;
 
-  @Column(name = "method_payment", nullable = false)
+  @Column(name = "methode_payment", nullable = false)
   private char methodPayment;
-
-  @Column(name = "vendor_type", nullable = false, length = 2)
-  private String vendorType;
 
   @Column(name = "price_payment", nullable = false)
   private int pricePayment;
@@ -57,7 +54,8 @@ public class BookingTransaction {
   private User user;
 
   @OneToOne
-  @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "type")})
+  @JoinColumns({@JoinColumn(name = "vendor_id"),
+      @JoinColumn(name = "vendor_type", columnDefinition = "CHAR(3)")})
   private Vendor vendor;
 
   @OneToOne(targetEntity = TransactionConfirmation.class, cascade = CascadeType.ALL,
@@ -142,14 +140,6 @@ public class BookingTransaction {
 
   public void setMethodPayment(char methodPayment) {
     this.methodPayment = methodPayment;
-  }
-
-  public String getVendorType() {
-    return vendorType;
-  }
-
-  public void setVendorType(String vendorType) {
-    this.vendorType = vendorType;
   }
 
   public int getPricePayment() {

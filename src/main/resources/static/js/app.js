@@ -14,6 +14,8 @@ $(document).ready(function() {
  */
 function init() {
 	validateRegisterForm();
+	validateVendorRegistrationForm();
+	fetchAllAvailableCategory();
 }
 
 function showModal() {
@@ -69,6 +71,38 @@ function invalidate() {
 	});
 }
 
+function fetchAllAvailableCategory() {
+	$.ajax({
+		url : 'api/categories',
+		method : 'GET',
+		success : function(data) {
+			var result = "";
+			$.each(data.contents.content, function(index, value) {
+				result = result.concat("<option value='" + value.vendorType
+						+ "'>" + value.vendorTypeName + "</option>");
+			});
+			$('#available_category_list').html(result);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log("error occured : " + errorThrown);
+		}
+	});
+}
 
+function pickCategory() {
+	var selected = $('#available_category_list').find(':selected');
+	// console.log("selected id "+selected.attr('id'));
+	selected.remove();
+	$('#choosen_category_list').append(selected);
+	$("#choosen_category_list").prop("selected", true);
+	$("#choosen_category_list").validateOptions();
 
+}
 
+function cancelCategory() {
+	var selected = $('#choosen_category_list').find(':selected');
+	selected.remove();
+	$('#available_category_list').append(selected);
+	$("#choosen_category_list").prop("selected", true);
+	$("#choosen_category_list").validateOptions();
+}

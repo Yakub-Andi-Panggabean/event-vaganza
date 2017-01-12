@@ -26,7 +26,7 @@ public class Invoice {
   @Column(name = "name_booking", nullable = false, length = 50)
   private String nameBooking;
 
-  @Column(name = "event_type", nullable = false, length = 20)
+  @Column(name = "event_type", columnDefinition = "CHAR(2)", nullable = false, length = 20)
   private String eventType;
 
   @Column(name = "event_place", nullable = false, length = 50)

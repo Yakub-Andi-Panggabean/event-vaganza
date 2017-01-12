@@ -13,7 +13,7 @@ public class VendorId implements Serializable {
   @Column(name = "vendor_id", nullable = false, length = 10)
   private String vendorId;
 
-  @Column(name = "vendor_type", nullable = false, length = 2)
+  @Column(name = "vendor_type", columnDefinition = "CHAR(2)", nullable = false)
   private String type;
 
   public String getVendorId() {

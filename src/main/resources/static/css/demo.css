@@ -13,10 +13,6 @@ body {
 }
 pre { margin: 0; padding: 10px 20px !important;}
 
-footer {
-  margin-top: 200px;
-}
-
 .container, .jumbotron .container { width: auto; max-width: 1170px; }
 
 .jumbotron {

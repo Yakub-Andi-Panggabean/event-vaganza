@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.special.gift.app.domain.VendorDesc;
@@ -30,7 +31,7 @@ public class VendorDescServiceBean implements VendorDescService {
 
     for (final VendorDesc vendorDesc : categories) {
       if (vendorDesc.getVendorType().substring(1, 2).equals("0")) {
-        vendorDesc.setVendorDescription(vendorDesc.getVendorDescription().toLowerCase());
+        vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
         contents.add(vendorDesc);
       }
     }
@@ -64,7 +65,7 @@ public class VendorDescServiceBean implements VendorDescService {
 
     for (final VendorDesc vendorDesc : categories) {
       if (vendorDesc.getVendorType().substring(0, 1).equals(parent.substring(0, 1))) {
-        vendorDesc.setVendorDescription(vendorDesc.getVendorDescription().toLowerCase());
+        vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
         if (!parent.equals(vendorDesc.getVendorType())
             && !vendorDesc.getVendorType().substring(1, 2).equals("0")) {
           contents.add(vendorDesc);
@@ -97,8 +98,12 @@ public class VendorDescServiceBean implements VendorDescService {
 
   @Override
   public VendorDesc findById(String id) {
-    // TODO Auto-generated method stub
     return repository.findOne(id);
+  }
+
+  @Override
+  public Page<VendorDesc> findAll() {
+    return repository.findAll(new PageRequest(0, (int) repository.count()));
   }
 
 

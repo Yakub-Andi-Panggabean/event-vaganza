@@ -62,8 +62,8 @@
 						<li class="list-group-item"
 							th:each="category,rowStat : ${categories1}"
 							th:id="${category.vendorType}"><a
-							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorDescription,' ','-')},c=${category.vendorType})}"
-							th:text="${#strings.capitalize(category.vendorDescription)}"></a></li>
+							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
+							th:text="${#strings.capitalize(category.vendorTypeName)}"></a></li>
 					</ul>
 				</div>
 				<div class="col-md-4">
@@ -71,8 +71,8 @@
 						<li class="list-group-item"
 							th:each="category,rowStat : ${categories2}"
 							th:id="${category.vendorType}"><a
-							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorDescription,' ','-')},c=${category.vendorType})}"
-							th:text="${#strings.capitalize(category.vendorDescription)}"></a></li>
+							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
+							th:text="${#strings.capitalize(category.vendorTypeName)}"></a></li>
 					</ul>
 				</div>
 				<div class="col-md-4">
@@ -80,8 +80,8 @@
 						<li class="list-group-item"
 							th:each="category,rowStat : ${categories3}"
 							th:id="${category.vendorType}"><a
-							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorDescription,' ','-')},c=${category.vendorType})}"
-							th:text="${#strings.capitalize(category.vendorDescription)}"></a></li>
+							th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
+							th:text="${#strings.capitalize(category.vendorTypeName)}"></a></li>
 					</ul>
 				</div>
 			</div>

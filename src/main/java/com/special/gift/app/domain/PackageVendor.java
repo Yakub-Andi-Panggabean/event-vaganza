@@ -45,9 +45,6 @@ public class PackageVendor {
   @Column(name = "discount_rate", nullable = false)
   private int discountRate;
 
-  @Column(name = "vendor_type", nullable = false, length = 3)
-  private String vendorType;
-
   @Column(name = "minimum_payment", nullable = false)
   private int minimumPayment;
 
@@ -55,7 +52,8 @@ public class PackageVendor {
   private int timePackage;
 
   @OneToOne
-  @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "type")})
+  @JoinColumns({@JoinColumn(name = "vendor_id"),
+      @JoinColumn(name = "vendor_type", columnDefinition = "CHAR(2)")})
   private Vendor vendor;
 
   public String getPackageId() {
@@ -136,14 +134,6 @@ public class PackageVendor {
 
   public void setDiscountRate(int discountRate) {
     this.discountRate = discountRate;
-  }
-
-  public String getVendorType() {
-    return vendorType;
-  }
-
-  public void setVendorType(String vendorType) {
-    this.vendorType = vendorType;
   }
 
   public int getMinimumPayment() {

@@ -9,13 +9,16 @@ import javax.persistence.Table;
 @Table(name = VendorDesc.TABLE_NAME)
 public class VendorDesc {
 
-  public static final String TABLE_NAME = "vendor_desc";
+  public static final String TABLE_NAME = "vendor_description";
 
   @Id
-  @Column(name = "vendor_type", nullable = false, length = 2)
+  @Column(name = "vendor_type", columnDefinition = "CHAR(2)", nullable = false)
   private String vendorType;
 
-  @Column(name = "vendor_desc", nullable = false, length = 100)
+  @Column(name = "vendor_type_name", nullable = false, length = 50)
+  private String vendorTypeName;
+
+  @Column(name = "vendor_description", nullable = false, length = 100)
   private String vendorDescription;
 
   public String getVendorType() {
@@ -34,10 +37,12 @@ public class VendorDesc {
     this.vendorDescription = vendorDescription;
   }
 
-  @Override
-  public String toString() {
-    return "VendorDesc [vendorType=" + vendorType + ", vendorDescription=" + vendorDescription
-        + "]";
+  public String getVendorTypeName() {
+    return vendorTypeName;
+  }
+
+  public void setVendorTypeName(String vendorTypeName) {
+    this.vendorTypeName = vendorTypeName;
   }
 
 

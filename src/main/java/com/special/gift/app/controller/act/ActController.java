@@ -70,8 +70,6 @@ public class ActController {
       final User user = userService.findUserByPrincipal(vendor.getUser());
       if (user != null) {
         log.debug("user : {}", user.toString());
-        vendor.setPic(user.getUsername());
-        vendor.setUser(user.getUserId());
         Vendor target = null;
         for (final String type : vendor.getVendorType().split(",")) {
           target = new Vendor();
@@ -80,6 +78,7 @@ public class ActController {
           id.setVendorId("5000000000");
           BeanUtils.copyProperties(vendor, target);
           target.setVendorId(id);
+          target.setUser(user);
           vendorService.addNewUserVendor(target);
         }
       }

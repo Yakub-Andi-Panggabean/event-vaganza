@@ -16,6 +16,18 @@ public class VendorId implements Serializable {
   @Column(name = "vendor_type", columnDefinition = "CHAR(2)", nullable = false)
   private String type;
 
+
+  public VendorId() {
+    super();
+    // TODO Auto-generated constructor stub
+  }
+
+  public VendorId(String vendorId, String type) {
+    super();
+    this.vendorId = vendorId;
+    this.type = type;
+  }
+
   public String getVendorId() {
     return vendorId;
   }

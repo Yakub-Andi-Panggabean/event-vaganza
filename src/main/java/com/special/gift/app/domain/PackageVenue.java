@@ -15,8 +15,8 @@ public class PackageVenue {
   public static final String TABLE_NAME = "package_venue";
 
   @OneToOne
-  @JoinColumns({@JoinColumn(name = "vendor_id"),
-      @JoinColumn(name = "vendor_type", columnDefinition = "CHAR(2)")})
+  @JoinColumns({@JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id"), @JoinColumn(
+      name = "vendor_type", referencedColumnName = "vendor_type", columnDefinition = "CHAR(2)")})
   Vendor vendor;
 
   @Id

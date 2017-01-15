@@ -37,9 +37,9 @@
 							</div>
 							<div id="form_group_vendor_phone" class="form-group has-feedback">
 								<i class="glyphicon glyphicon-earphone form-control-feedback"></i>
-								<input type="text" class="form-control" id="vendor_phone" name="vendor_phone"
-									placeholder="Phone" th:field="*{phone}"> <span
-									class="error_message" id="vendor_phone_error_message"
+								<input type="text" class="form-control" id="vendor_phone"
+									name="vendor_phone" placeholder="Phone" th:field="*{phone}">
+								<span class="error_message" id="vendor_phone_error_message"
 									hidden="true"></span>
 							</div>
 							<div id="form_group_vendor_email" class="form-group has-feedback">
@@ -81,8 +81,9 @@
 										<select id="available_category_list" multiple
 											class="form-control" style="height: 200px">
 										</select>
-										<button onclick="pickCategory()" type="button"
-											class="btn btn-warning" style="width: 100%">pick >></button>
+										<button id="button_pick_vendor_type" onclick="pickCategory()"
+											type="button" class="btn btn-warning" style="width: 100%">pick
+											>></button>
 									</div>
 								</div>
 							</div>
@@ -94,7 +95,8 @@
 										<select th:field="*{vendorType}" id="choosen_category_list"
 											multiple class="form-control" style="height: 200px">
 										</select>
-										<button onclick="cancelCategory()" type="button"
+										<button id="button_cancel_vendor_type"
+											onclick="cancelCategory()" type="button"
 											class="btn btn-warning" style="width: 100%">< cancel</button>
 									</div>
 								</div>

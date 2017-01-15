@@ -801,20 +801,40 @@ function validateVendorRegistrationForm() {
 
 			});
 
-	isVendorTypeValid = $("#choosen_category_list").validateOptions();
-	
-	if (isVendorTypeValid) {
-		
-		isVendorInputValid = isVendorEmailValid && isVendorNameValid
-				&& isVendorHandphoneValid && isVendorPhoneValid
-				&& isVendorPicValid && isVendorDescValid
-				&& isVendorAddressValid && isVendorTypeValid;
+	$("#button_pick_vendor_type").click(
+			function() {
+				isVendorTypeValid = $("#choosen_category_list")
+						.validateOptions();
 
-		if (isVendorInputValid) {
-			$('#register_vendor_button').prop('disabled', false)
-		} else {
-			$('#register_vendor_button').prop('disabled', true)
-		}
-	}
+				isVendorInputValid = isVendorEmailValid && isVendorNameValid
+						&& isVendorHandphoneValid && isVendorPhoneValid
+						&& isVendorPicValid && isVendorDescValid
+						&& isVendorAddressValid && isVendorTypeValid;
+
+				if (isVendorInputValid) {
+					$('#register_vendor_button').prop('disabled', false)
+				} else {
+					$('#register_vendor_button').prop('disabled', true)
+				}
+
+			});
+
+	$("#button_cancel_vendor_type").click(
+			function() {
+				isVendorTypeValid = $("#choosen_category_list")
+						.validateOptions();
+
+				isVendorInputValid = isVendorEmailValid && isVendorNameValid
+						&& isVendorHandphoneValid && isVendorPhoneValid
+						&& isVendorPicValid && isVendorDescValid
+						&& isVendorAddressValid && isVendorTypeValid;
+
+				if (isVendorInputValid) {
+					$('#register_vendor_button').prop('disabled', false)
+				} else {
+					$('#register_vendor_button').prop('disabled', true)
+				}
+
+			});
 
 }

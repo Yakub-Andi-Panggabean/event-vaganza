@@ -1,11 +1,13 @@
 package com.special.gift.app.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -51,9 +53,9 @@ public class PackageVendor {
   @Column(name = "time_package", nullable = false)
   private int timePackage;
 
-  @OneToOne
-  @JoinColumns({@JoinColumn(name = "vendor_id"),
-      @JoinColumn(name = "vendor_type", columnDefinition = "CHAR(2)")})
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+  @JoinColumns({@JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id"), @JoinColumn(
+      name = "vendor_type", referencedColumnName = "vendor_type", columnDefinition = "CHAR(2)")})
   private Vendor vendor;
 
   public String getPackageId() {
@@ -152,6 +154,12 @@ public class PackageVendor {
     this.timePackage = timePackage;
   }
 
+  public Vendor getVendor() {
+    return vendor;
+  }
 
+  public void setVendor(Vendor vendor) {
+    this.vendor = vendor;
+  }
 
 }

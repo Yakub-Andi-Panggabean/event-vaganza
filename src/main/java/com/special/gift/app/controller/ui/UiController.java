@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.special.gift.app.domain.VendorDesc;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.dto.VendorDto;
+import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.VendorDescService;
 
 @Controller
@@ -26,19 +27,25 @@ public class UiController {
   private static final Logger log = LoggerFactory.getLogger(UiController.class);
 
   public static final String PATH = "/";
-  public static final String REGISTER = PATH + "register";
-  public static final String HELP = PATH + "help";
-  public static final String SEARCH = PATH + "search";
-  public static final String NOTIFICATION = PATH + "notification";
-  public static final String VENDOR_REGISTER = PATH + "vendor-registration";
+  public static final String REGISTER = "register";
+  public static final String HELP = "help";
+  public static final String SEARCH = "search";
+  public static final String NOTIFICATION = "notification";
+  public static final String VENDOR_REGISTER = "vendor-registration";
 
   // used for category > child > grandchild
-  public static final String CATEGORIES = PATH + "categories";
-  public static final String DETAIL = PATH + "categories/{criteria}";
-  public static final String DETAIL_CHILD = PATH + "categories/{criteria}/{child}";
+  public static final String CATEGORIES = "categories";
+  public static final String DETAIL = "categories/{criteria}";
+  public static final String DETAIL_CHILD = "categories/{criteria}/{child}";
+
+  // package
+  public static final String PACKAGE_DETAIL = "/packages/{type}/{packageId}";
 
   @Inject
   private VendorDescService vendorDescService;
+
+  @Inject
+  private ListingService listingService;
 
   /**
    * mapping for home page
@@ -113,24 +120,24 @@ public class UiController {
       @RequestParam(value = "c") String id, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
 
-    if (id == null || name == null || id == null) {
+    if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
       return "redirect:/";
     } else {
 
       final VendorDesc vendorDesc = vendorDescService.findById(id);
-
-      // used for url
-      model.addAttribute("parent", name.replace(" ", "-"));
-
-      // used for banner
-      model.addAttribute("category_name", name.replace("-", " "));
-      model.addAttribute("category_description", vendorDesc.getVendorDescription());
 
       log.debug("parent_from detail : {}", name);
 
       if (vendorDesc == null) {
         return "redirect:/";
       } else {
+
+        // used for url
+        model.addAttribute("parent", name.replace(" ", "-"));
+
+        // used for banner
+        model.addAttribute("category_name", name.replace("-", " "));
+        model.addAttribute("category_description", vendorDesc.getVendorDescription());
 
         model.addAttribute("children1",
             vendorDescService.findAllChildren(vendorDesc.getVendorType(), 0, 6));
@@ -163,7 +170,7 @@ public class UiController {
       @PathVariable(value = "child") String child, @RequestParam(value = "c") String id,
       HttpSession session) {
 
-    if (id == null || name == null || id == null) {
+    if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
       return "redirect:/";
     } else {
 
@@ -174,41 +181,42 @@ public class UiController {
       } else {
         final VendorDesc vendorDesc = vendorDescService.findById(id);
 
-        model.addAttribute("user", session.getAttribute("user"));
-
-        // for request param
-        model.addAttribute("root_type", parent.getVendorType());
-
-        // child name banner
-        log.debug("child name : {}", child.replace("-", " "));
-        model.addAttribute("child_name", child.replace("-", " "));
-
-        model.addAttribute("child_description", vendorDesc.getVendorDescription());
-
-        // parent for parent url
-        model.addAttribute("parent", parent.getVendorTypeName().replace(" ", "-").toLowerCase());
-
-        // parent for parent banner
-        model.addAttribute("parentName", parent.getVendorTypeName());
-
-
-
         if (vendorDesc == null) {
           return "redirect:/".concat("categories/")
               .concat(parent.getVendorTypeName().replace(" ", "-").toLowerCase()).concat("?")
               .concat("c=").concat(parent.getVendorType());
+        } else {
+          model.addAttribute("user", session.getAttribute("user"));
+
+          // for request param
+          model.addAttribute("root_type", parent.getVendorType());
+
+          // child name banner
+          log.debug("child name : {}", child.replace("-", " "));
+          model.addAttribute("child_name", child.replace("-", " "));
+
+          model.addAttribute("child_description", vendorDesc.getVendorDescription());
+
+          // parent for parent url
+          model.addAttribute("parent", parent.getVendorTypeName().replace(" ", "-").toLowerCase());
+
+          // parent for parent banner
+          model.addAttribute("parentName", parent.getVendorTypeName());
+
+
+          model.addAttribute("children1",
+              vendorDescService.findAllChildren(vendorDesc.getVendorType(), 0, 6));
+          model.addAttribute("children2",
+              vendorDescService.findAllChildren(vendorDesc.getVendorType(), 6, 13));
+          model.addAttribute("children3",
+              vendorDescService.findAllChildren(vendorDesc.getVendorType(), 13, 19));
+
+          log.debug("vendor desc : {}", vendorDesc.toString());
+
+          return "/contents/finder";
         }
 
-        model.addAttribute("children1",
-            vendorDescService.findAllChildren(vendorDesc.getVendorType(), 0, 6));
-        model.addAttribute("children2",
-            vendorDescService.findAllChildren(vendorDesc.getVendorType(), 6, 13));
-        model.addAttribute("children3",
-            vendorDescService.findAllChildren(vendorDesc.getVendorType(), 13, 19));
 
-        log.debug("vendor desc : {}", vendorDesc.toString());
-
-        return "/contents/finder";
       }
     }
   }
@@ -257,5 +265,14 @@ public class UiController {
     }
   }
 
+  @RequestMapping(value = PACKAGE_DETAIL, method = RequestMethod.GET)
+  public String renderPackageDetailPage(@PathVariable(value = "type") String type,
+      @PathVariable(value = "packageId") String id) {
+    log.debug("type : {}", type);
+    log.debug("id : {}", id);
+
+
+    return "/contents/package-detail";
+  }
 
 }

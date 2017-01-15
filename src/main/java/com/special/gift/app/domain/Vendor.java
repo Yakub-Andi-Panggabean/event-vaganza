@@ -1,5 +1,7 @@
 package com.special.gift.app.domain;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -7,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -39,9 +42,12 @@ public class Vendor {
   @Column(name = "vendor_email", nullable = false, length = 100)
   private String email;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = true)
   private User user;
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "vendor")
+  private List<PackageVendor> packageVendor;
 
 
   public String getName() {
@@ -115,5 +121,22 @@ public class Vendor {
   public void setVendorId(VendorId vendorId) {
     this.vendorId = vendorId;
   }
+
+  public List<PackageVendor> getPackageVendor() {
+    return packageVendor;
+  }
+
+  public void setPackageVendor(List<PackageVendor> packageVendor) {
+    this.packageVendor = packageVendor;
+  }
+
+  @Override
+  public String toString() {
+    return "Vendor [vendorId=" + vendorId + ", name=" + name + ", desc=" + desc + ", address="
+        + address + ", handphone=" + handphone + ", phone=" + phone + ", pic=" + pic + ", email="
+        + email + ", user=" + user + "]";
+  }
+
+
 
 }

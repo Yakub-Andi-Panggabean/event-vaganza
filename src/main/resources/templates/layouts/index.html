@@ -10,30 +10,25 @@
 
 <link href="http://cdn.phpoll.com/css/animate.css" rel="stylesheet">
 <style>
-body {
-	padding-top: 70px;
-}
-
-<
 style>.carousel-inner>.item>img, .carousel-inner>.item>a>img {
 	width: 70%;
 	margin: auto;
 }
 </style>
-</style>
 </head>
 <body>
-
-	<div>
-		<header th:include="${header} :: header">
-			<p>This is default header area for default layout</p>
-		</header>
-		<section th:replace="${view} :: content">
-			<p>This is default content area for default layout</p>
-		</section>
-		<footer th:replace="${footer} :: footer">
-			<p>This is default footer area for default layout</p>
-		</footer>
+	<div class="container-fluid">
+		<div class="row">
+			<header class="col-xs-12 col-md-12" th:include="${header} :: header">
+				<p>This is default header area for default layout</p>
+			</header>
+			<section style="padding-top:5%;" class="col-xs-12 col-md-12" th:include="${view} :: content">
+				<p>This is default content area for default layout</p>
+			</section>
+			<footer class="col-xs-12 col-md-12" th:replace="${footer} :: footer">
+				<p>This is default footer area for default layout</p>
+			</footer>
+		</div>
 	</div>
 
 
@@ -90,6 +85,7 @@ style>.carousel-inner>.item>img, .carousel-inner>.item>a>img {
 <script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/js/validation.js}"></script>
 <script th:src="@{/js/handsome-plugin.js}"></script>
+<script th:src="@{/js/jquery.twbsPagination.js}"></script>
 <script
 	src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css"></script>
 <script>

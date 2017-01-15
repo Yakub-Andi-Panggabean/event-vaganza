@@ -1,5 +1,8 @@
 package com.special.gift.app.util;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +40,18 @@ public class CommonUtil {
     final Matcher matcher = pattern.matcher(email);
     if (!matcher.matches())
       throw new RuntimeException(new StringBuilder(email).append(" is not valid email").toString());
+  }
+
+  public static String convertIntoCurrencyFormat(int price) {
+    final double dPrice = price;
+    final NumberFormat formatter = NumberFormat.getCurrencyInstance();
+    final DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+    dfs.setCurrencySymbol("Rp ");
+    ((DecimalFormat) formatter).setDecimalFormatSymbols(dfs);
+    if (Math.round(dPrice * 100) % 100 == 0) {
+      formatter.setMaximumFractionDigits(0);
+    }
+    return formatter.format(dPrice);
   }
 
 }

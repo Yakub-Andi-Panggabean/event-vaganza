@@ -46,7 +46,7 @@ $.fn.validateInputNotEmpty = function(messageId, formGroup, length, label) {
 				.html(label + " length has to be more than " + length);
 		$('#' + messageId).show();
 		$("#" + formGroup).addClass('has-error');
-		isUserTrue = false;
+		trigger = false;
 	} else {
 		$('#' + messageId).html("");
 		$('#' + messageId).hide();
@@ -67,18 +67,18 @@ $.fn.validateNumberInput = function(messageId, formGroup, length, label) {
 		$('#' + messageId).html(label + " has to be number");
 		$('#' + messageId).show();
 		$("#" + formGroup).addClass('has-error');
-		isPhoneTrue = false;
+		trigger = false;
 	} else if (input.length > 0 && input.length < length) {
 		$('#' + messageId)
 				.html(label + " length has to be more than " + length);
 		$('#' + messageId).show();
 		$("#" + formGroup).addClass('has-error');
-		isPhoneTrue = false;
+		trigger = false;
 	} else {
 		$('#' + messageId).html("");
 		$('#' + messageId).hide();
 		$("#" + formGroup).removeClass('has-error');
-		isPhoneTrue = true;
+		trigger = true;
 	}
 
 	return trigger;

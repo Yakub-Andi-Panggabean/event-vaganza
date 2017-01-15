@@ -2,48 +2,42 @@ package com.special.gift.app;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.special.gift.app.domain.PackageVendor;
 import com.special.gift.app.domain.User;
+import com.special.gift.app.domain.Vendor;
+import com.special.gift.app.domain.VendorId;
+import com.special.gift.app.repository.PackageVendorRepository;
 import com.special.gift.app.repository.UserRepository;
+import com.special.gift.app.repository.VendorRepository;
 import com.special.gift.app.util.CommonUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ApplicationTests {
 
+  private static final Logger log = LoggerFactory.getLogger(ApplicationTests.class);
+
   @Autowired
   private UserRepository userRepository;
 
   @Autowired
+  private VendorRepository vendorRepository;
+
+  @Autowired
   private ShaPasswordEncoder passwordEncoder;
 
-  //
+  @Autowired
+  private PackageVendorRepository pVendorRepsitory;
+
   // @Test
-  // public void insertApplicationMenu() {
-  //
-  // final ApplicationMenu applicationMenu = new ApplicationMenu();
-  // applicationMenu.setActive(true);
-  // applicationMenu.setChildren(null);
-  // applicationMenu.setCreatedBy("kotaro minami");
-  // applicationMenu.setCreatedDate(new Date());
-  // applicationMenu.setDescription("register page");
-  // applicationMenu.setLabel("Daftar");
-  // applicationMenu.setParent(null);
-  // applicationMenu.setRole(null);
-  // applicationMenu.setUrl("/register");
-  // repository.save(applicationMenu);
-  //
-  // }
-
-  @Test
   public void insertUser() {
-
-
-
     try {
       final User user = new User();
       user.setEmail("yakub.jobs@gmail.com");
@@ -60,9 +54,50 @@ public class ApplicationTests {
     } catch (final Exception e) {
       e.printStackTrace();
     }
+  }
 
 
+  // @Test
+  public void insertPackageVendor() {
 
+    try {
+      final PackageVendor pVendor = new PackageVendor();
+      pVendor
+          .setPackageImg("http://blog.room34.com/wp-content/uploads/underdog/logo.thumbnail.png");
+      pVendor.setDiscountRate(3);
+      pVendor.setMinimumPayment(200000000);
+      pVendor.setPackageCapacity(100);
+      pVendor.setPackageCategory("xxx");
+      pVendor.setPackageDesc("Package Description");
+      pVendor.setPackageId("50000000");
+      pVendor.setPackageName("Package Example");
+      pVendor.setPackagePrice(300000000);
+      pVendor.setPackagePromo("get one chair");
+      pVendor.setPackageStyle("free style");
+      pVendor.setTimePackage(4);
+
+      final VendorId id = new VendorId();
+      id.setType("80");
+      id.setVendorId("5000000000");
+
+      pVendor.setVendor(vendorRepository.findOne(id));
+
+
+      pVendorRepsitory.save(pVendor);
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+    }
+
+  }
+
+  @Test
+  public void selectVendor() {
+    try {
+      final Vendor vendor = vendorRepository.findOne(new VendorId("5000000000", "80"));
+      log.debug("vendor : {}", vendor.toString());
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+    }
   }
 
 }

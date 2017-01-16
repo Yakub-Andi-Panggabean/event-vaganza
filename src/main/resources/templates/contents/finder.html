@@ -80,13 +80,13 @@
 						<div class="panel-body">
 
 							<div class="form-group has-feedback">
-								<label for="filter_keyword">Cari di kategori ini</label>
+								<label for="filter_keyword_items">Cari di kategori ini</label>
 								<div class="input-group ">
 									<span class="input-group-btn">
 										<button class="btn btn-default" type="button">
 											<span class="glyphicon glyphicon-search"></span>
 										</button>
-									</span> <input type="text" class="form-control" id="filter_keyword"
+									</span> <input type="text" class="form-control" id="filter_keyword_items"
 										placeholder="Search for...">
 								</div>
 								<!-- /input-group -->
@@ -97,44 +97,46 @@
 								<div class="row">
 									<div class="col col-md-6">
 										<input type="text" class="form-control" name="min_price"
-											id="min_price" placeholder="min" />
+											id="filter_min_price_selection" placeholder="min" />
 									</div>
 									<div class="col col-md-6">
 										<input type="text" class="form-control" name="max_price"
-											id="max_price" placeholder="max">
+											id="filter_max_price_selection" placeholder="max">
 									</div>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="max_price">Urutan Berdasarkan</label> <select
+								<label for="package_sorting">Urutkan</label> <select
 									class="form-control" id="package_sorting">
-									<option>Price</option>
-									<option>Recommendation</option>
-									<option>City</option>
+									<option value="cheapest">Termurah</option>
+									<option value="most_expensive">Termahal</option>
+									<option value="capacity">Kapasitas</option>
+									<option value="promo">Promo</option>
+									<option value="discount">Diskon</option>
 								</select>
 							</div>
 
-							<div id="form_group_find_keyword" class="form-group has-feedback">
+							<div class="form-group has-feedback">
 								<i
 									class="glyphicon glyphicon glyphicon-search form-control-feedback"></i>
 								<input type="text" class="form-control" name="capacity"
-									id="capacity" placeholder="kapasitas">
+									id="filter_capacity_selection" placeholder="kapasitas">
 							</div>
 
-							<div id="form_group_find_keyword" class="form-group has-feedback">
+							<div class="form-group has-feedback">
 								<i
 									class="glyphicon glyphicon glyphicon-search form-control-feedback"></i>
-								<input type="text" class="form-control" name="city" id="city"
+								<input type="text" class="form-control" name="filter_city_selection" id="filter_city_selection"
 									placeholder="kota">
 							</div>
 
 							<div class="form-group">
-								<label for="package_type">Package Type</label> <select
-									class="form-control" id="package_type">
-									<option>All</option>
-									<option>Vendor</option>
-									<option>Venue</option>
+								<label for="filter_package_type_selection">Package Type</label> <select
+									class="form-control" id="filter_package_type_selection">
+									<option value="all">All</option>
+									<option value="vendor">Vendor</option>
+									<option value="venue">Venue</option>
 								</select>
 							</div>
 						</div>

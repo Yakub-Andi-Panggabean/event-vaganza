@@ -1,6 +1,6 @@
 //contents of the displayed record
 var pagingPageSize = 12;
-//pagination number
+// pagination number
 var pagingNumber = 5;
 var pages = [];
 
@@ -137,7 +137,7 @@ function fetchItemList(start, limit) {
 	// update dispalay record
 	$.ajax({
 		url : '/api/items/' + start + '/' + limit + '/' + fType,
-		method : 'GET',
+		method : 'POST',
 		success : function(data) {
 			var result = "";
 			var pagination = "";
@@ -175,7 +175,7 @@ function fetchItemList(start, limit) {
 			}
 
 			$('#item_list').html(result);
-			
+
 			$('#pagination').twbsPagination({
 				totalPages : data.contents.totalPages,
 				visiblePages : pagingNumber,
@@ -190,6 +190,94 @@ function fetchItemList(start, limit) {
 			console.log("error occured : " + errorThrown);
 		}
 	});
+}
+
+function fetchItemsSelectionList(start, limit) {
+	var fType = getUrlVars()["c"];
+	var filterKeyword = $('#filter_keyword_items').value();
+	var filterMinPrice = $('#filter_min_price_selection').value();
+	var filterMaxPrice = $('#filter_max_price_selection').value();
+	var filterCapacity = $('filter_capacity_selection').val();
+	var filterCity = $('filter_city_selection').val();
+	var packageSorting = $('#package_sorting').find('option:selected').val();
+	var filterPackageType = ('#filter_package_type_selection$').find(
+			'option:selected').val();
+
+	var filterData = {
+		"keyword" : filterKeyword,
+		"minPrice" : filterMinPrice,
+		"maxPrice" : filterMaxPrice,
+		"capacity" : filterCapacity,
+		"city" : filterCity,
+		"packageType" : filterPackageType
+	}
+
+	var filterSorting;
+	if (packageSorting === 'cheapest') {
+		filterSorting = {
+			propertyName : "price",
+			order : "desc"
+		}
+	} else if (packageSorting === 'most_expensive') {
+		filterSorting = {
+			propertyName : "price",
+			order : "asc"
+		}
+	} else if (packageSorting === 'discount') {
+		filterSorting = {
+			propertyName : "discount",
+			order : "asc"
+		}
+	} else {
+		filterSorting = {
+			propertyName : "capacity",
+			order : "asc"
+		}
+	}
+
+	filterData.sorting = filterSorting;
+
+	$.ajax({
+		url : '/api/items/selection/' + start + '/' + limit + '/' + fType,
+		method : "GET",
+		contentType : 'application/json',
+		data : filterData,
+		success : function(data) {
+
+			$.each(data.contents.content, function(index, value) {
+				result = result.concat("<div class=\"col-sm-6 col-md-3\">");
+				result = result.concat("<a href=" + value.url + ">");
+				result = result.concat("<div class=\"thumbnail\">");
+				result = result.concat("<img class=\"img-fluid\" src=\""
+						+ value.image + "\" alt=\"Responsive image\">");
+				result = result.concat("</a>");
+				result = result.concat("</div>");
+				result = result.concat("<div class=\"caption\">");
+				result = result.concat("<h4>" + value.name + "</h4>");
+				result = result.concat("<p>" + value.price + ".</p>");
+				result = result.concat("</div>");
+				result = result.concat("</div>");
+			});
+
+			// clear array
+			pages = [];
+			// populate all contents into an array
+			for (i = 1; i <= data.contents.totalPages; i++) {
+
+				pagination = "<li id=\"pagination_" + (i - 1)
+						+ "\" ><a onclick=\"fetchItemsSelectionList(" + (i - 1)
+						+ "," + pagingPageSize + ")\">" + i + "</a></li>";
+
+				pages.push(pagination);
+
+			}
+
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log("error occured : " + errorThrown);
+		}
+	});
+
 }
 
 /**

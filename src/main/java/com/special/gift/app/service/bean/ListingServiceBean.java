@@ -36,7 +36,8 @@ public class ListingServiceBean implements ListingService {
   private static final String PACKAGE_VENDOR = "vendors";
 
   @Override
-  public List<ItemListDto> findAllList(HttpServletRequest request, String category) {
+  public List<ItemListDto> findAllList(HttpServletRequest request, String category)
+      throws Exception {
 
     final List<ItemListDto> items = new ArrayList<>();
 
@@ -92,6 +93,7 @@ public class ListingServiceBean implements ListingService {
 
     } catch (final Exception exception) {
       exception.printStackTrace();
+      throw exception;
     }
 
     return items;
@@ -99,93 +101,102 @@ public class ListingServiceBean implements ListingService {
 
   @Override
   public List<ItemListDto> findAllList(HttpServletRequest request, String category,
-      final FilterDto filter) {
+      final FilterDto filter) throws Exception {
     final List<ItemListDto> list = findAllList(request, category);
     final List<ItemListDto> filteredList = new ArrayList<>();
-    for (final ItemListDto item : list) {
+    try {
 
-      // filter capacity
-      if (filter.getCapacity() != null && item.getCapacity() == filter.getCapacity()) {
-        filteredList.add(item);
+      for (final ItemListDto item : list) {
+
+        // filter capacity
+        if (filter.getCapacity() != null && item.getCapacity() == filter.getCapacity()) {
+          filteredList.add(item);
+        }
+
+        // filter city
+        if (filter.getCity() != null && item.getLocation() != null
+            && item.getLocation().equalsIgnoreCase(filter.getCity())) {
+          filteredList.add(item);
+        }
+
+        if (filter.getKeyword() != null
+            && item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase())) {
+          filteredList.add(item);
+        }
+
+        if ((filter.getMaxPrice() != null && filter.getMinPrice() != null)
+            && (item.getIntPrice() <= filter.getMaxPrice()
+                && item.getIntPrice() >= filter.getMinPrice())) {
+          filteredList.add(item);
+        }
+
+        if (filter.getMaxPrice() != null && filter.getMaxPrice() <= item.getIntPrice()) {
+          filteredList.add(item);
+        }
+
+        if (filter.getMinPrice() != null && filter.getMinPrice() >= item.getIntPrice()) {
+          filteredList.add(item);
+        }
+
+        if (filter.getPackageType() != null
+            && filter.getPackageType().equals(item.getPackageType())) {
+          filteredList.add(item);
+        }
+
       }
 
-      // filter city
-      if (filter.getCity() != null && item.getLocation() != null
-          && item.getLocation().equalsIgnoreCase(filter.getCity())) {
-        filteredList.add(item);
-      }
+      if (filter.getSorting() != null) {
 
-      if (filter.getKeyword() != null && filter.getKeyword().equals(item.getName())) {
-        filteredList.add(item);
-      }
+        if (filter.getSorting().getPropertyName().equals("capacity")) {
+          Collections.sort(filteredList, new Comparator<ItemListDto>() {
 
-      if ((filter.getMaxPrice() != null && filter.getMinPrice() != null)
-          && (item.getIntPrice() <= filter.getMaxPrice()
-              && item.getIntPrice() >= filter.getMinPrice())) {
-        filteredList.add(item);
-      }
-
-      if (filter.getMaxPrice() != null && filter.getMaxPrice() <= item.getIntPrice()) {
-        filteredList.add(item);
-      }
-
-      if (filter.getMinPrice() != null && filter.getMinPrice() >= item.getIntPrice()) {
-        filteredList.add(item);
-      }
-
-      if (filter.getPackageType() != null
-          && filter.getPackageType().equals(item.getPackageType())) {
-        filteredList.add(item);
-      }
-    }
-
-    if (filter.getSorting() != null) {
-
-      if (filter.getSorting().getPropertyName().equals("capacity")) {
-        Collections.sort(list, new Comparator<ItemListDto>() {
-
-          @Override
-          public int compare(ItemListDto o1, ItemListDto o2) {
-            if (filter.getSorting().getOrder().equals("asc")) {
-              return o1.getCapacity().compareTo(o2.getCapacity());
-            } else {
-              return o2.getCapacity().compareTo(o1.getCapacity());
+            @Override
+            public int compare(ItemListDto o1, ItemListDto o2) {
+              if (filter.getSorting().getOrder().equals("asc")) {
+                return o1.getCapacity().compareTo(o2.getCapacity());
+              } else {
+                return o2.getCapacity().compareTo(o1.getCapacity());
+              }
             }
-          }
 
-        });
-      }
+          });
+        }
 
 
-      if (filter.getSorting().getPropertyName().equals("price")) {
-        Collections.sort(list, new Comparator<ItemListDto>() {
+        if (filter.getSorting().getPropertyName().equals("price")) {
+          Collections.sort(filteredList, new Comparator<ItemListDto>() {
 
-          @Override
-          public int compare(ItemListDto o1, ItemListDto o2) {
-            if (filter.getSorting().getOrder().equals("asc")) {
-              return o1.getIntPrice().compareTo(o2.getIntPrice());
-            } else {
-              return o2.getIntPrice().compareTo(o1.getIntPrice());
+            @Override
+            public int compare(ItemListDto o1, ItemListDto o2) {
+              if (filter.getSorting().getOrder().equals("asc")) {
+                return o1.getIntPrice().compareTo(o2.getIntPrice());
+              } else {
+                return o2.getIntPrice().compareTo(o1.getIntPrice());
+              }
             }
-          }
-        });
-      }
+          });
+        }
 
 
-      if (filter.getSorting().getPropertyName().equals("discount")) {
-        Collections.sort(list, new Comparator<ItemListDto>() {
+        if (filter.getSorting().getPropertyName().equals("discount")) {
+          Collections.sort(filteredList, new Comparator<ItemListDto>() {
 
-          @Override
-          public int compare(ItemListDto o1, ItemListDto o2) {
-            if (filter.getSorting().getOrder().equals("asc")) {
-              return o1.getDiscountRate().compareTo(o2.getDiscountRate());
-            } else {
-              return o2.getDiscountRate().compareTo(o1.getDiscountRate());
+            @Override
+            public int compare(ItemListDto o1, ItemListDto o2) {
+              if (filter.getSorting().getOrder().equals("asc")) {
+                return o1.getDiscountRate().compareTo(o2.getDiscountRate());
+              } else {
+                return o2.getDiscountRate().compareTo(o1.getDiscountRate());
+              }
             }
-          }
-        });
+          });
+        }
+
       }
 
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+      throw exception;
     }
 
     return filteredList;

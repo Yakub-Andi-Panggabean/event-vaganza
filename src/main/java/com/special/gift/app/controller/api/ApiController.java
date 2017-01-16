@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.VendorDesc;
+import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.service.ListingService;
@@ -74,16 +75,50 @@ public class ApiController {
       @PathVariable(value = "type") String type, HttpServletRequest request) {
 
     log.debug("item type : {}", type);
+    try {
 
-    final List<ItemListDto> list = listingService.findAllList(request, type);
+      final List<ItemListDto> list = listingService.findAllList(request, type);
 
-    final int start = page > 0 ? page * size : page;
+      final int start = page > 0 ? page * size : page;
 
-    final Page<ItemListDto> contents = new PageImpl<>(
-        list.subList(start, (start + size) > list.size() ? list.size() : (start + size)),
-        new PageRequest(page, size), list.size());
+      final Page<ItemListDto> contents = new PageImpl<>(
+          list.subList(start, (start + size) > list.size() ? list.size() : (start + size)),
+          new PageRequest(page, size), list.size());
 
-    return new GenericMultipleResponse<>(true, "success", contents);
+      return new GenericMultipleResponse<>(true, "success", contents);
+
+    } catch (final Exception ex) {
+      return new GenericMultipleResponse<>(false, ex.getMessage(), null);
+    }
+  }
+
+  @PostMapping(value = ITEMS_LIST_API)
+  public GenericMultipleResponse<ItemListDto> retrieveItemSelectionList(
+      @PathVariable(value = "page") int page, @PathVariable(value = "size") int size,
+      @PathVariable(value = "type") String type, @RequestBody FilterDto filterDto,
+      HttpServletRequest request) {
+
+    log.debug("filter properties : {}", filterDto.toString());
+
+    log.debug("item type : {}", type);
+
+    try {
+
+      final List<ItemListDto> list = listingService.findAllList(request, type, filterDto);
+
+      final int start = page > 0 ? page * size : page;
+
+      final Page<ItemListDto> contents = new PageImpl<>(
+          list.subList(start, (start + size) > list.size() ? list.size() : (start + size)),
+          new PageRequest(page, size), list.size());
+
+      return new GenericMultipleResponse<>(true, "success", contents);
+
+    } catch (final Exception ex) {
+      return new GenericMultipleResponse<>(false, ex.getMessage(), null);
+    }
+
+
   }
 
 

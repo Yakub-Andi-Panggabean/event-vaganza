@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container" th:fragment="content">
+		<div class="row container-package-detail">
+			<div class="col-md-4 col-md-offset-4">
+				<form name="user-update" action="#" th:action="@{/user-update}"
+					th:object="${userData}" method="post">
+					<input name="userId" type="hidden"
+						th:value="${existingData.userId}" />
+					<div id="form_group_update_username"
+						class="form-group has-feedback">
+						<i class="glyphicon glyphicon-user form-control-feedback"></i> <input
+							type="text" class="form-control" name="username"
+							id="username_update" placeholder="Name"
+							th:value="${existingData.username}"> <span
+							class="error_message" id="username_update_error_message"
+							hidden="true"></span>
+					</div>
+					<div id="form_group_update_email" class="form-group has-feedback">
+						<i class="glyphicon glyphicon-envelope form-control-feedback"></i>
+						<input type="email" class="form-control" id="email_update"
+							name="email" placeholder="email" th:value="${existingData.email}">
+						<span class="error_message" id="email_update_error_message"
+							hidden="true"></span>
+					</div>
+					<div id="form_group_update_handphone"
+						class="form-group has-feedback">
+						<i class="glyphicon glyphicon-phone form-control-feedback"></i> <input
+							type="text" class="form-control" name="handphone"
+							id="handphone_update" placeholder="Mobile Number"
+							th:value="${existingData.handphone}"> <span
+							class="error_message" id="handphone_update_error_message"
+							hidden="true"></span>
+					</div>
+					<div id="form_group_update_phone" class="form-group has-feedback">
+						<i class="glyphicon glyphicon-earphone form-control-feedback"></i>
+						<input type="text" class="form-control" id="phone_update"
+							name="phone" placeholder="Phone" th:value="${existingData.phone}">
+						<span class="error_message" id="phone_update_error_message"
+							hidden="true"></span>
+					</div>
+					<div id="form_group_update_zipcode" class="form-group has-feedback">
+						<i class="glyphicon glyphicon-home form-control-feedback"></i> <input
+							type="text" class="form-control" id="zipcode_update"
+							name="userZip" placeholder="zipcode"
+							th:value="${existingData.userZip}"> <span
+							class="error_message" id="zipcode_update_error_message"
+							hidden="true"></span>
+					</div>
+					<div id="form_group_update_address" class="form-group">
+						<textarea class="form-control" th:inline="text"
+							id="user_address_update" name="userAddress" rows="3"
+							placeholder="Address">[[${existingData.userAddress}]]</textarea>
+						<span class="error_message" id="address_update_error_message"
+							hidden="true"></span>
+					</div>
+					<button id="update_user_button" type="submit"
+						class="btn btn-warning" style="width: 100%">update</button>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

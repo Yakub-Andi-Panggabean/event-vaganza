@@ -74,7 +74,7 @@ public class ApplicationTests {
       pVendor.setPackagePrice(300000000);
       pVendor.setPackagePromo("get one chair");
       pVendor.setPackageStyle("free style");
-      pVendor.setTimePackage(4);
+      pVendor.setTimePackage("4");
 
       final VendorId id = new VendorId();
       id.setType("80");

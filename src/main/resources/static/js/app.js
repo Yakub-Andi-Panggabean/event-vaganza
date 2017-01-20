@@ -2,7 +2,6 @@
 var pagingPageSize = 12;
 // pagination number
 var pagingNumber = 5;
-var pages = [];
 
 /**
  * 
@@ -23,11 +22,22 @@ function init() {
 	validateVendorRegistrationForm();
 	fetchAllAvailableCategory();
 	fetchItemList(0, pagingPageSize, 1);
+	filteringKeyword();
+	filteringPrice();
+	sortingPackageList();
+	filteringPackageType();
+	filteringCapacity();
 }
 
 function showModal() {
 	$('#login').click(function() {
-		$('#myModal').modal();
+		$('#login_modal').modal();
+	});
+
+	$('#book-event-date').datepicker();
+
+	$('#button-booking').click(function() {
+		$('#book_modal').modal();
 	});
 }
 
@@ -44,7 +54,7 @@ function authenticate() {
 	var enc = window.btoa(username + ":" + password);
 
 	$.ajax({
-		url : 'login',
+		url : '/login',
 		method : 'POST',
 		headers : {
 			'isigunyaziso' : enc
@@ -137,7 +147,7 @@ function fetchItemList(start, limit) {
 	// update dispalay record
 	$.ajax({
 		url : '/api/items/' + start + '/' + limit + '/' + fType,
-		method : 'POST',
+		method : 'GET',
 		success : function(data) {
 			var result = "";
 			var pagination = "";
@@ -180,7 +190,6 @@ function fetchItemList(start, limit) {
 				totalPages : data.contents.totalPages,
 				visiblePages : pagingNumber,
 				onPageClick : function(event, page) {
-					// $('#page-content').text('Page ' + page);
 					fetchItemList((page - 1), pagingPageSize);
 				}
 			});
@@ -192,58 +201,127 @@ function fetchItemList(start, limit) {
 	});
 }
 
-function fetchItemsSelectionList(start, limit) {
+function filteringKeyword() {
+	$('#button_filter_keyword_items').click(function() {
+		fetchItemsSelectionList(0, pagingPageSize, true);
+	});
+
+	$('#filter_keyword_items').keypress(function() {
+		fetchItemsSelectionList(0, pagingPageSize, true);
+	});
+
+	$('#filter_keyword_items').keyup(function() {
+		fetchItemsSelectionList(0, pagingPageSize, true);
+	});
+}
+
+function filteringCapacity() {
+
+	$('#filter_capacity_selection').keypress(function(e) {
+		if (e.which === 13) {
+			fetchItemsSelectionList(0, pagingPageSize, true);
+		}
+	});
+
+}
+
+function filteringPrice() {
+
+	$('#filter_min_price_selection').keypress(function(e) {
+		if (e.which === 13) {
+			fetchItemsSelectionList(0, pagingPageSize, true);
+		}
+	});
+
+	$('#filter_max_price_selection').keypress(function(e) {
+		if (e.which === 13) {
+			fetchItemsSelectionList(0, pagingPageSize, true);
+		}
+	});
+
+}
+
+function filteringPackageType() {
+	$('#filter_package_type_selection').change(function(e) {
+		fetchItemsSelectionList(0, pagingPageSize, true);
+	});
+}
+
+function sortingPackageList() {
+	$('#filtering_package_sorting').change(function(e) {
+		fetchItemsSelectionList(0, pagingPageSize, true);
+	});
+}
+
+/**
+ * 
+ * filter data
+ * 
+ * @param start
+ * @param limit
+ * @returns
+ */
+function fetchItemsSelectionList(start, limit, destroy) {
 	var fType = getUrlVars()["c"];
-	var filterKeyword = $('#filter_keyword_items').value();
-	var filterMinPrice = $('#filter_min_price_selection').value();
-	var filterMaxPrice = $('#filter_max_price_selection').value();
-	var filterCapacity = $('filter_capacity_selection').val();
+	var filterKeyword = $('#filter_keyword_items').val();
+	var filterMinPrice = $('#filter_min_price_selection').val();
+	var filterMaxPrice = $('#filter_max_price_selection').val();
+	var filterCapacity = $('#filter_capacity_selection').val();
 	var filterCity = $('filter_city_selection').val();
-	var packageSorting = $('#package_sorting').find('option:selected').val();
-	var filterPackageType = ('#filter_package_type_selection$').find(
-			'option:selected').val();
+	var packageSorting = $('#filtering_package_sorting').find(':selected')
+			.val();
+	var filterPackageType = $('#filter_package_type_selection').find(
+			':selected').val();
 
 	var filterData = {
 		"keyword" : filterKeyword,
-		"minPrice" : filterMinPrice,
-		"maxPrice" : filterMaxPrice,
-		"capacity" : filterCapacity,
+		"minPrice" : Number(filterMinPrice),
+		"maxPrice" : Number(filterMaxPrice),
+		"capacity" : Number(filterCapacity),
 		"city" : filterCity,
 		"packageType" : filterPackageType
 	}
 
 	var filterSorting;
+
+	console.log("sorting :" + packageSorting);
+
 	if (packageSorting === 'cheapest') {
 		filterSorting = {
 			propertyName : "price",
-			order : "desc"
+			order : "asc"
 		}
 	} else if (packageSorting === 'most_expensive') {
 		filterSorting = {
 			propertyName : "price",
-			order : "asc"
+			order : "desc"
 		}
 	} else if (packageSorting === 'discount') {
 		filterSorting = {
 			propertyName : "discount",
 			order : "asc"
 		}
-	} else {
+	} else if (packageSorting === 'capacity') {
 		filterSorting = {
 			propertyName : "capacity",
 			order : "asc"
 		}
+	} else {
+		packageSorting = null;
 	}
 
 	filterData.sorting = filterSorting;
 
 	$.ajax({
-		url : '/api/items/selection/' + start + '/' + limit + '/' + fType,
-		method : "GET",
+		url : '/api/items/' + start + '/' + limit + '/' + fType,
+		method : "POST",
 		contentType : 'application/json',
-		data : filterData,
+		dataType : 'json',
+		data : JSON.stringify(filterData),
 		success : function(data) {
-
+			var result = "";
+			var pagination = "";
+			var displayedpagination = "";
 			$.each(data.contents.content, function(index, value) {
 				result = result.concat("<div class=\"col-sm-6 col-md-3\">");
 				result = result.concat("<a href=" + value.url + ">");
@@ -271,6 +349,28 @@ function fetchItemsSelectionList(start, limit) {
 				pages.push(pagination);
 
 			}
+
+			for (i = 0; i < data.contents.totalPages; i++) {
+				displayedpagination = displayedpagination.concat(pages[i]);
+			}
+
+			$('#item_list').html(result);
+
+			if (destroy == true) {
+				$('#pagination').twbsPagination('destroy');
+			}
+
+			$('#pagination').twbsPagination(
+					{
+						totalPages : data.contents.totalPages,
+						visiblePages : pagingNumber,
+						onPageClick : function(event, page) {
+							if (page > 1) {
+								fetchItemsSelectionList((page - 1),
+										pagingPageSize, false);
+							}
+						}
+					});
 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

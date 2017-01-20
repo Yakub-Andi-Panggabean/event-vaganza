@@ -99,6 +99,11 @@ public class UserServiceBean implements UserService {
     repository.delete(id);
   }
 
+  @Override
+  public User findUserById(String id) throws Exception {
+    return repository.findOne(id);
+  }
+
 
 
 }

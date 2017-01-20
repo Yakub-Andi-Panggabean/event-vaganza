@@ -79,7 +79,15 @@ public class ApiController {
 
       final List<ItemListDto> list = listingService.findAllList(request, type);
 
-      final int start = page > 0 ? page * size : page;
+      int start = page > 0 ? page * size : page;
+
+      if (start > list.size()) {
+        start = list.size();
+      }
+
+      if (start < 0) {
+        start = 0;
+      }
 
       final Page<ItemListDto> contents = new PageImpl<>(
           list.subList(start, (start + size) > list.size() ? list.size() : (start + size)),
@@ -88,6 +96,7 @@ public class ApiController {
       return new GenericMultipleResponse<>(true, "success", contents);
 
     } catch (final Exception ex) {
+      ex.printStackTrace();
       return new GenericMultipleResponse<>(false, ex.getMessage(), null);
     }
   }
@@ -106,7 +115,17 @@ public class ApiController {
 
       final List<ItemListDto> list = listingService.findAllList(request, type, filterDto);
 
-      final int start = page > 0 ? page * size : page;
+      int start = page > 0 ? page * size : page;
+
+      if (start > list.size()) {
+        start = list.size();
+      }
+
+      if (start < 0) {
+        start = 0;
+      }
+
+      log.debug("start index : {}", start);
 
       final Page<ItemListDto> contents = new PageImpl<>(
           list.subList(start, (start + size) > list.size() ? list.size() : (start + size)),
@@ -115,6 +134,7 @@ public class ApiController {
       return new GenericMultipleResponse<>(true, "success", contents);
 
     } catch (final Exception ex) {
+      ex.printStackTrace();
       return new GenericMultipleResponse<>(false, ex.getMessage(), null);
     }
 

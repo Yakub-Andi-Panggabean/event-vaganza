@@ -1,10 +1,12 @@
 package com.special.gift.app.controller.ui;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.VendorDesc;
+import com.special.gift.app.dto.FilterDto;
+import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.dto.VendorDto;
 import com.special.gift.app.service.ListingService;
+import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
 
 @Controller
@@ -27,11 +33,15 @@ public class UiController {
   private static final Logger log = LoggerFactory.getLogger(UiController.class);
 
   public static final String PATH = "/";
-  public static final String REGISTER = "register";
   public static final String HELP = "help";
   public static final String SEARCH = "search";
   public static final String NOTIFICATION = "notification";
   public static final String VENDOR_REGISTER = "vendor-registration";
+
+  // user
+  public static final String REGISTER = "register";
+  public static final String USER_UPDATE = "user-update";
+  public static final String USER_VIEW = "user-view";
 
   // used for category > child > grandchild
   public static final String CATEGORIES = "categories";
@@ -40,6 +50,9 @@ public class UiController {
 
   // package
   public static final String PACKAGE_DETAIL = "/packages/{type}/{packageId}";
+
+  @Inject
+  private UserService userService;
 
   @Inject
   private VendorDescService vendorDescService;
@@ -74,6 +87,26 @@ public class UiController {
   public String renderRegisterPage(Model model) {
     model.addAttribute("user", new UserDto());
     return "/contents/register";
+  }
+
+  @RequestMapping(value = USER_UPDATE, method = RequestMethod.GET)
+  public String renderUserUpdatePage(Model model, HttpSession session) {
+
+    try {
+      final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+      final UserDto dto = new UserDto();
+      user.setVendor(null);
+      BeanUtils.copyProperties(user, dto);
+      log.debug("user dto : {}", dto.toString());
+      model.addAttribute("userData", new UserDto());
+      model.addAttribute("existingData", dto);
+      model.addAttribute("user", session.getAttribute("user"));
+    } catch (final Exception e) {
+      return "redirect:/";
+    }
+
+
+    return "/contents/user-update";
   }
 
   /**
@@ -266,13 +299,40 @@ public class UiController {
   }
 
   @RequestMapping(value = PACKAGE_DETAIL, method = RequestMethod.GET)
-  public String renderPackageDetailPage(@PathVariable(value = "type") String type,
-      @PathVariable(value = "packageId") String id) {
+  public String renderPackageDetailPage(Model model, @PathVariable(value = "type") String type,
+      @PathVariable(value = "packageId") String id, HttpServletRequest request,
+      HttpSession session) {
     log.debug("type : {}", type);
     log.debug("id : {}", id);
-
+    model.addAttribute("user", session.getAttribute("user"));
+    final FilterDto filter = new FilterDto();
+    filter.setId(id);
+    try {
+      final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
+      log.debug("item from controller : {}", item.toString());
+      model.addAttribute("packageDetail", item);
+      model.addAttribute("package_type", Character.toUpperCase(type.charAt(0)) + type.substring(1));
+    } catch (final Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     return "/contents/package-detail";
   }
 
+
+  @RequestMapping(value = USER_VIEW, method = RequestMethod.GET)
+  public String renderUserViewPage(Model model, HttpSession session) {
+    try {
+      final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+      final UserDto dto = new UserDto();
+      user.setVendor(null);
+      BeanUtils.copyProperties(user, dto);
+      model.addAttribute("existingData", dto);
+      model.addAttribute("user", session.getAttribute("user"));
+    } catch (final Exception e) {
+      return "redirect:/";
+    }
+    return "/contents/user-data-view";
+  }
 }

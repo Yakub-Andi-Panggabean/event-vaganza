@@ -1,53 +1,31 @@
+body {
+	line-height: 1.7;
+	font-family: "Open Sans", sans-serif;
+	overflow-x: hidden;
+}
+
+body .well {
+	background-color: #fff;
+}
+
 .navbar-default .navbar-nav>li>a {
-	color: #ffffff;
+	color: rgb(227, 201, 25);
 }
 
 .navbar-default .navbar-nav .navbar-right>li>a {
-	color: #ffffff;
+	color: rgb(227, 201, 25);
 }
 
 .navbar-default .navbar-brand {
-	color: #ffffff;
+	color: rgb(227, 201, 25);
 }
 
 .navbar-default {
-	background-color: rgba(214, 174, 39, 0.81);
-	border-color: rgba(8, 8, 8, 0);
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-	position: relative;
-	min-height: 100%;
-}
-
-body {
-	/* Margin bottom by footer height */
-	margin-bottom: 60px;
-}
-
-.footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	/* Set the fixed height of the footer here */
-	height: 60px;
-	line-height: 60px; 
-/* 	background-color: #f5f5f5; */
-}
-
-.footer>.container {
-	padding-right: 15px;
-	padding-left: 15px;
-}
-
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
-
-body>.container {
-	padding: 60px 15px 0;
+	padding-top: 10px;
+	background-color: #fff;
+	border-color: rgb(227, 201, 25);
+	height: 70px;
+	background-color: #fff;
 }
 
 code {
@@ -175,3 +153,59 @@ code {
 	margin-bottom: 20px;
 }
 
+/*------------detail--------------------*/
+.big-button-trigger {
+	background-color: rgb(212, 180, 45);
+	color: white;
+	padding-bottom: 1%;
+	transition: all .5s ease-in;
+}
+
+.big-button-trigger:hover {
+	box-shadow: 1px 0px 5px 8px #DEDEDE;
+	transform: scale(1.1, 1.1);
+	cursor: pointer;
+}
+
+.img-zoom {
+	transition: all .3s ease-in;
+}
+
+.img-zoom:hover {
+	z-index: 9999 !important;;
+	transform: scale(1.5, 1.5);
+	position: relative;
+}
+
+.container-package-detail {
+	color: #A5A044;
+	margin-top: 100px;
+}
+
+hr {
+	border-width: 3px 20px -2px;
+	border-color: #EAD812 -moz-use-text-color -moz-use-text-color;
+}
+
+.detail-package .panel-heading {
+	color: #A5A044;
+	background-color: #fff;
+}
+
+.modal-header {
+	background-color: #DECE52;;
+	margin-top: 10pxk;
+	color: white;
+}
+
+.modal-booking {
+	margin-top: 5%;
+}
+
+.modal-body {
+	color: #777;
+}
+
+.detail-package .panel-heading {
+	background-color: #fff;
+}

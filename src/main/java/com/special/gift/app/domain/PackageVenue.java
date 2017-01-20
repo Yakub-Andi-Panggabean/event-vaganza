@@ -26,6 +26,9 @@ public class PackageVenue {
   @Column(name = "venue_room", nullable = false, length = 50)
   private String venueRoom;
 
+  @Column(name = "venue_name", nullable = false, length = 50)
+  private String venueName;
+
   @Column(name = "room_capacity", nullable = false, length = 5)
   private String roomCapacity;
 
@@ -159,5 +162,15 @@ public class PackageVenue {
   public void setVendor(Vendor vendor) {
     this.vendor = vendor;
   }
+
+  public String getVenueName() {
+    return venueName;
+  }
+
+  public void setVenueName(String venueName) {
+    this.venueName = venueName;
+  }
+
+
 
 }

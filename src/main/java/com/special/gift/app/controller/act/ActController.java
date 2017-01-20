@@ -31,6 +31,7 @@ public class ActController {
 
   public static final String BASE_PATH = "/";
   private static final String USER_ACT_PATH = "user";
+  private static final String USER_UPDATE_ACT_PATH = "user-update";
   private static final String VENDOR_ACT_PATH = "vendor";
 
   @Inject
@@ -59,6 +60,49 @@ public class ActController {
       return "redirect:/register";
     }
     return "redirect:/";
+  }
+
+  @PostMapping(value = USER_UPDATE_ACT_PATH)
+  public String updateUser(@ModelAttribute UserDto user) {
+    log.debug("existing user data : {}", user.toString());
+    try {
+
+      final User userEntity = userService.findUserById(user.getUserId());
+
+      if (user != null && user.getUserId() != null) {
+
+        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+          userEntity.setEmail(user.getEmail());
+        }
+
+        if (user.getHandphone() != null && !user.getHandphone().isEmpty()) {
+          userEntity.setHandphone(user.getHandphone());
+        }
+
+        if (user.getPhone() != null && !user.getPhone().isEmpty()) {
+          userEntity.setPhone(user.getPhone());
+        }
+
+        if (user.getUserAddress() != null && !user.getUserAddress().isEmpty()) {
+          userEntity.setUserAddress(user.getUserAddress());
+        }
+
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+          userEntity.setUsername(user.getUsername());
+        }
+
+        if (user.getUserZip() != null && !user.getUserZip().isEmpty()) {
+          userEntity.setUserZip(user.getUserZip());
+        }
+
+      }
+
+      userService.updateUser(userEntity);
+      return "redirect:/user-view";
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+      return "redirect:/";
+    }
   }
 
 

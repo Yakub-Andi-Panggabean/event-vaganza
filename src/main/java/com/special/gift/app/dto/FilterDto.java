@@ -6,6 +6,7 @@ public class FilterDto implements Serializable {
 
   private static final long serialVersionUID = -5784151640004523843L;
 
+  private String id;
   private String keyword;
   private Integer minPrice;
   private Integer maxPrice;
@@ -70,11 +71,19 @@ public class FilterDto implements Serializable {
     this.packageType = packageType;
   }
 
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
   @Override
   public String toString() {
-    return "FilterDto [keyword=" + keyword + ", minPrice=" + minPrice + ", maxPrice=" + maxPrice
-        + ", sorting=" + sorting + ", capacity=" + capacity + ", city=" + city + ", packageType="
-        + packageType + "]";
+    return "FilterDto [id=" + id + ", keyword=" + keyword + ", minPrice=" + minPrice + ", maxPrice="
+        + maxPrice + ", sorting=" + sorting + ", capacity=" + capacity + ", city=" + city
+        + ", packageType=" + packageType + "]";
   }
 
 

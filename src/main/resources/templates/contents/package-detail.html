@@ -6,7 +6,98 @@
 </head>
 <body>
 	<div class="container" th:fragment="content">
-		<h1>Package Detail</h1>
+		<div class="container container-package-detail">
+			<div class="row well">
+				<div class="col-xs-12 col-md-4">
+					<img class="img-responsive img-zoom"
+						th:src="${packageDetail.image}" alt="Chania" width="300"
+						height="500">
+				</div>
+				<div class="col-xs-12 col-md-8">
+					<div class="panel panel-default detail-package"
+						style="border: none;">
+						<div class="panel-heading" style="border: none;">
+							<h3 th:text="${#strings.append(package_type,' Description :')}">Package
+								Wedding A</h3>
+						</div>
+						<div class="panel-body package-box" style="border: none;">
+							<div class="col-xs-12 col-md-4">
+								<div class="well" align="center">
+									<h2 th:text="${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.paxPrice,3,'POINT',2,'COMMA'))}">Rp. 250 k</h2>
+									<h5>per Pax</h5>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-4">
+								<div class="well" align="center">
+									<h2 th:text="${packageDetail.capacity}">capacity</h2>
+									<h5>People</h5>
+								</div>
+							</div>
+							<div class="col-xs-12 col-md-4">
+								<div class="well" align="center">
+									<h2
+										th:text="${#strings.append(packageDetail.rentDuration,' Hours')}">3
+										Hours</h2>
+									<h5>Room Usage</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end of header -->
+			<div class="row well" style="border: none; box-shadow: none;">
+				<div class="col-xs-12 col-md-8">
+					<blockquote>
+						<h2 th:text="${#strings.capitalize(packageDetail.name)}">name</h2>
+						<footer>
+							<p style="font-size: 1.3em;">Lorem Ipsum is simply dummy text
+								of the printing and typesetting industry. Lorem Ipsum has been
+								the industry's standard dummy text ever since the 1500s, when an
+								unknown printer took a galley of type and scrambled it to make a
+								type specimen book. It has survived not only five centuries, but
+								also the leap into electronic typesetting, remaining essentially
+								unchanged. It was popularised in the 1960s with the release of
+								Letraset sheets containing Lorem Ipsum passages, and more
+								recently with desktop publishing software like Aldus PageMaker
+								including versions of Lorem Ipsum.</p>
+						</footer>
+					</blockquote>
+				</div>
+				<!-- end of list feature  -->
+				<div class="col-xs-12 col-md-4">
+					<blockquote>
+						<span style="font-size: 0.9em;">Minimum Payment</span>
+						<p class="lead"
+							th:text="${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.minimumPayment,3,'POINT',2,'COMMA'))}">Price</p>
+						<footer>
+							This package price exclue venue rental fee. Client Should booking
+							the venue first before booking this package <cite
+								title="Source Title">Source Title</cite>
+						</footer>
+					</blockquote>
+					<blockquote>
+						<span style="font-size: 0.9em;">Total Price</span>
+						<p class="lead"
+							th:text="${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.price,3,'POINT',2,'COMMA'))}">Price</p>
+						<footer>
+							This package price exclue venue rental fee. Client Should booking
+							the venue first before booking this package <cite
+								title="Source Title">Source Title</cite>
+						</footer>
+					</blockquote>
+				</div>
+			</div>
+			<!-- end of description row -->
+			<div class="row" style="border: none; box-shadow: none;"
+				align="center">
+				<div id="button-booking"
+					class="col-xs-8 col-md-2 col-md-offset-5 col-xs-offset-2 big-button-trigger ">
+					<h2>Book Now</h2>
+				</div>
+			</div>
+			<hr />
+		</div>
 	</div>
 </body>
 </html>

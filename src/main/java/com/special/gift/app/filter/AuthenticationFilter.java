@@ -69,6 +69,7 @@ public class AuthenticationFilter implements Filter {
           if (passwordEncoder.isPasswordValid(user.getPassword(), credential, CommonUtil.SALT)) {
 
             request.setAttribute("user", user.getUsername());
+            request.setAttribute("userEmail", user.getEmail());
 
             chain.doFilter(request, response);
 

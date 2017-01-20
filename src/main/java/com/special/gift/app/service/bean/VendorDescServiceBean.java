@@ -44,6 +44,10 @@ public class VendorDescServiceBean implements VendorDescService {
         limit = contents.size();
       }
 
+      if (start > (contents.size() - 1)) {
+        start = contents.size();
+      }
+
       log.debug("start : {}, limit : {}", start, limit);
 
       contents = contents.subList((int) start, (int) limit);

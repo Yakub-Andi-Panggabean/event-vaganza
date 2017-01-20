@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container" th:fragment="content">
+		<div class="row container-package-detail">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4>User Info</h4>
+					</div>
+					<div class="panel-body">
+						<dl class="dl-horizontal">
+							<dt>Username :</dt>
+							<dd>
+								<span th:text="${existingData.username}">Value</span>
+							</dd>
+							<dt>Email :</dt>
+							<dd>
+								<span th:text="${existingData.email}">Value</span>
+							</dd>
+							<dt>Handphone :</dt>
+							<dd>
+								<span th:text="${existingData.handphone}">Value</span>
+							</dd>
+							<dt>Phone :</dt>
+							<dd>
+								<span th:text="${existingData.phone}">Value</span>
+							</dd>
+							<dt>Zip :</dt>
+							<dd>
+								<span th:text="${existingData.userZip}">Value</span>
+							</dd>
+							<dt>Address :</dt>
+							<dd>
+								<span th:text="${existingData.userAddress}">Value</span>
+							</dd>
+						</dl>
+					</div>
+					<div class="panel-footer">
+						<button type="button" class="btn btn-warning">
+							<a style="color: white;" th:href="@{/user-update}">Update
+								Data</a>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

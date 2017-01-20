@@ -8,20 +8,21 @@ public class ItemListDto {
   private String category;
   private String image;
   private String url;
-  private String price;
-  private Integer intPrice;
+  private Integer price;
   private Integer capacity;
   private String location;
   private Integer discountRate;
   private Integer minimumPayment;
+  private Integer paxPrice;
+  private String rentDuration;
 
   public ItemListDto() {
     super();
   }
 
   public ItemListDto(String id, String name, String packageType, String category, String image,
-      String url, String price, int intPrice, Integer capacity, String location,
-      Integer discountRate, Integer minimumPayment) {
+      String url, Integer price, Integer capacity, String location, Integer discountRate,
+      Integer minimumPayment, Integer paxPrice, String rentDuration) {
     super();
     this.id = id;
     this.name = name;
@@ -32,9 +33,10 @@ public class ItemListDto {
     this.price = price;
     this.capacity = capacity;
     this.location = location;
-    this.intPrice = intPrice;
     this.discountRate = discountRate;
     this.minimumPayment = minimumPayment;
+    this.paxPrice = paxPrice;
+    this.rentDuration = rentDuration;
   }
 
   public String getId() {
@@ -85,11 +87,11 @@ public class ItemListDto {
     this.category = category;
   }
 
-  public String getPrice() {
+  public Integer getPrice() {
     return price;
   }
 
-  public void setPrice(String price) {
+  public void setPrice(Integer price) {
     this.price = price;
   }
 
@@ -109,13 +111,6 @@ public class ItemListDto {
     this.location = location;
   }
 
-  public Integer getIntPrice() {
-    return intPrice;
-  }
-
-  public void setIntPrice(Integer intPrice) {
-    this.intPrice = intPrice;
-  }
 
   public Integer getDiscountRate() {
     return discountRate;
@@ -131,6 +126,31 @@ public class ItemListDto {
 
   public void setMinimumPayment(Integer minimumPayment) {
     this.minimumPayment = minimumPayment;
+  }
+
+  public Integer getPaxPrice() {
+    return paxPrice;
+  }
+
+  public void setPaxPrice(Integer paxPrice) {
+    this.paxPrice = paxPrice;
+  }
+
+  public String getRentDuration() {
+    return rentDuration;
+  }
+
+  public void setRentDuration(String rentDuration) {
+    this.rentDuration = rentDuration;
+  }
+
+  @Override
+  public String toString() {
+    return "ItemListDto [id=" + id + ", name=" + name + ", packageType=" + packageType
+        + ", category=" + category + ", image=" + image + ", url=" + url + ", price=" + price
+        + ", capacity=" + capacity + ", location=" + location + ", discountRate=" + discountRate
+        + ", minimumPayment=" + minimumPayment + ", paxPrice=" + paxPrice + ", rentDuration="
+        + rentDuration + "]";
   }
 
 

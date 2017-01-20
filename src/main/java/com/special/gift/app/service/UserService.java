@@ -14,6 +14,8 @@ public interface UserService {
 
   User findUserByPrincipal(String principal) throws Exception;
 
+  User findUserById(String id) throws Exception;
+
   void insertUser(User user) throws Exception;
 
   void updateUser(User user) throws Exception;

@@ -19,7 +19,6 @@ import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.repository.PackageVendorRepository;
 import com.special.gift.app.repository.PackageVenueRepository;
 import com.special.gift.app.service.ListingService;
-import com.special.gift.app.util.CommonUtil;
 
 @Service
 public class ListingServiceBean implements ListingService {
@@ -32,8 +31,8 @@ public class ListingServiceBean implements ListingService {
   @Autowired
   private PackageVenueRepository pVenueRepository;
 
-  private static final String PACKAGE_VENUE = "venues";
-  private static final String PACKAGE_VENDOR = "vendors";
+  private static final String PACKAGE_VENUE = "venue";
+  private static final String PACKAGE_VENDOR = "vendor";
 
   @Override
   public List<ItemListDto> findAllList(HttpServletRequest request, String category)
@@ -53,21 +52,21 @@ public class ListingServiceBean implements ListingService {
             PACKAGE_VENDOR, packages.getVendor().getVendorId().getType(), packages.getPackageImg(),
             new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENDOR)
                 .append("/").append(packages.getPackageId()).toString(),
-            CommonUtil.convertIntoCurrencyFormat(packages.getPackagePrice()),
             packages.getPackagePrice(), packages.getPackageCapacity(), null,
-            packages.getDiscountRate(), packages.getMinimumPayment()));
+            packages.getDiscountRate(), packages.getMinimumPayment(), 0,
+            String.valueOf(packages.getTimePackage())));
 
       }
 
       // add package venue
       for (final PackageVenue venue : pVenueRepository.findAll()) {
-        items.add(new ItemListDto(venue.getVenueId(), venue.getVenueRoom(), PACKAGE_VENUE,
+        items.add(new ItemListDto(venue.getVenueId(), venue.getVenueName(), PACKAGE_VENUE,
             venue.getVendor().getVendorId().getType(), venue.getVenuePortofolio(),
             new StringBuilder("/packages/").append(PACKAGE_VENUE).append("/")
                 .append(venue.getVenueId()).toString(),
-            CommonUtil.convertIntoCurrencyFormat(venue.getRentalPrice()), venue.getRentalPrice(),
-            Integer.valueOf(venue.getRoomCapacity()), venue.getCity(), venue.getDiscountRate(),
-            venue.getMinimumPayment()));
+            venue.getRentalPrice(), Integer.valueOf(venue.getRoomCapacity()), venue.getCity(),
+            venue.getDiscountRate(), venue.getMinimumPayment(), venue.getPaxPrice(),
+            venue.getTimeRent()));
       }
 
 
@@ -106,47 +105,88 @@ public class ListingServiceBean implements ListingService {
     final List<ItemListDto> filteredList = new ArrayList<>();
     try {
 
-      for (final ItemListDto item : list) {
+      log.debug("filter : {}", filter.toString());
 
-        // filter capacity
-        if (filter.getCapacity() != null && item.getCapacity() == filter.getCapacity()) {
-          filteredList.add(item);
+      if ((filter.getCapacity() == null || filter.getCapacity() == 0)
+          && (filter.getCity() == null || filter.getCity().isEmpty() || filter.getCity().equals(""))
+          && (filter.getKeyword() == null || filter.getKeyword().isEmpty()
+              || filter.getKeyword().equals(""))
+          && (filter.getMaxPrice() == null || filter.getMaxPrice() == 0)
+          && (filter.getMinPrice() == null || filter.getMinPrice() == 0)
+          && (filter.getId() == null || filter.getId().isEmpty() || filter.getId().equals(""))
+          && (filter.getPackageType() == null || filter.getPackageType().isEmpty()
+              || filter.getPackageType().toLowerCase().equals("all"))) {
+        log.debug("no filtering");
+        filteredList.addAll(list);
+      } else {
+        for (final ItemListDto item : list) {
+
+
+          // filter capacity
+          if (filter.getId() != null
+              && filter.getId().toLowerCase().equals(item.getId().toLowerCase())) {
+            log.debug("filtering id : {}", filter.getId());
+            log.debug("item filtered : {}", item.toString());
+            filteredList.add(item);
+            return filteredList;
+          }
+
+          // filter capacity
+          if (filter.getCapacity() != null && filter.getCapacity() > 0
+              && item.getCapacity() == filter.getCapacity()) {
+            log.debug("filtering capacity : {}", filter.getCapacity());
+            filteredList.add(item);
+          }
+
+          // filter city
+          if (filter.getCity() != null && !filter.getCity().isEmpty() && item.getLocation() != null
+              && !item.getLocation().isEmpty()
+              && item.getLocation().equalsIgnoreCase(filter.getCity())) {
+            log.debug("filtering city : {}", filter.getCity());
+            filteredList.add(item);
+          }
+
+          if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()
+              && item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase())) {
+            log.debug("filtering keyword : {}", filter.getKeyword());
+            filteredList.add(item);
+          }
+
+          if ((filter.getMaxPrice() != null && filter.getMaxPrice() > 0
+              && filter.getMinPrice() != null && filter.getMinPrice() > 0)
+              && (item.getPrice() <= filter.getMaxPrice()
+                  && item.getPrice() >= filter.getMinPrice())) {
+            log.debug("filtering min price : {} and max price : {}", filter.getMinPrice(),
+                filter.getMaxPrice());
+            filteredList.add(item);
+          }
+
+          // max prize
+          if (filter.getMaxPrice() != null && filter.getMaxPrice() > 0 && filter.getMinPrice() == 0
+              && item.getPrice() <= filter.getMaxPrice()) {
+            log.debug("filtering max price : {}", filter.getMaxPrice());
+            log.debug("item price : {}", item.getPrice());
+            filteredList.add(item);
+          }
+
+          if (filter.getMinPrice() != null && filter.getMinPrice() > 0 && filter.getMaxPrice() == 0
+              && item.getPrice() >= filter.getMinPrice()) {
+            log.debug("filtering min price : {}", filter.getMinPrice());
+            filteredList.add(item);
+          }
+
+          if (filter.getPackageType() != null && !filter.getPackageType().isEmpty()
+              && !filter.getPackageType().toLowerCase().equals("all") && filter.getPackageType()
+                  .toLowerCase().equals(item.getPackageType().toLowerCase())) {
+            log.debug("filtering package type : {}", filter.getPackageType());
+            filteredList.add(item);
+          }
+
         }
-
-        // filter city
-        if (filter.getCity() != null && item.getLocation() != null
-            && item.getLocation().equalsIgnoreCase(filter.getCity())) {
-          filteredList.add(item);
-        }
-
-        if (filter.getKeyword() != null
-            && item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase())) {
-          filteredList.add(item);
-        }
-
-        if ((filter.getMaxPrice() != null && filter.getMinPrice() != null)
-            && (item.getIntPrice() <= filter.getMaxPrice()
-                && item.getIntPrice() >= filter.getMinPrice())) {
-          filteredList.add(item);
-        }
-
-        if (filter.getMaxPrice() != null && filter.getMaxPrice() <= item.getIntPrice()) {
-          filteredList.add(item);
-        }
-
-        if (filter.getMinPrice() != null && filter.getMinPrice() >= item.getIntPrice()) {
-          filteredList.add(item);
-        }
-
-        if (filter.getPackageType() != null
-            && filter.getPackageType().equals(item.getPackageType())) {
-          filteredList.add(item);
-        }
-
       }
 
-      if (filter.getSorting() != null) {
 
+      if (filter.getSorting() != null) {
         if (filter.getSorting().getPropertyName().equals("capacity")) {
           Collections.sort(filteredList, new Comparator<ItemListDto>() {
 
@@ -164,14 +204,17 @@ public class ListingServiceBean implements ListingService {
 
 
         if (filter.getSorting().getPropertyName().equals("price")) {
+
+          log.debug("filtered size : {}", filteredList.size());
+
           Collections.sort(filteredList, new Comparator<ItemListDto>() {
 
             @Override
             public int compare(ItemListDto o1, ItemListDto o2) {
               if (filter.getSorting().getOrder().equals("asc")) {
-                return o1.getIntPrice().compareTo(o2.getIntPrice());
+                return o1.getPrice().compareTo(o2.getPrice());
               } else {
-                return o2.getIntPrice().compareTo(o1.getIntPrice());
+                return o2.getPrice().compareTo(o1.getPrice());
               }
             }
           });

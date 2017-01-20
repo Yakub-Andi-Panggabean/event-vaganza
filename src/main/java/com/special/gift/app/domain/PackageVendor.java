@@ -50,8 +50,8 @@ public class PackageVendor {
   @Column(name = "minimum_payment", nullable = false)
   private int minimumPayment;
 
-  @Column(name = "time_package", nullable = false)
-  private int timePackage;
+  @Column(name = "time_package", nullable = false, length = 20)
+  private String timePackage;
 
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
   @JoinColumns({@JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id"), @JoinColumn(
@@ -146,11 +146,11 @@ public class PackageVendor {
     this.minimumPayment = minimumPayment;
   }
 
-  public int getTimePackage() {
+  public String getTimePackage() {
     return timePackage;
   }
 
-  public void setTimePackage(int timePackage) {
+  public void setTimePackage(String timePackage) {
     this.timePackage = timePackage;
   }
 

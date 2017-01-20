@@ -34,6 +34,7 @@ public class AuthenticationController {
     final AuthenticationResponse authResponse = new AuthenticationResponse("/",
         (String) request.getAttribute("user"), "200", "authenticated");
     httpSession.setAttribute("user", authResponse.getUsername());
+    httpSession.setAttribute("userEmail", request.getAttribute("userEmail"));
     return authResponse;
   }
 

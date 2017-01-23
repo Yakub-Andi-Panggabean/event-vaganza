@@ -95,3 +95,30 @@ $.fn.validateOptions = function() {
 	}
 
 }
+
+/**
+ * 
+ * used for multiple select type
+ * 
+ * @returns
+ */
+$.fn.pickCategory = function(target) {
+	var selected = this.find(':selected');
+	selected.remove();
+	$('#' + target).append(selected);
+	$("#" + target).prop("selected", true);
+
+}
+
+/**
+ * 
+ * used for multiple select type
+ * 
+ * @returns
+ */
+$.fn.cancelCategory = function(target) {
+	var selected = this.find(':selected');
+	selected.remove();
+	$('#' + target).append(selected);
+	this.prop("selected", true);
+}

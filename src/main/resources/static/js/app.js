@@ -27,6 +27,25 @@ function init() {
 	sortingPackageList();
 	filteringPackageType();
 	filteringCapacity();
+	searchButtonClick();
+
+	$('#button_pick_vendor_type').click(function() {
+		$('#available_category_list').pickCategory('choosen_category_list');
+	});
+
+	$('#button_cancel_vendor_type').click(function() {
+		$('#choosen_category_list').cancelCategory('available_category_list');
+	});
+	
+	
+	$('#button_pick_update_vendor_type').click(function() {
+		$('#available_category_update_list').pickCategory('choosen_category_update_list');
+	});
+
+	$('#button_cancel_update_vendor_type').click(function() {
+		$('#choosen_category_update_list').cancelCategory('available_category_update_list');
+	});
+
 }
 
 function showModal() {
@@ -112,27 +131,26 @@ function fetchAllAvailableCategory() {
  * 
  * @returns
  */
-function pickCategory() {
-	var selected = $('#available_category_list').find(':selected');
-	selected.remove();
-	$('#choosen_category_list').append(selected);
-	$("#choosen_category_list").prop("selected", true);
-
-}
-
-/**
- * 
- * used for multiple select type
- * 
- * @returns
- */
-function cancelCategory() {
-	var selected = $('#choosen_category_list').find(':selected');
-	selected.remove();
-	$('#available_category_list').append(selected);
-	$("#choosen_category_list").prop("selected", true);
-}
-
+// function pickCategory() {
+// var selected = $('#available_category_list').find(':selected');
+// selected.remove();
+// $('#choosen_category_list').append(selected);
+// $("#choosen_category_list").prop("selected", true);
+//
+// }
+//
+// /**
+// *
+// * used for multiple select type
+// *
+// * @returns
+// */
+// function cancelCategory() {
+// var selected = $('#choosen_category_list').find(':selected');
+// selected.remove();
+// $('#available_category_list').append(selected);
+// $("#choosen_category_list").prop("selected", true);
+// }
 /**
  * 
  * fetch record and pagination
@@ -145,60 +163,86 @@ function fetchItemList(start, limit) {
 	var fType = getUrlVars()["c"];
 
 	// update dispalay record
-	$.ajax({
-		url : '/api/items/' + start + '/' + limit + '/' + fType,
-		method : 'GET',
-		success : function(data) {
-			var result = "";
-			var pagination = "";
-			var displayedpagination = "";
-			$.each(data.contents.content, function(index, value) {
-				result = result.concat("<div class=\"col-sm-6 col-md-3\">");
-				result = result.concat("<a href=" + value.url + ">");
-				result = result.concat("<div class=\"thumbnail\">");
-				result = result.concat("<img class=\"img-fluid\" src=\""
-						+ value.image + "\" alt=\"Responsive image\">");
-				result = result.concat("</a>");
-				result = result.concat("</div>");
-				result = result.concat("<div class=\"caption\">");
-				result = result.concat("<h4>" + value.name + "</h4>");
-				result = result.concat("<p>" + value.price + ".</p>");
-				result = result.concat("</div>");
-				result = result.concat("</div>");
-			});
+	$
+			.ajax({
+				url : '/api/items/' + start + '/' + limit + '/' + fType,
+				method : 'GET',
+				success : function(data) {
+					var result = "";
+					var pagination = "";
+					var displayedpagination = "";
+					$
+							.each(
+									data.contents.content,
+									function(index, value) {
+										if (index == 0) {
+											result = result
+													.concat("<div class=\"row\" style=\"border-bottom:1px\">");
+										} else if (index % 4 == 0) {
+											result = result.concat("</div>");
+											result = result
+													.concat("<div class=\"row\" style=\"border-bottom:1px\">");
+										}
+										result = result
+												.concat("<div class=\"col-sm-6 col-md-3\">");
+										result = result.concat("<a href="
+												+ value.url + ">");
+										result = result
+												.concat("<div class=\"thumbnail\">");
+										result = result
+												.concat("<img class=\"img-fluid\" src=\""
+														+ value.image
+														+ "\" alt=\"Responsive image\">");
+										result = result.concat("</a>");
+										result = result.concat("</div>");
+										result = result
+												.concat("<div class=\"caption\">");
+										result = result.concat("<h4>"
+												+ value.name + "</h4>");
+										result = result.concat("<p>"
+												+ value.price.format(2)
+												+ ".</p>");
+										result = result.concat("</div>");
+										result = result.concat("</div>");
+									});
+					result = result.concat("</div>");
 
-			// clear array
-			pages = [];
-			// populate all contents into an array
-			for (i = 1; i <= data.contents.totalPages; i++) {
+					// clear array
+					pages = [];
+					// populate all contents into an array
+					for (i = 1; i <= data.contents.totalPages; i++) {
 
-				pagination = "<li id=\"pagination_" + (i - 1)
-						+ "\" ><a onclick=\"fetchItemList(" + (i - 1) + ","
-						+ pagingPageSize + ")\">" + i + "</a></li>";
+						pagination = "<li id=\"pagination_" + (i - 1)
+								+ "\" ><a onclick=\"fetchItemList(" + (i - 1)
+								+ "," + pagingPageSize + ")\">" + i
+								+ "</a></li>";
 
-				pages.push(pagination);
+						pages.push(pagination);
 
-			}
+					}
 
-			for (i = 0; i < data.contents.totalPages; i++) {
-				displayedpagination = displayedpagination.concat(pages[i]);
-			}
+					for (i = 0; i < data.contents.totalPages; i++) {
+						displayedpagination = displayedpagination
+								.concat(pages[i]);
+					}
 
-			$('#item_list').html(result);
+					$('#item_list').html(result);
 
-			$('#pagination').twbsPagination({
-				totalPages : data.contents.totalPages,
-				visiblePages : pagingNumber,
-				onPageClick : function(event, page) {
-					fetchItemList((page - 1), pagingPageSize);
+					if (data.contents.totalPages > 0) {
+						$('#pagination').twbsPagination({
+							totalPages : data.contents.totalPages,
+							visiblePages : pagingNumber,
+							onPageClick : function(event, page) {
+								fetchItemList((page - 1), pagingPageSize);
+							}
+						});
+					}
+
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("error occured : " + errorThrown);
 				}
 			});
-
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log("error occured : " + errorThrown);
-		}
-	});
 }
 
 function filteringKeyword() {
@@ -323,6 +367,12 @@ function fetchItemsSelectionList(start, limit, destroy) {
 			var pagination = "";
 			var displayedpagination = "";
 			$.each(data.contents.content, function(index, value) {
+				if (index == 0) {
+					result = result.concat("<div class=\"row\">");
+				} else if (index % 4 == 0) {
+					result = result.concat("</div>");
+					result = result.concat("<div class=\"row\">");
+				}
 				result = result.concat("<div class=\"col-sm-6 col-md-3\">");
 				result = result.concat("<a href=" + value.url + ">");
 				result = result.concat("<div class=\"thumbnail\">");
@@ -336,6 +386,7 @@ function fetchItemsSelectionList(start, limit, destroy) {
 				result = result.concat("</div>");
 				result = result.concat("</div>");
 			});
+			result = result.concat("</div>");
 
 			// clear array
 			pages = [];
@@ -360,17 +411,19 @@ function fetchItemsSelectionList(start, limit, destroy) {
 				$('#pagination').twbsPagination('destroy');
 			}
 
-			$('#pagination').twbsPagination(
-					{
-						totalPages : data.contents.totalPages,
-						visiblePages : pagingNumber,
-						onPageClick : function(event, page) {
-							if (page > 1) {
-								fetchItemsSelectionList((page - 1),
-										pagingPageSize, false);
+			if (data.contents.totalPages > 0) {
+				$('#pagination').twbsPagination(
+						{
+							totalPages : data.contents.totalPages,
+							visiblePages : pagingNumber,
+							onPageClick : function(event, page) {
+								if (page > 1) {
+									fetchItemsSelectionList((page - 1),
+											pagingPageSize, false);
+								}
 							}
-						}
-					});
+						});
+			}
 
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -394,3 +447,23 @@ function getUrlVars() {
 			});
 	return vars;
 }
+
+function searchButtonClick() {
+	$('#search-header-button').click(function() {
+		console.log("searc button clicked");
+		$('#form-search-header').submit();
+	});
+}
+
+/**
+ * Number.prototype.format(n, x)
+ * 
+ * @param integer
+ *            n: length of decimal
+ * @param integer
+ *            x: length of sections
+ */
+Number.prototype.format = function(n, x) {
+	var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+	return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};

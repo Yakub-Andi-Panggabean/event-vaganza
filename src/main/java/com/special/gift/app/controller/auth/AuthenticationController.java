@@ -35,6 +35,11 @@ public class AuthenticationController {
         (String) request.getAttribute("user"), "200", "authenticated");
     httpSession.setAttribute("user", authResponse.getUsername());
     httpSession.setAttribute("userEmail", request.getAttribute("userEmail"));
+    httpSession.setAttribute("isVendor", request.getAttribute("isVendorExist"));
+
+
+    log.debug("is vendor exist : {}", request.getAttribute("isVendorExist"));
+
     return authResponse;
   }
 

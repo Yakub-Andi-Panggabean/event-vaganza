@@ -2,38 +2,36 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Insert title here</title>
-<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-<link th:href="@{/css/style.css}" rel="stylesheet">
+
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"></link>
+<link th:href="@{/css/light-bootstrap-dashboard.css}" rel="stylesheet"></link>
+<link th:href="@{/css/vaganza-style.css}" rel="stylesheet"></link>
+<link th:href="@{/css/animate.min.css}" rel="stylesheet"></link>
+<link th:href="@{/css/pe-icon-7-stroke.css}" rel="stylesheet"></link>
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet"></link>
+<link th:href="@{/css/left-panel.css}" rel="stylesheet"></link>
 <link th:href="@{/css/yamm.css}" rel="stylesheet">
 <link th:href="@{/css/demo.css}" rel="stylesheet">
-<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
 <link th:href="@{/css/bootstrap-datetimepicker.min.css}"
 	rel="stylesheet">
 <link th:href="@{/css/bootstrap-datepicker3.css}" rel="stylesheet">
 <link th:href="@{/css/bootstrap-datepicker3.standalone.min.css}"
 	rel="stylesheet">
-<link href="http://cdn.phpoll.com/css/animate.css" rel="stylesheet">
-<style>
-style>.carousel-inner>.item>img, .carousel-inner>.item>a>img {
-	width: 70%;
-	margin: auto;
-}
-</style>
 </head>
 <body>
-	<div class="container-fluid">
-		<div class="row">
-			<header class="col-xs-12 col-md-12" th:include="${header} :: header">
-				<p>This is default header area for default layout</p>
-			</header>
-			<section class="col-xs-12 col-md-12" th:include="${view} :: content">
-				<p>This is default content area for default layout</p>
-			</section>
-			<footer class="col-xs-12 col-md-12" th:replace="${footer} :: footer">
-				<p>This is default footer area for default layout</p>
-			</footer>
+
+	<header class="header" th:replace="${header} :: header">
+		<p>This is default header area for default layout</p>
+	</header>
+	<div class="block"></div>
+	<div class="wrapper">
+		<div class="content">
+			<div class="container" th:include="${view} :: content"></div>
 		</div>
 	</div>
+	<footer th:replace="${footer} :: footer">
+		<p>This is default footer area for default layout</p>
+	</footer>
 
 
 	<!-- login modal -->
@@ -129,14 +127,20 @@ style>.carousel-inner>.item>img, .carousel-inner>.item>a>img {
 <script th:src="@{/js/handsome-plugin.js}"></script>
 <script th:src="@{/js/jquery.twbsPagination.js}"></script>
 <script th:src="@{/js/bootstrap-datepicker.js}"></script>
-<script
-	src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css"></script>
-<script>
-	$(function() {
-		window.prettyPrint && prettyPrint()
-		$(document).on('click', '.yamm .dropdown-menu', function(e) {
-			e.stopPropagation()
-		})
-	})
+<script th:src="@{/js/bootstrap-checkbox-radio-switch.js}"
+	type="text/javascript"></script>
+<script th:src="@{/js/bootstrap-select.js}" type="text/javascript"></script>
+<script th:src="@{/js/bootstrap-notify.js}" type="text/javascript"></script>
+<script th:src="@{/js/left-panel.js}" type="text/javascript"></script>
+
+<!-- <script -->
+<!-- 	src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css"></script> -->
+<!-- <script> -->
+<!-- 	$(function() { -->
+<!-- 		window.prettyPrint && prettyPrint() -->
+<!-- 		$(document).on('click', '.yamm .dropdown-menu', function(e) { -->
+<!-- 			e.stopPropagation() -->
+<!-- 		}) -->
+<!-- 	}) -->
 </script>
 </html>

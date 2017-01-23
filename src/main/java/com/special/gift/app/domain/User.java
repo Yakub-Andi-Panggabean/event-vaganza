@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(name = User.TABLE_NAME)
 public class User {
 
-  public static final String TABLE_NAME = "user";
+  public static final String TABLE_NAME = "user_web";
 
   @Id
   @Column(name = "user_id", length = 10, nullable = false)
@@ -127,14 +127,6 @@ public class User {
 
   public void setVendor(List<Vendor> vendor) {
     this.vendor = vendor;
-  }
-
-  @Override
-  public String toString() {
-    return "User [userId=" + userId + ", password=" + password + ", username=" + username
-        + ", userZip=" + userZip + ", userAddress=" + userAddress + ", handphone=" + handphone
-        + ", phone=" + phone + ", email=" + email + ", status=" + status + ", vendor=" + vendor
-        + "]";
   }
 
 

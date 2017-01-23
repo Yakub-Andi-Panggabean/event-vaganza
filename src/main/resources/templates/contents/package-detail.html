@@ -17,27 +17,31 @@
 					<div class="panel panel-default detail-package"
 						style="border: none;">
 						<div class="panel-heading" style="border: none;">
-							<h3 th:text="${#strings.append(package_type,' Description :')}">Package
-								Wedding A</h3>
+							<h4 th:text="${#strings.append(package_type,' Description :')}">Package
+								Wedding A</h4>
 						</div>
 						<div class="panel-body package-box" style="border: none;">
 							<div class="col-xs-12 col-md-4">
 								<div class="well" align="center">
-									<h2 th:text="${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.paxPrice,3,'POINT',2,'COMMA'))}">Rp. 250 k</h2>
-									<h5>per Pax</h5>
+									<h5
+										th:text="${packageDetail.vendorStyle==null}?${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.paxPrice,3,'POINT',2,'COMMA'))}:${packageDetail.vendorStyle}">Rp.
+										250 k</h5>
+									<h5
+										th:text="${packageDetail.vendorStyle==null}?'per Pax':'Style'">per
+										Pax</h5>
 								</div>
 							</div>
 							<div class="col-xs-12 col-md-4">
 								<div class="well" align="center">
-									<h2 th:text="${packageDetail.capacity}">capacity</h2>
+									<h5 th:text="${packageDetail.capacity}">capacity</h5>
 									<h5>People</h5>
 								</div>
 							</div>
 							<div class="col-xs-12 col-md-4">
 								<div class="well" align="center">
-									<h2
+									<h5
 										th:text="${#strings.append(packageDetail.rentDuration,' Hours')}">3
-										Hours</h2>
+										Hours</h5>
 									<h5>Room Usage</h5>
 								</div>
 							</div>
@@ -48,20 +52,12 @@
 			<!-- end of header -->
 			<div class="row well" style="border: none; box-shadow: none;">
 				<div class="col-xs-12 col-md-8">
+					<h2 th:inline="text">
+						[[${#strings.capitalize(packageDetail.name)}]] <small>[[${#strings.capitalize(packageDetail.room)}]]</small>
+					</h2>
 					<blockquote>
-						<h2 th:text="${#strings.capitalize(packageDetail.name)}">name</h2>
-						<footer>
-							<p style="font-size: 1.3em;">Lorem Ipsum is simply dummy text
-								of the printing and typesetting industry. Lorem Ipsum has been
-								the industry's standard dummy text ever since the 1500s, when an
-								unknown printer took a galley of type and scrambled it to make a
-								type specimen book. It has survived not only five centuries, but
-								also the leap into electronic typesetting, remaining essentially
-								unchanged. It was popularised in the 1960s with the release of
-								Letraset sheets containing Lorem Ipsum passages, and more
-								recently with desktop publishing software like Aldus PageMaker
-								including versions of Lorem Ipsum.</p>
-						</footer>
+						<p th:text="${#strings.capitalize(packageDetail.description)}">Lorem
+							Ipsum</p>
 					</blockquote>
 				</div>
 				<!-- end of list feature  -->
@@ -70,21 +66,11 @@
 						<span style="font-size: 0.9em;">Minimum Payment</span>
 						<p class="lead"
 							th:text="${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.minimumPayment,3,'POINT',2,'COMMA'))}">Price</p>
-						<footer>
-							This package price exclue venue rental fee. Client Should booking
-							the venue first before booking this package <cite
-								title="Source Title">Source Title</cite>
-						</footer>
 					</blockquote>
 					<blockquote>
 						<span style="font-size: 0.9em;">Total Price</span>
 						<p class="lead"
 							th:text="${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.price,3,'POINT',2,'COMMA'))}">Price</p>
-						<footer>
-							This package price exclue venue rental fee. Client Should booking
-							the venue first before booking this package <cite
-								title="Source Title">Source Title</cite>
-						</footer>
 					</blockquote>
 				</div>
 			</div>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container" th:fragment="content">
+		<div class="row container-package-detail">
+			<div class="col-sm-12 col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<h5>Vendor Information</h5>
+						<dl class="dl-horizontal">
+							<dt>Name :</dt>
+							<dd th:text="${existingVendor.name}"></dd>
+							<dt>Address :</dt>
+							<dd th:text="${existingVendor.address}"></dd>
+							<dt>Description :</dt>
+							<dd th:text="${existingVendor.desc}"></dd>
+							<dt>Handphone :</dt>
+							<dd th:text="${existingVendor.handphone}"></dd>
+							<dt>Telp :</dt>
+							<dd th:text="${existingVendor.phone}"></dd>
+							<dt>Pic :</dt>
+							<dd th:text="${existingVendor.pic}"></dd>
+							<dt>Email :</dt>
+							<dd th:text="${existingVendor.email}"></dd>
+						</dl>
+
+						<h6>Vendor Types:</h6>
+						<ul class="list-inline">
+							<li th:each="type : ${vendorTypes}"
+								th:text="${type.vendorTypeName}"></li>
+						</ul>
+
+					</div>
+					<div class="panel-footer">
+						<button type="button" class="btn btn-warning">
+							<a th:href="@{/vendor-update}">Update Data</a>
+						</button>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-sm-12 col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-body">
+
+						<h5>Confirmation List</h5>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

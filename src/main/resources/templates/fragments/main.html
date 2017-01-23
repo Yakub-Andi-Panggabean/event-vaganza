@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div class="container" th:fragment="content">
+	<div th:fragment="content">
 		<div class="container-package-detail">
 			<div id="myCarousel" class="carousel slide" data-ride="carousel">
 				<!-- Indicators -->
@@ -51,15 +51,14 @@
 				</a>
 			</div>
 
-			<br> <br>
+			<div class="col-md-12">
+				<div class="line-through">
+					<span class="font-bold fs-16">Pilih Kategori</span>
+				</div>
+			</div>
 
 			<!-- carousel -->
 			<div class="row category-container">
-				<div class="col-md-12" style="margin-bottom: 1%;">
-					<div class="col-md-4">
-						<span>Pilih Kategori</span>
-					</div>
-				</div>
 				<!-- end of category header -->
 				<div class="col-md-12">
 					<div class="col-md-4">

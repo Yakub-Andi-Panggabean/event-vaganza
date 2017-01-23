@@ -1,56 +1,120 @@
-<header style="color: #e5b516; height: 400px;">
-	<!-- Navigation -->
-	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-		<div class="container">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" th:href="@{/}">Event Vaganza</a>
+<header class="header">
+	<div class="nav-logo">
+		<a th:href="@{/}"><img th:src="@{/image/logo-nav.png}"
+			width="auto" height="40px"></img></a>
+	</div>
+	<div class="nav-user">
+		<a th:href="@{/register}">Daftar</a> <a id="login">Masuk</a> <a
+			th:href="@{/help}">Bantuan</a>
+	</div>
+	<div class="nav-shop">
+		<a><img th:src="@{/image/button-buy.png}" width="auto"
+			height="40px"></img></a>
+	</div>
+	<div class="nav-search">
+		<form id="form-search-header" th:action="@{/search}">
+			<div class="form-search">
+				<input type="text" class="form-search-field"
+					placeholder="Search ..."></input> <span id="search-header-button"
+					class="input-icon pe-7s-search"></span>
 			</div>
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse"
-				id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li><a th:href="@{/help}">Bantuan</a></li>
-					<li><a th:href="@{/register}">Daftar</a></li>
-					<li><a id="login">Masuk</a></li>
-				</ul>
-
-				<form class="navbar-form" role="search" method="GET"
-					th:action="@{/search}">
-					<div class="input-group search-box">
-						<input type="text" class="form-control" placeholder="Search"
-							name="f" id="search">
-						<div class="input-group-btn">
-							<button class="btn btn-default dropdown-toggle" type="button"
-								id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
-								aria-expanded="true">
-								Kategori <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-								<li><a href="#">Action</a></li>
-								<li><a href="#">Another action</a></li>
-								<li><a href="#">Something else here</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="#">Separated link</a></li>
-							</ul>
-							<button class="btn btn-default" type="submit">
-								<i class="glyphicon glyphicon-search"></i>
-							</button>
-						</div>
-					</div>
-				</form>
-
-
+		</form>
+	</div>
+	<div id="leftpanel">
+		<div class="main-menu">
+			<div class="row">
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-venue.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">BOOK VENUE</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-package.png}" width="100%"
+						height="auto" style="max-width: 48px" />
+						<p class="menu-text">BOOK PACKAGE</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-entertainment.png}" width="100%"
+						height="auto" style="max-width: 48px" />
+						<p class="menu-text">ENTERTAINMENT</p>
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-car.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">CAR / TRANSPORT</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-catering.png}" width="100%"
+						height="auto" style="max-width: 48px" />
+						<p class="menu-text">CATERING</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-photo.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">PHOTOGRAPHY</p>
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-decor.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">DECORATION</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-makeup.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">MAKE UP</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-event.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">EVENT ORGANIZER</p>
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-buy.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">BUY EQUIPMENT</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-rent.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">RENT EQUIPMENT</p>
+					</a>
+				</div>
+				<div class="col-sm-4 col-xs-4">
+					<a href="#" class="menu-icon"> <img
+						th:src="@{/image/menu-icon-other.png}" width="100%" height="auto"
+						style="max-width: 48px" />
+						<p class="menu-text">OTHER SERVICES</p>
+					</a>
+				</div>
 			</div>
 		</div>
-		<!-- /.navbar-collapse -->
-		<!-- /.col-lg-6 -->
-		<!-- /.container -->
-	</nav>
+	</div>
+	<span data-panel="leftpanel" class="panel-button"></span>
 </header>

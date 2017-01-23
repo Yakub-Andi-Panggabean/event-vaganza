@@ -13,10 +13,12 @@ import com.special.gift.app.domain.PackageVendor;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
+import com.special.gift.app.repository.GlobalSequenceRepository;
 import com.special.gift.app.repository.PackageVendorRepository;
 import com.special.gift.app.repository.UserRepository;
 import com.special.gift.app.repository.VendorRepository;
 import com.special.gift.app.util.CommonUtil;
+import com.special.gift.app.util.SequenceUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -36,6 +38,18 @@ public class ApplicationTests {
   @Autowired
   private PackageVendorRepository pVendorRepsitory;
 
+  @Autowired
+  private GlobalSequenceRepository sequenceRepository;
+
+  @Test
+  public void testSequence() {
+    try {
+      log.debug("sequence : {}", sequenceRepository.generateSequence(SequenceUtil.VENDOR_ID_SEQ));
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
   // @Test
   public void insertUser() {
     try {
@@ -46,7 +60,7 @@ public class ApplicationTests {
       user.setPhone("0212067899");
       user.setStatus('1');
       user.setUserAddress("pandawa streen no 312");
-      user.setUserId("1000000001");
+      user.setUserId(sequenceRepository.generateSequence(SequenceUtil.USER_ID_SEQ));
       user.setUsername("yakub");
       user.setUserZip("30118");
       user.setVendor(null);
@@ -90,7 +104,7 @@ public class ApplicationTests {
 
   }
 
-  @Test
+  // @Test
   public void selectVendor() {
     try {
       final Vendor vendor = vendorRepository.findOne(new VendorId("5000000000", "80"));

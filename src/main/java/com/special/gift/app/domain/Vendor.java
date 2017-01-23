@@ -130,13 +130,6 @@ public class Vendor {
     this.packageVendor = packageVendor;
   }
 
-  @Override
-  public String toString() {
-    return "Vendor [vendorId=" + vendorId + ", name=" + name + ", desc=" + desc + ", address="
-        + address + ", handphone=" + handphone + ", phone=" + phone + ", pic=" + pic + ", email="
-        + email + ", user=" + user + "]";
-  }
-
 
 
 }

@@ -75,11 +75,4 @@ public class VendorId implements Serializable {
     return true;
   }
 
-  @Override
-  public String toString() {
-    return "VendorId [vendorId=" + vendorId + ", type=" + type + "]";
-  }
-
-
-
 }

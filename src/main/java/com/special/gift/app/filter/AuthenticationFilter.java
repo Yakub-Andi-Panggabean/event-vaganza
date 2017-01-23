@@ -2,6 +2,7 @@ package com.special.gift.app.filter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.Filter;
@@ -20,7 +21,9 @@ import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.crypto.codec.Base64;
 
 import com.special.gift.app.domain.User;
+import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.service.UserService;
+import com.special.gift.app.service.VendorService;
 import com.special.gift.app.util.CommonUtil;
 
 @WebFilter(urlPatterns = "/login")
@@ -30,6 +33,9 @@ public class AuthenticationFilter implements Filter {
 
   @Inject
   private UserService userService;
+
+  @Inject
+  private VendorService vendorService;
 
 
   @Inject
@@ -56,9 +62,8 @@ public class AuthenticationFilter implements Filter {
 
     try {
 
-      if (authentication != null) {
+      if (authentication != null && decodeHeader(authentication).length > 1) {
         final String[] auth = decodeHeader(authentication);
-
         final String principal = auth[0];
         final String credential = auth[1];
         // check is user is exist or not by username
@@ -68,8 +73,13 @@ public class AuthenticationFilter implements Filter {
 
           if (passwordEncoder.isPasswordValid(user.getPassword(), credential, CommonUtil.SALT)) {
 
+            final List<Vendor> vendors = vendorService.findByUser(user);
+
+            request.setAttribute("isVendorExist", vendors.size() > 0);
             request.setAttribute("user", user.getUsername());
             request.setAttribute("userEmail", user.getEmail());
+
+
 
             chain.doFilter(request, response);
 
@@ -83,7 +93,7 @@ public class AuthenticationFilter implements Filter {
         }
 
       } else {
-        printResponse(res, HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+        printResponse(res, HttpServletResponse.SC_FORBIDDEN, "Autentikasi Gagal");
       }
 
     } catch (final Exception exception) {

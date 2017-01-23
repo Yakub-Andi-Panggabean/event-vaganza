@@ -15,6 +15,9 @@ public class ItemListDto {
   private Integer minimumPayment;
   private Integer paxPrice;
   private String rentDuration;
+  private String description;
+  private String room;
+  private String vendorStyle;
 
   public ItemListDto() {
     super();
@@ -22,7 +25,8 @@ public class ItemListDto {
 
   public ItemListDto(String id, String name, String packageType, String category, String image,
       String url, Integer price, Integer capacity, String location, Integer discountRate,
-      Integer minimumPayment, Integer paxPrice, String rentDuration) {
+      Integer minimumPayment, Integer paxPrice, String rentDuration, String description,
+      String room, String vendorStyle) {
     super();
     this.id = id;
     this.name = name;
@@ -37,6 +41,9 @@ public class ItemListDto {
     this.minimumPayment = minimumPayment;
     this.paxPrice = paxPrice;
     this.rentDuration = rentDuration;
+    this.description = description;
+    this.room = room;
+    this.vendorStyle = vendorStyle;
   }
 
   public String getId() {
@@ -144,13 +151,38 @@ public class ItemListDto {
     this.rentDuration = rentDuration;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getRoom() {
+    return room;
+  }
+
+  public void setRoom(String room) {
+    this.room = room;
+  }
+
+  public String getVendorStyle() {
+    return vendorStyle;
+  }
+
+  public void setVendorStyle(String vendorStyle) {
+    this.vendorStyle = vendorStyle;
+  }
+
   @Override
   public String toString() {
     return "ItemListDto [id=" + id + ", name=" + name + ", packageType=" + packageType
         + ", category=" + category + ", image=" + image + ", url=" + url + ", price=" + price
         + ", capacity=" + capacity + ", location=" + location + ", discountRate=" + discountRate
         + ", minimumPayment=" + minimumPayment + ", paxPrice=" + paxPrice + ", rentDuration="
-        + rentDuration + "]";
+        + rentDuration + ", description=" + description + ", room=" + room + ", vendorStyle="
+        + vendorStyle + "]";
   }
 
 

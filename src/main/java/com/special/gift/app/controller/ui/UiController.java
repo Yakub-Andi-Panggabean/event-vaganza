@@ -1,5 +1,8 @@
 package com.special.gift.app.controller.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.special.gift.app.domain.User;
+import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorDesc;
 import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
@@ -24,6 +28,7 @@ import com.special.gift.app.dto.VendorDto;
 import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
+import com.special.gift.app.service.VendorService;
 
 @Controller
 @SessionAttributes(value = {"menus"})
@@ -36,7 +41,11 @@ public class UiController {
   public static final String HELP = "help";
   public static final String SEARCH = "search";
   public static final String NOTIFICATION = "notification";
+
+  // vendor
   public static final String VENDOR_REGISTER = "vendor-registration";
+  public static final String VENDOR_UPDATE = "vendor-update";
+  public static final String VENDOR_VIEW = "vendor-view";
 
   // user
   public static final String REGISTER = "register";
@@ -60,6 +69,9 @@ public class UiController {
   @Inject
   private ListingService listingService;
 
+  @Inject
+  private VendorService vendorService;
+
   /**
    * mapping for home page
    *
@@ -70,6 +82,7 @@ public class UiController {
   @RequestMapping(method = RequestMethod.GET)
   public String renderIndex(Model model, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
+    model.addAttribute("isVendor", session.getAttribute("isVendor"));
     model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
     model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
     model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
@@ -109,6 +122,7 @@ public class UiController {
     return "/contents/user-update";
   }
 
+
   /**
    *
    * mapping for search page
@@ -120,6 +134,7 @@ public class UiController {
   @RequestMapping(value = SEARCH, method = RequestMethod.GET)
   public String renderSearchPage(Model model, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
+    model.addAttribute("isVendor", session.getAttribute("isVendor"));
     return "/contents/search";
   }
 
@@ -135,6 +150,7 @@ public class UiController {
   @RequestMapping(value = CATEGORIES, method = RequestMethod.GET)
   public String renderCategoriesPage(Model model, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
+    model.addAttribute("isVendor", session.getAttribute("isVendor"));
     return "/contents/parent-categories";
   }
 
@@ -152,6 +168,7 @@ public class UiController {
   public String renderDetailPage(Model model, @PathVariable(value = "criteria") String name,
       @RequestParam(value = "c") String id, HttpSession session) {
     model.addAttribute("user", session.getAttribute("user"));
+    model.addAttribute("isVendor", session.getAttribute("isVendor"));
 
     if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
       return "redirect:/";
@@ -219,7 +236,9 @@ public class UiController {
               .concat(parent.getVendorTypeName().replace(" ", "-").toLowerCase()).concat("?")
               .concat("c=").concat(parent.getVendorType());
         } else {
+
           model.addAttribute("user", session.getAttribute("user"));
+          model.addAttribute("isVendor", session.getAttribute("isVendor"));
 
           // for request param
           model.addAttribute("root_type", parent.getVendorType());
@@ -298,13 +317,53 @@ public class UiController {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  @RequestMapping(value = VENDOR_UPDATE, method = RequestMethod.GET)
+  public String renderVendorUpdatePage(Model model, HttpSession session) {
+    try {
+
+
+      final List<VendorDesc> vendorTypes = vendorDescService.findAll().getContent();
+      final List<VendorDesc> availableList = new ArrayList<>();
+      final List<VendorDesc> pickedList = (List<VendorDesc>) session.getAttribute("vendorTypes");
+
+
+      availableList.addAll(vendorTypes);
+
+      for (int i = 0; i < availableList.size(); i++) {
+        for (int x = 0; x < pickedList.size(); x++) {
+          if (pickedList.get(x).getVendorType().toLowerCase()
+              .equals(availableList.get(i).getVendorType().toLowerCase())) {
+            availableList.remove(i);
+          }
+        }
+      }
+
+
+      log.debug("picked types : {}", pickedList.toString());
+      log.debug("available types : {}", availableList.toString());
+
+
+      model.addAttribute("user", session.getAttribute("user"));
+      model.addAttribute("vendor", new VendorDto());
+      model.addAttribute("vendorData", session.getAttribute("vendorData"));
+      model.addAttribute("vendorTypes", session.getAttribute("vendorTypes"));
+      model.addAttribute("availableVendorTypes", availableList);
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+    }
+
+    return "/contents/vendor-update";
+  }
+
   @RequestMapping(value = PACKAGE_DETAIL, method = RequestMethod.GET)
   public String renderPackageDetailPage(Model model, @PathVariable(value = "type") String type,
       @PathVariable(value = "packageId") String id, HttpServletRequest request,
       HttpSession session) {
-    log.debug("type : {}", type);
-    log.debug("id : {}", id);
+
     model.addAttribute("user", session.getAttribute("user"));
+    model.addAttribute("isVendor", session.getAttribute("isVendor"));
+
     final FilterDto filter = new FilterDto();
     filter.setId(id);
     try {
@@ -313,7 +372,6 @@ public class UiController {
       model.addAttribute("packageDetail", item);
       model.addAttribute("package_type", Character.toUpperCase(type.charAt(0)) + type.substring(1));
     } catch (final Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -329,10 +387,43 @@ public class UiController {
       user.setVendor(null);
       BeanUtils.copyProperties(user, dto);
       model.addAttribute("existingData", dto);
+
       model.addAttribute("user", session.getAttribute("user"));
+      model.addAttribute("isVendor", session.getAttribute("isVendor"));
+
     } catch (final Exception e) {
       return "redirect:/";
     }
     return "/contents/user-data-view";
   }
+
+  @RequestMapping(value = VENDOR_VIEW, method = RequestMethod.GET)
+  public String renderVendorViewPage(Model model, HttpSession session) {
+    try {
+      final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+      final List<Vendor> data = vendorService.findByUser(user);
+      final List<VendorDesc> vendorTypes = new ArrayList<>();
+
+      final VendorDto vendorDto = new VendorDto();
+      BeanUtils.copyProperties(data.get(0), vendorDto);
+
+      log.debug("vendor dto : {}", vendorDto.toString());
+
+      for (final Vendor vendor : data) {
+        vendorTypes.add(vendorDescService.findById(vendor.getVendorId().getType()));
+      }
+
+      model.addAttribute("existingVendor", vendorDto);
+      model.addAttribute("vendorTypes", vendorTypes);
+      model.addAttribute("isVendor", session.getAttribute("isVendor"));
+
+      session.setAttribute("vendorData", vendorDto);
+      session.setAttribute("vendorTypes", vendorTypes);
+
+    } catch (final Exception e) {
+      return "redirect:/";
+    }
+    return "/contents/vendor-data-view";
+  }
+
 }

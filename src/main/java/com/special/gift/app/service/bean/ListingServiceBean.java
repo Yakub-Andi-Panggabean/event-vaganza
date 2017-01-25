@@ -52,7 +52,7 @@ public class ListingServiceBean implements ListingService {
             PACKAGE_VENDOR, packages.getVendor().getVendorId().getType(), packages.getPackageImg(),
             new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENDOR)
                 .append("/").append(packages.getPackageId()).toString(),
-            packages.getPackagePrice(), packages.getPackageCapacity(), null,
+            packages.getPackagePrice(), packages.getPackageCapacity(), "",
             packages.getDiscountRate(), packages.getMinimumPayment(), 0,
             String.valueOf(packages.getTimePackage()), packages.getPackageDesc(), "",
             packages.getPackageStyle()));

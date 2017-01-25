@@ -195,7 +195,7 @@ function fetchItemList(start, limit) {
 												.concat("<div class=\"thumbnail\">");
 										result = result
 												.concat("<img class=\"img-fluid\" src=\""
-														+ value.image
+														+ value.image.split(',')[0]
 														+ "\" alt=\"Responsive image\">");
 										result = result.concat("</a>");
 										result = result.concat("</div>");
@@ -381,7 +381,7 @@ function fetchItemsSelectionList(start, limit, destroy) {
 				result = result.concat("<a href=" + value.url + ">");
 				result = result.concat("<div class=\"thumbnail\">");
 				result = result.concat("<img class=\"img-fluid\" src=\""
-						+ value.image + "\" alt=\"Responsive image\">");
+						+ value.image.split(',')[0] + "\" alt=\"Responsive image\">");
 				result = result.concat("</a>");
 				result = result.concat("</div>");
 				result = result.concat("<div class=\"caption\">");

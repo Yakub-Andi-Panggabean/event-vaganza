@@ -9,8 +9,8 @@
 				data-toggle="dropdown"><img th:src="@{/image/user.png}"
 					width="auto" height="40px"></img></a>
 				<ul class="dropdown-menu">
-					<li><a th:text="${user}" th:href="@{/user-view}">Profile</a></li>
-					<li><a th:href="@{/vendor-view}" th:remove="${isVendor}?none:all">Vendor
+					<li><a th:text="${session.user}" th:href="@{/user-view}">Profile</a></li>
+					<li><a th:href="@{/vendor-view}" th:remove="${session.isVendor}?none:all">Vendor
 							Status</a></li>
 					<li><a href="#">Setting</a></li>
 					<li><a onclick="invalidate()">Logout</a></li>
@@ -19,7 +19,7 @@
 	</div>
 	<div class="nav-user">
 		<a th:href="@{/help}">Bantuan</a> <a th:href="@{/vendor-registration}"
-			th:remove="${isVendor}?all:none"> Vendor</a>
+			th:remove="${session.isVendor}?all:none"> Vendor</a>
 	</div>
 	<div class="nav-search">
 		<form id="form-search-header" th:action="@{/search}">
@@ -57,7 +57,7 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-4 col-xs-4">
-					<a href="#" class="menu-icon"> <img
+					<a th:href="@{/items/car}" class="menu-icon"> <img
 						th:src="@{/image/menu-icon-car.png}" width="100%" height="auto"
 						style="max-width: 48px" />
 						<p class="menu-text">CAR / TRANSPORT</p>

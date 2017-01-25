@@ -1,4 +1,4 @@
-package com.special.gift.app.filter;
+package com.special.gift.app.servlet;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -78,8 +78,6 @@ public class AuthenticationFilter implements Filter {
             request.setAttribute("isVendorExist", vendors.size() > 0);
             request.setAttribute("user", user.getUsername());
             request.setAttribute("userEmail", user.getEmail());
-
-
 
             chain.doFilter(request, response);
 

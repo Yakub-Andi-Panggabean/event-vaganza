@@ -60,6 +60,8 @@ public class UiController {
   // package
   public static final String PACKAGE_DETAIL = "/packages/{type}/{packageId}";
 
+  public static final String ITEM_OPTION = "/items/car";
+
   @Inject
   private UserService userService;
 
@@ -81,8 +83,6 @@ public class UiController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public String renderIndex(Model model, HttpSession session) {
-    model.addAttribute("user", session.getAttribute("user"));
-    model.addAttribute("isVendor", session.getAttribute("isVendor"));
     model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
     model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
     model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
@@ -113,7 +113,6 @@ public class UiController {
       log.debug("user dto : {}", dto.toString());
       model.addAttribute("userData", new UserDto());
       model.addAttribute("existingData", dto);
-      model.addAttribute("user", session.getAttribute("user"));
     } catch (final Exception e) {
       return "redirect:/";
     }
@@ -132,9 +131,7 @@ public class UiController {
    * @return
    */
   @RequestMapping(value = SEARCH, method = RequestMethod.GET)
-  public String renderSearchPage(Model model, HttpSession session) {
-    model.addAttribute("user", session.getAttribute("user"));
-    model.addAttribute("isVendor", session.getAttribute("isVendor"));
+  public String renderSearchPage(Model model) {
     return "/contents/search";
   }
 
@@ -148,9 +145,7 @@ public class UiController {
    * @return
    */
   @RequestMapping(value = CATEGORIES, method = RequestMethod.GET)
-  public String renderCategoriesPage(Model model, HttpSession session) {
-    model.addAttribute("user", session.getAttribute("user"));
-    model.addAttribute("isVendor", session.getAttribute("isVendor"));
+  public String renderCategoriesPage(Model model) {
     return "/contents/parent-categories";
   }
 
@@ -166,9 +161,7 @@ public class UiController {
    */
   @RequestMapping(value = DETAIL, method = RequestMethod.GET)
   public String renderDetailPage(Model model, @PathVariable(value = "criteria") String name,
-      @RequestParam(value = "c") String id, HttpSession session) {
-    model.addAttribute("user", session.getAttribute("user"));
-    model.addAttribute("isVendor", session.getAttribute("isVendor"));
+      @RequestParam(value = "c") String id) {
 
     if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
       return "redirect:/";
@@ -217,8 +210,7 @@ public class UiController {
    */
   @RequestMapping(value = DETAIL_CHILD, method = RequestMethod.GET)
   public String renderDetailChildPage(Model model, @PathVariable(value = "criteria") String name,
-      @PathVariable(value = "child") String child, @RequestParam(value = "c") String id,
-      HttpSession session) {
+      @PathVariable(value = "child") String child, @RequestParam(value = "c") String id) {
 
     if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
       return "redirect:/";
@@ -236,9 +228,6 @@ public class UiController {
               .concat(parent.getVendorTypeName().replace(" ", "-").toLowerCase()).concat("?")
               .concat("c=").concat(parent.getVendorType());
         } else {
-
-          model.addAttribute("user", session.getAttribute("user"));
-          model.addAttribute("isVendor", session.getAttribute("isVendor"));
 
           // for request param
           model.addAttribute("root_type", parent.getVendorType());
@@ -311,7 +300,6 @@ public class UiController {
     if (session.getAttribute("user") == null) {
       return "redirect:/";
     } else {
-      model.addAttribute("user", session.getAttribute("user"));
       model.addAttribute("vendor", new VendorDto());
       return "/contents/vendor-registration";
     }
@@ -344,12 +332,10 @@ public class UiController {
       log.debug("available types : {}", availableList.toString());
 
 
-      model.addAttribute("user", session.getAttribute("user"));
       model.addAttribute("vendor", new VendorDto());
       model.addAttribute("vendorData", session.getAttribute("vendorData"));
       model.addAttribute("vendorTypes", session.getAttribute("vendorTypes"));
       model.addAttribute("availableVendorTypes", availableList);
-      model.addAttribute("isVendor", session.getAttribute("isVendor"));
 
     } catch (final Exception ex) {
       ex.printStackTrace();
@@ -361,11 +347,7 @@ public class UiController {
 
   @RequestMapping(value = PACKAGE_DETAIL, method = RequestMethod.GET)
   public String renderPackageDetailPage(Model model, @PathVariable(value = "type") String type,
-      @PathVariable(value = "packageId") String id, HttpServletRequest request,
-      HttpSession session) {
-
-    model.addAttribute("user", session.getAttribute("user"));
-    model.addAttribute("isVendor", session.getAttribute("isVendor"));
+      @PathVariable(value = "packageId") String id, HttpServletRequest request) {
 
     final FilterDto filter = new FilterDto();
     filter.setId(id);
@@ -390,9 +372,6 @@ public class UiController {
       user.setVendor(null);
       BeanUtils.copyProperties(user, dto);
       model.addAttribute("existingData", dto);
-
-      model.addAttribute("user", session.getAttribute("user"));
-      model.addAttribute("isVendor", session.getAttribute("isVendor"));
 
     } catch (final Exception e) {
       return "redirect:/";
@@ -420,7 +399,6 @@ public class UiController {
 
       model.addAttribute("existingVendor", vendorDto);
       model.addAttribute("vendorTypes", vendorTypes);
-      model.addAttribute("isVendor", session.getAttribute("isVendor"));
 
       session.setAttribute("vendorData", vendorDto);
       session.setAttribute("vendorTypes", vendorTypes);
@@ -430,6 +408,12 @@ public class UiController {
       return "redirect:/";
     }
     return "/contents/vendor-data-view";
+  }
+
+
+  @RequestMapping(value = ITEM_OPTION, method = RequestMethod.GET)
+  public String renderItemOptionViewPage(Model model) {
+    return "/contents/item-option";
   }
 
 }

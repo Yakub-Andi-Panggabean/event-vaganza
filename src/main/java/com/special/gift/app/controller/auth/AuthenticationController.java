@@ -33,9 +33,12 @@ public class AuthenticationController {
     log.debug("role from filter : {}", request.getAttribute("role"));
     final AuthenticationResponse authResponse = new AuthenticationResponse("/",
         (String) request.getAttribute("user"), "200", "authenticated");
+
     httpSession.setAttribute("user", authResponse.getUsername());
     httpSession.setAttribute("userEmail", request.getAttribute("userEmail"));
     httpSession.setAttribute("isVendor", request.getAttribute("isVendorExist"));
+
+    httpSession.setMaxInactiveInterval(10);
 
 
     log.debug("is vendor exist : {}", request.getAttribute("isVendorExist"));

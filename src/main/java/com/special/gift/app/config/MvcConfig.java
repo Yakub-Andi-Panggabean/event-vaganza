@@ -21,7 +21,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
   public static final String SERVICE_PACKAGE = BASE_PACKAGE + ".service";
   public static final String REPOSITORY_PACKAGE = BASE_PACKAGE + ".repository";
   public static final String UTIL_PACKAGE = BASE_PACKAGE + ".util";
-  public static final String SERVLET_PACKAGE = BASE_PACKAGE + ".filter";
+  public static final String SERVLET_PACKAGE = BASE_PACKAGE + ".servlet";
 
   @Autowired
   private ThymeleafViewInterceptor interceptor;

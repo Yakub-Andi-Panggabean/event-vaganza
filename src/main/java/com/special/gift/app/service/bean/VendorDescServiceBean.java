@@ -30,7 +30,7 @@ public class VendorDescServiceBean implements VendorDescService {
     List<VendorDesc> contents = new ArrayList<>();
 
     for (final VendorDesc vendorDesc : categories) {
-      if (vendorDesc.getVendorType().substring(2).equals("0")) {
+      if (String.valueOf(vendorDesc.getVendorType().charAt(2)).equals("0")) {
         vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
         contents.add(vendorDesc);
       }
@@ -68,11 +68,13 @@ public class VendorDescServiceBean implements VendorDescService {
     List<VendorDesc> contents = new ArrayList<>();
 
     for (final VendorDesc vendorDesc : categories) {
-      if (vendorDesc.getVendorType().substring(1, 2).equals(parent.substring(1, 2))) {
+      if (String.valueOf(vendorDesc.getVendorType().charAt(1))
+          .equals(String.valueOf(parent.charAt(1)))) {
         vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
 
-        if (!parent.equals(vendorDesc.getVendorType())
-            && !vendorDesc.getVendorType().substring(2).equals("0")) {
+        if (!parent.equals(vendorDesc.getVendorType()) && !String
+            .valueOf(vendorDesc.getVendorType().charAt(vendorDesc.getVendorType().length() - 1))
+            .equals("0")) {
           contents.add(vendorDesc);
         }
       }

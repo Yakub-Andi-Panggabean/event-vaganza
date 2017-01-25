@@ -40,7 +40,9 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
     final String principal = (String) request.getSession().getAttribute("user");
 
     log.debug("response code : {}", response.getStatus());
+
     log.debug("request attribute user : {}", request.getSession().getAttribute("user"));
+
     log.debug("view name : {}", originalViewName);
 
 

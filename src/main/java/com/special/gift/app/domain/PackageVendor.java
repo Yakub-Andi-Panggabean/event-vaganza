@@ -44,8 +44,8 @@ public class PackageVendor {
   @Column(name = "package_promo", nullable = false, length = 100)
   private String packagePromo;
 
-  @Column(name = "discount_rate", nullable = false)
-  private int discountRate;
+  @Column(name = "discount_rate", nullable = true)
+  private Integer discountRate;
 
   @Column(name = "minimum_payment", nullable = false)
   private int minimumPayment;
@@ -130,11 +130,11 @@ public class PackageVendor {
     this.packagePromo = packagePromo;
   }
 
-  public int getDiscountRate() {
+  public Integer getDiscountRate() {
     return discountRate;
   }
 
-  public void setDiscountRate(int discountRate) {
+  public void setDiscountRate(Integer discountRate) {
     this.discountRate = discountRate;
   }
 

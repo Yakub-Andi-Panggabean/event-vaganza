@@ -32,13 +32,13 @@ public class VendorServiceBean implements VendorService {
   private UserService userService;
 
   @Override
-  @Transactional(readOnly = true)
+  @Transactional(readOnly = false)
   public void addNewUserVendor(Vendor vendor) throws Exception {
     repository.save(vendor);
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Transactional(readOnly = false)
   public void editUserVendor(Vendor vendor) throws Exception {
     if (repository.exists(vendor.getVendorId())) {
       repository.save(vendor);
@@ -46,7 +46,7 @@ public class VendorServiceBean implements VendorService {
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Transactional(readOnly = false)
   public void deleteUserVendor(Vendor vendor) throws Exception {
     if (repository.exists(vendor.getVendorId())) {
       repository.delete(vendor);
@@ -81,22 +81,26 @@ public class VendorServiceBean implements VendorService {
         Vendor target = null;
         VendorId vendorId = null;
 
-        deleteByUser(user);
 
-        for (final String type : vendor.getVendorType().split(",")) {
-          target = new Vendor();
+        if (vendor.getVendorType() != null) {
+          deleteByUser(user);
+          for (final String type : vendor.getVendorType().split(",")) {
+            target = new Vendor();
 
-          vendorId = new VendorId();
-          vendorId.setType(type);
-          vendorId.setVendorId(vendorSequenceId);
+            vendorId = new VendorId();
+            vendorId.setType(type);
+            vendorId.setVendorId(vendorSequenceId);
 
-          BeanUtils.copyProperties(vendor, target);
+            BeanUtils.copyProperties(vendor, target);
 
-          target.setVendorId(vendorId);
-          target.setUser(user);
+            target.setVendorId(vendorId);
+            target.setUser(user);
 
-          addNewUserVendor(target);
+            addNewUserVendor(target);
+          }
         }
+
+
       }
     } catch (final Exception exception) {
       throw exception;

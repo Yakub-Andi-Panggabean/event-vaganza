@@ -42,7 +42,7 @@ public class Vendor {
   @Column(name = "vendor_email", nullable = false, length = 100)
   private String email;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = true)
   private User user;
 

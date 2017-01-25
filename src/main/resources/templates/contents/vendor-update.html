@@ -10,7 +10,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Fill Vendor Information</div>
 			<div class="panel-body">
-				<form name="vendor_update" action="#" th:action="@{/vendor-update}"
+				<form id="form_vendor_update" name="vendor_update" action="#" th:action="@{/vendor-update}"
 					th:object="${vendor}" method="post">
 					<div class="col-sm-6">
 						<div id="form_group_vendorname" class="form-group has-feedback">
@@ -62,8 +62,6 @@
 							<span class="error_message" id="vendor_address_error_message"
 								hidden="true"></span>
 						</div>
-						<button id="register_vendor_button" type="submit"
-							class="btn btn-warning" style="width: 100%">Update</button>
 					</div>
 					<div class="col-sm-6">
 						<div class="col-sm-6">
@@ -99,6 +97,8 @@
 						</div>
 					</div>
 				</form>
+				<button id="update_vendor_button" type="submit"
+					class="btn btn-warning" style="width: 100%">Update</button>
 			</div>
 			<!-- end of panel body -->
 		</div>

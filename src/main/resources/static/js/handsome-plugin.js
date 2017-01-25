@@ -102,13 +102,12 @@ $.fn.validateOptions = function() {
  * 
  * @returns
  */
-$.fn.pickCategory = function(target) {
+$.fn.pickCategory = function(picked) {
 	var selected = this.find(':selected');
 	selected.remove();
-	$('#' + target).append(selected);
-	$("#" + target).prop("selected", true);
-
-}
+	$('#' + picked).append(selected);
+	$('#' + picked).prop("selected", true);
+};
 
 /**
  * 
@@ -116,9 +115,9 @@ $.fn.pickCategory = function(target) {
  * 
  * @returns
  */
-$.fn.cancelCategory = function(target) {
+$.fn.cancelCategory = function(available) {
 	var selected = this.find(':selected');
 	selected.remove();
-	$('#' + target).append(selected);
+	$('#'+available).append(selected);
 	this.prop("selected", true);
-}
+};

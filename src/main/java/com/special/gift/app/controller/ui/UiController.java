@@ -349,8 +349,11 @@ public class UiController {
       model.addAttribute("vendorData", session.getAttribute("vendorData"));
       model.addAttribute("vendorTypes", session.getAttribute("vendorTypes"));
       model.addAttribute("availableVendorTypes", availableList);
+      model.addAttribute("isVendor", session.getAttribute("isVendor"));
+
     } catch (final Exception ex) {
       ex.printStackTrace();
+      return "redirect:/";
     }
 
     return "/contents/vendor-update";
@@ -400,11 +403,13 @@ public class UiController {
   @RequestMapping(value = VENDOR_VIEW, method = RequestMethod.GET)
   public String renderVendorViewPage(Model model, HttpSession session) {
     try {
+      model.addAttribute("user", session.getAttribute("user"));
       final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
       final List<Vendor> data = vendorService.findByUser(user);
       final List<VendorDesc> vendorTypes = new ArrayList<>();
 
       final VendorDto vendorDto = new VendorDto();
+
       BeanUtils.copyProperties(data.get(0), vendorDto);
 
       log.debug("vendor dto : {}", vendorDto.toString());
@@ -421,6 +426,7 @@ public class UiController {
       session.setAttribute("vendorTypes", vendorTypes);
 
     } catch (final Exception e) {
+      e.printStackTrace();
       return "redirect:/";
     }
     return "/contents/vendor-data-view";

@@ -28,6 +28,19 @@ function init() {
 	filteringPackageType();
 	filteringCapacity();
 	searchButtonClick();
+	updateVendor();
+
+	$('#button_pick_update_vendor_type').click(
+			function() {
+				$('#available_category_update_list').pickCategory(
+						'choosen_category_update_list');
+			});
+
+	$('#button_cancel_update_vendor_type').click(
+			function() {
+				$('#choosen_category_update_list').cancelCategory(
+						'available_category_update_list');
+			});
 
 	$('#button_pick_vendor_type').click(function() {
 		$('#available_category_list').pickCategory('choosen_category_list');
@@ -35,15 +48,6 @@ function init() {
 
 	$('#button_cancel_vendor_type').click(function() {
 		$('#choosen_category_list').cancelCategory('available_category_list');
-	});
-	
-	
-	$('#button_pick_update_vendor_type').click(function() {
-		$('#available_category_update_list').pickCategory('choosen_category_update_list');
-	});
-
-	$('#button_cancel_update_vendor_type').click(function() {
-		$('#choosen_category_update_list').cancelCategory('available_category_update_list');
 	});
 
 }
@@ -199,7 +203,7 @@ function fetchItemList(start, limit) {
 												.concat("<div class=\"caption\">");
 										result = result.concat("<h4>"
 												+ value.name + "</h4>");
-										result = result.concat("<p>"
+										result = result.concat("<p> Rp. "
 												+ value.price.format(2)
 												+ ".</p>");
 										result = result.concat("</div>");
@@ -382,7 +386,7 @@ function fetchItemsSelectionList(start, limit, destroy) {
 				result = result.concat("</div>");
 				result = result.concat("<div class=\"caption\">");
 				result = result.concat("<h4>" + value.name + "</h4>");
-				result = result.concat("<p>" + value.price + ".</p>");
+				result = result.concat("<p> Rp." + value.price + ".</p>");
 				result = result.concat("</div>");
 				result = result.concat("</div>");
 			});
@@ -467,3 +471,13 @@ Number.prototype.format = function(n, x) {
 	var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
 	return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
+
+function updateVendor() {
+	$('#update_vendor_button').click(function() {
+		$('#choosen_category_update_list option').each(function() {
+			$(this).prop('selected', true);
+		});
+
+		$('#form_vendor_update').submit();
+	});
+}

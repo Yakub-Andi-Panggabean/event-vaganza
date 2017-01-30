@@ -22,7 +22,7 @@
 			th:remove="${session.isVendor}?all:none"> Vendor</a>
 	</div>
 	<div class="nav-search">
-		<form id="form-search-header" th:action="@{/search}">
+		<form name="f" id="form-search-header" th:action="@{/search}">
 			<div class="form-search">
 				<input type="text" class="form-search-field"
 					placeholder="Search ..."></input> <span id="search-header-button"

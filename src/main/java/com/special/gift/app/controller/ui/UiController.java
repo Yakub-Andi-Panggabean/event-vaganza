@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -130,8 +131,68 @@ public class UiController {
    * @param session
    * @return
    */
-  @RequestMapping(value = SEARCH, method = RequestMethod.GET)
-  public String renderSearchPage(Model model) {
+  @RequestMapping(value = SEARCH, method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+  public String renderSearchPage(Model model,
+      @RequestParam(value = "f", required = false) String keyword, HttpServletRequest request,
+      @RequestParam(value = "start", defaultValue = "0", required = false) int start,
+      @RequestParam(value = "limit", defaultValue = "1", required = false) int limit) {
+    try {
+      log.debug("keyword : {}", keyword);
+      log.debug("start : {}", start);
+      log.debug("limit : {}", limit);
+
+      final FilterDto filter = new FilterDto();
+      filter.setKeyword(keyword);
+      final List<ItemListDto> itemList = listingService.findAllList(request, null, filter);
+
+      final List<ItemListDto> filteredItemList = new ArrayList<>();
+
+      final List<ItemListDto> displayedItemList = new ArrayList<>();
+
+      if (keyword != null && !keyword.isEmpty()) {
+        for (int i = 0; i < itemList.size(); i++) {
+
+          final boolean suitableLocation =
+              itemList.get(i).getLocation().toLowerCase().contains(keyword.toLowerCase());
+
+          final boolean suitableVendorStyle =
+              itemList.get(i).getVendorStyle().toLowerCase().contains(keyword.toLowerCase());
+
+          final boolean suitableName =
+              itemList.get(i).getName().toLowerCase().contains(keyword.toLowerCase());
+
+          if (suitableLocation || suitableVendorStyle || suitableName) {
+            filteredItemList.add(itemList.get(i));
+          }
+
+          displayedItemList.clear();
+          displayedItemList.addAll(filteredItemList);
+        }
+
+      } else {
+        displayedItemList.clear();
+        displayedItemList.addAll(itemList);
+      }
+
+      log.debug("start : {}", start);
+
+      model.addAttribute("totalPage",
+          new Double(Math.ceil((double) itemList.size() / (double) limit)).intValue());
+      model.addAttribute("limit", limit);
+
+
+      model.addAttribute("itemList",
+          displayedItemList.subList(
+              displayedItemList.size() > start ? start : displayedItemList.size() - 1,
+              displayedItemList.size() > limit ? limit : displayedItemList.size()));
+
+
+      log.debug("item size : {}", itemList.size());
+
+
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+    }
     return "/contents/search";
   }
 
@@ -216,9 +277,10 @@ public class UiController {
       return "redirect:/";
     } else {
 
-      final VendorDesc parent = vendorDescService.findById(id.substring(0, 1).concat("0"));
+      final VendorDesc parent = vendorDescService.findById(id.substring(0, 2).concat("0"));
 
       if (parent == null) {
+        log.debug("parent is null");
         return "redirect:/";
       } else {
         final VendorDesc vendorDesc = vendorDescService.findById(id);

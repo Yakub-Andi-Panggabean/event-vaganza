@@ -571,3 +571,11 @@ body .well {
 	background: #fff;
 	padding: 0 10px;
 }
+
+.main-item-list .item {
+	color: #f7c321;
+}
+
+.main-item-list li{
+	border:none;
+}

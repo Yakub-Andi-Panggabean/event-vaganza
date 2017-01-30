@@ -77,14 +77,17 @@ public class ListingServiceBean implements ListingService {
         final List<ItemListDto> dtos = new ArrayList<>();
         dtos.clear();
         for (final ItemListDto itemListDto : items) {
-          if (itemListDto.getCategory().equals(category)) {
+          // if parent it will also contains all it's child
+          if ((category.endsWith("0")
+              && itemListDto.getCategory().substring(1, 2).equals(category.substring(1, 2)))
+              || (itemListDto.getCategory().equals(category))) {
             dtos.add(itemListDto);
           }
         }
 
 
 
-        log.debug("total filtered item count : {}", dtos.size());
+        log.debug("total filtered item count with category {} : {}", category, dtos.size());
 
         return dtos;
       }

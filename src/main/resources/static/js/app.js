@@ -10,7 +10,6 @@ $(document).ready(function() {
 	// do jQuery stuff when DOM is ready
 	showModal();
 	init();
-	$('#z-auth').click(authenticate);
 });
 
 /**
@@ -29,6 +28,7 @@ function init() {
 	filteringCapacity();
 	searchButtonClick();
 	updateVendor();
+	authProcess();
 
 	$('#button_pick_update_vendor_type').click(
 			function() {
@@ -62,6 +62,44 @@ function showModal() {
 	$('#button-booking').click(function() {
 		$('#book_modal').modal();
 	});
+}
+
+function authProcess() {
+
+	$('#z-auth').click(authenticate);
+
+	$('#z-user').keypress(function(e) {
+
+		var username = $('#z-user').val();
+		var password = $('#z-password').val();
+
+		if (e.which == 13) {
+			if (username === '') {
+				window.alert('user harus di isi');
+			} else if (password === '') {
+				window.alert('email harus di isi');
+			} else {
+				authenticate();
+			}
+		}
+	});
+
+	$('#z-password').keypress(function(e) {
+
+		var username = $('#z-user').val();
+		var password = $('#z-password').val();
+
+		if (e.which == 13) {
+			if (username === '') {
+				window.alert('user harus di isi');
+			} else if (password === '') {
+				window.alert('email harus di isi');
+			} else {
+				authenticate();
+			}
+		}
+	});
+
 }
 
 /**
@@ -131,32 +169,6 @@ function fetchAllAvailableCategory() {
 
 /**
  * 
- * used for multiple select type
- * 
- * @returns
- */
-// function pickCategory() {
-// var selected = $('#available_category_list').find(':selected');
-// selected.remove();
-// $('#choosen_category_list').append(selected);
-// $("#choosen_category_list").prop("selected", true);
-//
-// }
-//
-// /**
-// *
-// * used for multiple select type
-// *
-// * @returns
-// */
-// function cancelCategory() {
-// var selected = $('#choosen_category_list').find(':selected');
-// selected.remove();
-// $('#available_category_list').append(selected);
-// $("#choosen_category_list").prop("selected", true);
-// }
-/**
- * 
  * fetch record and pagination
  * 
  * @param start
@@ -166,7 +178,7 @@ function fetchAllAvailableCategory() {
 function fetchItemList(start, limit) {
 	var fType = getUrlVars()["c"];
 
-	// update dispalay record
+	// update display record
 	$
 			.ajax({
 				url : '/api/items/' + start + '/' + limit + '/' + fType,
@@ -181,21 +193,22 @@ function fetchItemList(start, limit) {
 									function(index, value) {
 										if (index == 0) {
 											result = result
-													.concat("<div class=\"row\" style=\"border-bottom:1px\">");
+													.concat("<div class=\"row\" style=\"margin-bottom:25px\">");
 										} else if (index % 4 == 0) {
 											result = result.concat("</div>");
 											result = result
-													.concat("<div class=\"row\" style=\"border-bottom:1px\">");
+													.concat("<div class=\"row\" style=\"margin-bottom:25px\">");
 										}
 										result = result
 												.concat("<div class=\"col-sm-6 col-md-3\">");
 										result = result.concat("<a href="
 												+ value.url + ">");
 										result = result
-												.concat("<div class=\"thumbnail\">");
+												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">");
 										result = result
-												.concat("<img class=\"img-fluid\" src=\""
-														+ value.image.split(',')[0]
+												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
+														+ value.image
+																.split(',')[0]
 														+ "\" alt=\"Responsive image\">");
 										result = result.concat("</a>");
 										result = result.concat("</div>");
@@ -360,80 +373,97 @@ function fetchItemsSelectionList(start, limit, destroy) {
 
 	filterData.sorting = filterSorting;
 
-	$.ajax({
-		url : '/api/items/' + start + '/' + limit + '/' + fType,
-		method : "POST",
-		contentType : 'application/json',
-		dataType : 'json',
-		data : JSON.stringify(filterData),
-		success : function(data) {
-			var result = "";
-			var pagination = "";
-			var displayedpagination = "";
-			$.each(data.contents.content, function(index, value) {
-				if (index == 0) {
-					result = result.concat("<div class=\"row\">");
-				} else if (index % 4 == 0) {
+	$
+			.ajax({
+				url : '/api/items/' + start + '/' + limit + '/' + fType,
+				method : "POST",
+				contentType : 'application/json',
+				dataType : 'json',
+				data : JSON.stringify(filterData),
+				success : function(data) {
+					var result = "";
+					var pagination = "";
+					var displayedpagination = "";
+					$
+							.each(
+									data.contents.content,
+									function(index, value) {
+										if (index == 0) {
+											result = result
+													.concat("<div class=\"row\" style=\"margin-bottom:25px\">");
+										} else if (index % 4 == 0) {
+											result = result.concat("</div>");
+											result = result
+													.concat("<div class=\"row\" style=\"margin-bottom:25px\">");
+										}
+										result = result
+												.concat("<div class=\"col-sm-6 col-md-3\">");
+										result = result.concat("<a href="
+												+ value.url + ">");
+										result = result
+												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">>");
+										result = result
+												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
+														+ value.image
+																.split(',')[0]
+														+ "\" alt=\"Responsive image\">");
+										result = result.concat("</a>");
+										result = result.concat("</div>");
+										result = result
+												.concat("<div class=\"caption\">");
+										result = result.concat("<h4>"
+												+ value.name + "</h4>");
+										result = result.concat("<p> Rp."
+												+ value.price + ".</p>");
+										result = result.concat("</div>");
+										result = result.concat("</div>");
+									});
 					result = result.concat("</div>");
-					result = result.concat("<div class=\"row\">");
+
+					// clear array
+					pages = [];
+					// populate all contents into an array
+					for (i = 1; i <= data.contents.totalPages; i++) {
+
+						pagination = "<li id=\"pagination_" + (i - 1)
+								+ "\" ><a onclick=\"fetchItemsSelectionList("
+								+ (i - 1) + "," + pagingPageSize + ")\">" + i
+								+ "</a></li>";
+
+						pages.push(pagination);
+
+					}
+
+					for (i = 0; i < data.contents.totalPages; i++) {
+						displayedpagination = displayedpagination
+								.concat(pages[i]);
+					}
+
+					$('#item_list').html(result);
+
+					if (destroy == true) {
+						$('#pagination').twbsPagination('destroy');
+					}
+
+					if (data.contents.totalPages > 0) {
+						$('#pagination').twbsPagination(
+								{
+									totalPages : data.contents.totalPages,
+									visiblePages : pagingNumber,
+									onPageClick : function(event, page) {
+										if (page > 1) {
+											fetchItemsSelectionList((page - 1),
+													pagingPageSize, false);
+										}
+									}
+								});
+					}
+
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					console.log("error occured : " + errorThrown);
 				}
-				result = result.concat("<div class=\"col-sm-6 col-md-3\">");
-				result = result.concat("<a href=" + value.url + ">");
-				result = result.concat("<div class=\"thumbnail\">");
-				result = result.concat("<img class=\"img-fluid\" src=\""
-						+ value.image.split(',')[0] + "\" alt=\"Responsive image\">");
-				result = result.concat("</a>");
-				result = result.concat("</div>");
-				result = result.concat("<div class=\"caption\">");
-				result = result.concat("<h4>" + value.name + "</h4>");
-				result = result.concat("<p> Rp." + value.price + ".</p>");
-				result = result.concat("</div>");
-				result = result.concat("</div>");
 			});
-			result = result.concat("</div>");
-
-			// clear array
-			pages = [];
-			// populate all contents into an array
-			for (i = 1; i <= data.contents.totalPages; i++) {
-
-				pagination = "<li id=\"pagination_" + (i - 1)
-						+ "\" ><a onclick=\"fetchItemsSelectionList(" + (i - 1)
-						+ "," + pagingPageSize + ")\">" + i + "</a></li>";
-
-				pages.push(pagination);
-
-			}
-
-			for (i = 0; i < data.contents.totalPages; i++) {
-				displayedpagination = displayedpagination.concat(pages[i]);
-			}
-
-			$('#item_list').html(result);
-
-			if (destroy == true) {
-				$('#pagination').twbsPagination('destroy');
-			}
-
-			if (data.contents.totalPages > 0) {
-				$('#pagination').twbsPagination(
-						{
-							totalPages : data.contents.totalPages,
-							visiblePages : pagingNumber,
-							onPageClick : function(event, page) {
-								if (page > 1) {
-									fetchItemsSelectionList((page - 1),
-											pagingPageSize, false);
-								}
-							}
-						});
-			}
-
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log("error occured : " + errorThrown);
-		}
-	});
 
 }
 
@@ -472,6 +502,7 @@ Number.prototype.format = function(n, x) {
 	return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
 
+// vendor update submit form
 function updateVendor() {
 	$('#update_vendor_button').click(function() {
 		$('#choosen_category_update_list option').each(function() {
@@ -480,4 +511,51 @@ function updateVendor() {
 
 		$('#form_vendor_update').submit();
 	});
+}
+
+function fetchFoundItemList() {
+	var keyword = getUrlVars()["f"];
+	var start = getUrlVars()["start"];
+	var limit = getUrlVars()["limit"];
+	var result = "";
+
+	$.ajax({
+		url : '/search?f=' + keyword + '&start=' + start + '&limit=' + limit,
+		method : 'GET',
+		success : function(data) {
+			var result = $(data).find('#search-result');
+			$('#search-result').html(result.children());
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log("error occured : " + errorThrown);
+		}
+	});
+}
+
+function loadContent(element, start, size) {
+
+	// remove active class
+	$(".pagination>li.active").removeClass("active");
+
+	// add active class
+	$(element).parent().eq(0).addClass('active');
+
+	var f = getUrlVars()["f"];
+	if (history.pushState) {
+		var newurl = window.location.protocol + "//" + window.location.host
+				+ window.location.pathname + '?f=' + f + '&start=' + start
+				+ '&limit=' + size;
+		window.history.pushState({
+			path : newurl
+		}, '', newurl);
+	}
+
+	fetchFoundItemList();
+}
+
+
+function searchPaginationProcess(element, start, size){
+	
+	
+	
 }

@@ -4,9 +4,95 @@
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
+
 <body>
-	<div class="container" th:fragment="content">
-		<h1>this is search page</h1>
+	<div class="wrapper" th:fragment="content">
+		<div class="row">
+			<h3 class="headline">Search</h3>
+			<hr class="headline-line">
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="row">
+					<label>EVENT TYPE</label>
+					<div class="form-group">
+						<input type="text" class="form-control"
+							placeholder="Select Event Type" value=""> <span
+							class="input-icon pe-7s-angle-down"></span>
+					</div>
+				</div>
+				<div class="row">
+					<label>EVENT DATE</label>
+					<div class="form-group">
+						<input type="text" class="form-control"
+							placeholder="Select Event Date" value=""> <span
+							class="input-icon pe-7s-date"></span>
+					</div>
+				</div>
+				<div class="row">
+					<label>CITY</label>
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Select City"
+							value=""> <span class="input-icon pe-7s-angle-down"></span>
+					</div>
+				</div>
+				<div class="row">
+					<label>GROUP SIZE</label>
+					<div class="form-group">
+						<input type="text" class="form-control"
+							placeholder="Select Group Size" value=""> <span
+							class="input-icon pe-7s-angle-down"></span>
+					</div>
+				</div>
+				<div class="row">
+					<button class="btn btn-action">SEARCH</button>
+				</div>
+			</div>
+
+			<div id="search-result" class="col-sm-8">
+				<div th:each="item:${itemList}" class="col-sm-3"
+					style="margin-bottom: 20px">
+					<a th:href="${item.url}"> <img
+						th:src=" ${#strings.arraySplit(item.image, ',')[0]}" width="100%"
+						height="250px" style="max-width: 180px;"></img>
+					</a>
+
+					<h6 th:inline="text">[[${item.name}]]</h6>
+					<br />
+					<p th:inline="text">[[${item.room!=null
+						&&!item.room.equals('')}?${#strings.append(#strings.toUpperCase(item.room),'-')}:'']]
+						Capacity [[${item.capacity}]] Person</p>
+
+					<p th:inline="text">[[${item.location}]]</p>
+
+					<p th:inline="text">
+						[[${item.vendorStyle!=null}?${#strings.append(#strings.capitalize(item.vendorStyle),'
+						style')}: ${#strings.append(#strings.append('Start from
+						Rp.',#numbers.formatDecimal(item.paxPrice,3,'POINT',2,'COMMA')),'
+						/pax')} ]]</p>
+
+					<p th:inline="text">Only For [[${#strings.append('Rp.
+						',#numbers.formatDecimal(item.price,3,'POINT',2,'COMMA'))}]]</p>
+
+					<p th:inline="text">
+						Book now only for <br /> [[${#strings.append('Rp.
+						',#numbers.formatDecimal(item.minimumPayment,3,'POINT',2,'COMMA'))}]]
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-4 col-sm-offset-4">
+			<ul class="pagination pull-right">
+				<li class="page-item"
+					th:each="page:${#numbers.sequence( 0, (totalPage-1))}"><a
+					href="#"
+					th:onclick="'javascript:loadContent(this,\''+${(page*limit)}+'\',\''+${((page*limit)+limit)}+'\');'"
+					th:inline="text">[[${page+1}]]</a></li>
+			</ul>
+				
+		</div>
 	</div>
+
 </body>
 </html>

@@ -40,6 +40,7 @@
 			</div>
 			<div class="carousel-description" th:inline="text">
 				[[${#strings.toUpperCase(packageDetail.name)}]] <small>[[${#strings.capitalize(packageDetail.room)}]]
+				
 			</div>
 		</div>
 		<div class="row">
@@ -65,7 +66,9 @@
 							<h6
 								th:text="${#strings.append(packageDetail.rentDuration,' Hours')}">3
 								HOURS</h6>
-							<p>Room Usage</p>
+							<p
+								th:text="${package_type.equals('venue')}?'Room Usage':'Service'">Room
+								Usage</p>
 						</div>
 					</div>
 				</div>

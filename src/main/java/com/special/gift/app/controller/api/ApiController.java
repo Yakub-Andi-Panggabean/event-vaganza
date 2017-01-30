@@ -39,6 +39,7 @@ public class ApiController {
   public static final String USER_API = "/user";
   public static final String VENDOR_TYPE_API = "/categories";
   public static final String ITEMS_LIST_API = "/items/{page}/{size}/{type}";
+  public static final String SEARCH_ITEM_API = "/search";
 
   @Inject
   private UserService userService;

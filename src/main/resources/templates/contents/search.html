@@ -83,14 +83,14 @@
 		</div>
 
 		<div class="col-sm-4 col-sm-offset-4">
-			<ul class="pagination pull-right">
+			<ul id="search-pagination" class="pagination pull-right">
 				<li class="page-item"
-					th:each="page:${#numbers.sequence( 0, (totalPage-1))}"><a
+					th:each="page:${#numbers.sequence( 0, (pagingNumber-1))}"><a
 					href="#"
-					th:onclick="'javascript:loadContent(this,\''+${(page*limit)}+'\',\''+${((page*limit)+limit)}+'\');'"
+					th:onclick="'javascript:loadContent(this,\''+${(page*limit)}+'\',\''+${((page*limit)+limit)}+'\',\''+${page+1}+'\',\''+${totalPage}+'\');'"
 					th:inline="text">[[${page+1}]]</a></li>
 			</ul>
-				
+
 		</div>
 	</div>
 

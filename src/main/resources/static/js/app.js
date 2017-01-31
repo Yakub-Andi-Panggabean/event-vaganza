@@ -532,13 +532,7 @@ function fetchFoundItemList() {
 	});
 }
 
-function loadContent(element, start, size) {
-
-	// remove active class
-	$(".pagination>li.active").removeClass("active");
-
-	// add active class
-	$(element).parent().eq(0).addClass('active');
+function loadContent(element, start, size, currentPage, totalPage) {
 
 	var f = getUrlVars()["f"];
 	if (history.pushState) {
@@ -550,12 +544,50 @@ function loadContent(element, start, size) {
 		}, '', newurl);
 	}
 
+	searchPaginationProcess(element, start, size, currentPage, totalPage);
 	fetchFoundItemList();
 }
 
+function searchPaginationProcess(element, start, size, currentPage, totalPage) {
 
-function searchPaginationProcess(element, start, size){
-	
-	
-	
+	console.log('current_page ' + currentPage);
+	console.log('total_page ' + totalPage);
+
+	var limit = Number(size - start);
+
+	var result = "";
+
+	// remove active class
+	$(".pagination>li.active").removeClass("active");
+
+	// add active class
+	$(element).parent().eq(0).addClass('active');
+
+	if (((currentPage) - 2 > 0) && ((currentPage) + 2 < totalPage)) {
+
+		var x = (Number(currentPage) - 2) + (Number(currentPage) + 2);
+
+		for (i = Number(currentPage); i < x; i++) {
+
+			result = result.concat("<li class=\"page-item\">");
+			result = result
+					.concat("<a href=\"#\" onclick=\"javascript:loadContent(this, "
+							+ Number(i * limit)
+							+ ", "
+							+ (Number(i * limit) + Number(limit))
+							+ ", "
+							+ i
+							+ "," + totalPage + ");\">" + i + "</a>");
+			result = result.concat("</li>");
+
+		}
+
+		$('#search-pagination').html(result);
+
+	}
+
+	if ((currentPage) + 2 > totalPage) {
+
+	}
+
 }

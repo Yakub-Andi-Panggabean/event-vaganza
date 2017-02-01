@@ -137,7 +137,7 @@ public class UiController {
   public String renderSearchPage(Model model,
       @RequestParam(value = "f", required = false) String keyword, HttpServletRequest request,
       @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-      @RequestParam(value = "limit", defaultValue = "4", required = false) int limit) {
+      @RequestParam(value = "limit", defaultValue = "12", required = false) int limit) {
     try {
       log.debug("keyword : {}", keyword);
       log.debug("start : {}", start);
@@ -182,7 +182,7 @@ public class UiController {
 
       model.addAttribute("totalPage",
           new Double(Math.ceil((double) itemList.size() / (double) limit)).intValue());
-      model.addAttribute("limit", limit);
+      model.addAttribute("totalDisplayItem", start > limit ? start - limit : limit);
       model.addAttribute("pagingNumber", PAGING_NUMBER);
 
 

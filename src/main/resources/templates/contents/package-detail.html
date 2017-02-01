@@ -40,6 +40,9 @@
 			</div>
 			<div class="carousel-description" th:inline="text">
 				[[${#strings.toUpperCase(packageDetail.name)}]] <small>[[${#strings.capitalize(packageDetail.room)}]]
+
+
+
 				
 			</div>
 		</div>
@@ -94,8 +97,8 @@
 				<div class="row">
 					<div class="col-sm-6">
 						<label>EVENT DATE</label>
-						<div class="form-group">
-							<input type="text" class="form-control"
+						<div class="form-group" data-provide="datepicker">
+							<input type="text" class="datepicker form-control"
 								placeholder="Select Event Date" value=""> <span
 								class="input-icon pe-7s-date"></span>
 						</div>

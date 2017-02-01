@@ -82,16 +82,10 @@
 			</div>
 		</div>
 
-		<div class="col-sm-4 col-sm-offset-4">
-			<ul id="search-pagination" class="pagination pull-right">
-				<li class="page-item"
-					th:each="page:${#numbers.sequence( 0, (pagingNumber-1))}"><a
-					href="#"
-					th:onclick="'javascript:loadContent(this,\''+${(page*limit)}+'\',\''+${((page*limit)+limit)}+'\',\''+${page+1}+'\',\''+${totalPage}+'\');'"
-					th:inline="text">[[${page+1}]]</a></li>
-			</ul>
+		<p id="total_search_page" th:text="${totalPage}" hidden></p>
+		<p id="total_displayed_item" th:text="${totalDisplayItem}" hidden></p>
 
-		</div>
+		<div class="col-sm-6 col-sm-offset-4" id="search-pagination"></div>
 	</div>
 
 </body>

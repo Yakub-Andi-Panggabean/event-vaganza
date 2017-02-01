@@ -1,4 +1,5 @@
-//contents of the displayed record
+var servletContext = "kado-web";
+// contents of the displayed record
 var pagingPageSize = 12;
 // pagination number
 var pagingNumber = 5;
@@ -17,6 +18,7 @@ $(document).ready(function() {
  * @returns
  */
 function init() {
+	getUrlVars();
 	validateRegisterForm();
 	validateVendorRegistrationForm();
 	fetchAllAvailableCategory();
@@ -29,6 +31,9 @@ function init() {
 	searchButtonClick();
 	updateVendor();
 	authProcess();
+	loadPagination();
+
+	$('.datepicker').datepicker();
 
 	$('#button_pick_update_vendor_type').click(
 			function() {
@@ -50,6 +55,21 @@ function init() {
 		$('#choosen_category_list').cancelCategory('available_category_list');
 	});
 
+}
+
+/**
+ * 
+ * get request params value
+ * 
+ * @returns
+ */
+function getUrlVars() {
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+			function(m, key, value) {
+				vars[key] = value;
+			});
+	return vars;
 }
 
 function showModal() {
@@ -138,7 +158,7 @@ function authenticate() {
  */
 function invalidate() {
 	$.ajax({
-		url : '/logout',
+		url : 'logout',
 		method : 'POST',
 		success : function(data) {
 			window.location.replace(data.url);
@@ -151,7 +171,7 @@ function invalidate() {
 
 function fetchAllAvailableCategory() {
 	$.ajax({
-		url : '/api/categories',
+		url : '/' + servletContext + '/api/categories',
 		method : 'GET',
 		success : function(data) {
 			var result = "";
@@ -178,10 +198,13 @@ function fetchAllAvailableCategory() {
 function fetchItemList(start, limit) {
 	var fType = getUrlVars()["c"];
 
+	console.log('type : ' + fType);
+
 	// update display record
 	$
 			.ajax({
-				url : '/api/items/' + start + '/' + limit + '/' + fType,
+				url : '/' + servletContext + '/api/items/' + start + '/'
+						+ limit + '/' + fType,
 				method : 'GET',
 				success : function(data) {
 					var result = "";
@@ -375,7 +398,8 @@ function fetchItemsSelectionList(start, limit, destroy) {
 
 	$
 			.ajax({
-				url : '/api/items/' + start + '/' + limit + '/' + fType,
+				url : '/' + servletContext + '/api/items/' + start + '/' + limit
+						+ '/' + fType,
 				method : "POST",
 				contentType : 'application/json',
 				dataType : 'json',
@@ -401,7 +425,7 @@ function fetchItemsSelectionList(start, limit, destroy) {
 										result = result.concat("<a href="
 												+ value.url + ">");
 										result = result
-												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">>");
+												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">");
 										result = result
 												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
 														+ value.image
@@ -414,7 +438,8 @@ function fetchItemsSelectionList(start, limit, destroy) {
 										result = result.concat("<h4>"
 												+ value.name + "</h4>");
 										result = result.concat("<p> Rp."
-												+ value.price + ".</p>");
+												+ value.price.format(2)
+												+ ".</p>");
 										result = result.concat("</div>");
 										result = result.concat("</div>");
 									});
@@ -467,21 +492,6 @@ function fetchItemsSelectionList(start, limit, destroy) {
 
 }
 
-/**
- * 
- * get request params value
- * 
- * @returns
- */
-function getUrlVars() {
-	var vars = {};
-	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
-			function(m, key, value) {
-				vars[key] = value;
-			});
-	return vars;
-}
-
 function searchButtonClick() {
 	$('#search-header-button').click(function() {
 		console.log("searc button clicked");
@@ -520,7 +530,7 @@ function fetchFoundItemList() {
 	var result = "";
 
 	$.ajax({
-		url : '/search?f=' + keyword + '&start=' + start + '&limit=' + limit,
+		url : 'search?f=' + keyword + '&start=' + start + '&limit=' + limit,
 		method : 'GET',
 		success : function(data) {
 			var result = $(data).find('#search-result');
@@ -532,7 +542,7 @@ function fetchFoundItemList() {
 	});
 }
 
-function loadContent(element, start, size, currentPage, totalPage) {
+function loadContent(start, size) {
 
 	var f = getUrlVars()["f"];
 	if (history.pushState) {
@@ -544,50 +554,29 @@ function loadContent(element, start, size, currentPage, totalPage) {
 		}, '', newurl);
 	}
 
-	searchPaginationProcess(element, start, size, currentPage, totalPage);
 	fetchFoundItemList();
 }
 
-function searchPaginationProcess(element, start, size, currentPage, totalPage) {
+function loadPagination() {
 
-	console.log('current_page ' + currentPage);
-	console.log('total_page ' + totalPage);
+	var visible = 5;
 
-	var limit = Number(size - start);
+	var total = Number($('#total_search_page').text());
+	var itemPerPage = Number($('#total_displayed_item').text());
 
-	var result = "";
+	console.log('item per page : ' + itemPerPage);
 
-	// remove active class
-	$(".pagination>li.active").removeClass("active");
+	if (Number(total) > 0) {
+		$('#search-pagination').twbsPagination(
+				{
+					totalPages : Number(total),
+					visiblePages : visible,
+					onPageClick : function(event, page) {
+						loadContent((page - 1) * itemPerPage,
+								((page - 1) * itemPerPage) + itemPerPage);
 
-	// add active class
-	$(element).parent().eq(0).addClass('active');
-
-	if (((currentPage) - 2 > 0) && ((currentPage) + 2 < totalPage)) {
-
-		var x = (Number(currentPage) - 2) + (Number(currentPage) + 2);
-
-		for (i = Number(currentPage); i < x; i++) {
-
-			result = result.concat("<li class=\"page-item\">");
-			result = result
-					.concat("<a href=\"#\" onclick=\"javascript:loadContent(this, "
-							+ Number(i * limit)
-							+ ", "
-							+ (Number(i * limit) + Number(limit))
-							+ ", "
-							+ i
-							+ "," + totalPage + ");\">" + i + "</a>");
-			result = result.concat("</li>");
-
-		}
-
-		$('#search-pagination').html(result);
-
-	}
-
-	if ((currentPage) + 2 > totalPage) {
-
+					}
+				});
 	}
 
 }

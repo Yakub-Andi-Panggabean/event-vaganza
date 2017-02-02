@@ -40,6 +40,8 @@ public class ActController {
   private static final String VENDOR_ACT_PATH = "vendor";
   private static final String VENDOR_UPDATE_ACT_PATH = "vendor-update";
 
+
+
   @Inject
   private UserService userService;
 
@@ -166,6 +168,7 @@ public class ActController {
     }
     return "redirect:/".concat(UiController.VENDOR_VIEW);
   }
+
 
 
 }

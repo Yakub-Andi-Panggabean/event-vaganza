@@ -52,10 +52,10 @@ public class ListingServiceBean implements ListingService {
             PACKAGE_VENDOR, packages.getVendor().getVendorId().getType(), packages.getPackageImg(),
             new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENDOR)
                 .append("/").append(packages.getPackageId()).toString(),
-            packages.getPackagePrice(), packages.getPackageCapacity(), "",
-            packages.getDiscountRate(), packages.getMinimumPayment(), 0,
-            String.valueOf(packages.getTimePackage()), packages.getPackageDesc(), "",
-            packages.getPackageStyle()));
+            packages.getPackagePrice(), packages.getPackageCapacity(),
+            packages.getVendor().getAddress(), packages.getDiscountRate(),
+            packages.getMinimumPayment(), 0, String.valueOf(packages.getTimePackage()),
+            packages.getPackageDesc(), "", packages.getPackageStyle()));
 
       }
 
@@ -63,11 +63,11 @@ public class ListingServiceBean implements ListingService {
       for (final PackageVenue venue : pVenueRepository.findAll()) {
         items.add(new ItemListDto(venue.getVenueId(), venue.getVenueName(), PACKAGE_VENUE,
             venue.getVendor().getVendorId().getType(), venue.getVenuePortofolio(),
-            new StringBuilder("/packages/").append(PACKAGE_VENUE).append("/")
-                .append(venue.getVenueId()).toString(),
+            new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENUE)
+                .append("/").append(venue.getVenueId()).toString(),
             venue.getRentalPrice(), Integer.valueOf(venue.getRoomCapacity()), venue.getCity(),
             venue.getDiscountRate(), venue.getMinimumPayment(), venue.getPaxPrice(),
-            venue.getTimeRent(), venue.getVenuePackage(), venue.getVenueRoom(), null));
+            venue.getTimeRent(), venue.getVenuePackage(), venue.getVenueRoom(), ""));
       }
 
 
@@ -145,7 +145,8 @@ public class ListingServiceBean implements ListingService {
           // filter city
           if (filter.getCity() != null && !filter.getCity().isEmpty() && item.getLocation() != null
               && !item.getLocation().isEmpty()
-              && item.getLocation().equalsIgnoreCase(filter.getCity())) {
+              && (item.getLocation().equalsIgnoreCase(filter.getCity())
+                  || item.getLocation().contains(filter.getCity()))) {
             log.debug("filtering city : {}", filter.getCity());
             filteredList.add(item);
           }

@@ -135,7 +135,7 @@ function authenticate() {
 	var enc = window.btoa(username + ":" + password);
 
 	$.ajax({
-		url : '/login',
+		url : 'login',
 		method : 'POST',
 		headers : {
 			'isigunyaziso' : enc
@@ -398,8 +398,8 @@ function fetchItemsSelectionList(start, limit, destroy) {
 
 	$
 			.ajax({
-				url : '/' + servletContext + '/api/items/' + start + '/' + limit
-						+ '/' + fType,
+				url : '/' + servletContext + '/api/items/' + start + '/'
+						+ limit + '/' + fType,
 				method : "POST",
 				contentType : 'application/json',
 				dataType : 'json',
@@ -578,5 +578,36 @@ function loadPagination() {
 					}
 				});
 	}
+
+}
+
+function advanceSearch() {
+
+	var eventType = $('#event-type-dropdown').val();
+	var city = $('#city-dropdown').val();
+	var groupSize = $('#capacity-dropdown').val();
+
+	console.log('event type :' + eventType);
+	console.log('city :' + city);
+	console.log('capacity : ' + groupSize);
+
+	var object = {
+		"eventType" : eventType,
+		"city" : city,
+		"capacity" : groupSize
+	}
+
+	$.ajax({
+		url : 'search',
+		method : 'POST',
+		data : object,
+		success : function(data) {
+			var result = $(data).find('#search-result');
+			$('#search-result').html(result.children());
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log("error occured : " + errorThrown);
+		}
+	});
 
 }

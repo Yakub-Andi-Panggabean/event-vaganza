@@ -12,40 +12,39 @@
 			<hr class="headline-line">
 		</div>
 		<div class="row">
+
 			<div class="col-sm-4">
 				<div class="row">
 					<label>EVENT TYPE</label>
 					<div class="form-group">
-						<input type="text" class="form-control"
-							placeholder="Select Event Type" value=""> <span
-							class="input-icon pe-7s-angle-down"></span>
-					</div>
-				</div>
-				<div class="row">
-					<label>EVENT DATE</label>
-					<div class="form-group">
-						<input type="text" class="form-control"
-							placeholder="Select Event Date" value=""> <span
-							class="input-icon pe-7s-date"></span>
+						<select id="event-type-dropdown" class="form-control">
+							<option th:each="event:${events}" th:inline="text"
+								th:value="${event.vendorType}">[[${event.vendorTypeName}]]</option>
+						</select>
 					</div>
 				</div>
 				<div class="row">
 					<label>CITY</label>
 					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Select City"
-							value=""> <span class="input-icon pe-7s-angle-down"></span>
+						<select id="city-dropdown" class="form-control">
+							<option th:each="city:${cities}" th:inline="text"
+								th:value="${city.name}">[[${city.name}]]</option>
+						</select>
 					</div>
 				</div>
 				<div class="row">
 					<label>GROUP SIZE</label>
 					<div class="form-group">
-						<input type="text" class="form-control"
-							placeholder="Select Group Size" value=""> <span
-							class="input-icon pe-7s-angle-down"></span>
+						<select id="capacity-dropdown" class="form-control">
+							<option value="<,300">< 300</option>
+							<option value="<,500">< 500</option>
+							<option value="<,1000">< 1000</option>
+							<option value=">,1000">> 1000</option>
+						</select>
 					</div>
 				</div>
 				<div class="row">
-					<button class="btn btn-action">SEARCH</button>
+					<button onclick="advanceSearch()" class="btn btn-action">SEARCH</button>
 				</div>
 			</div>
 
@@ -65,8 +64,8 @@
 
 					<p th:inline="text">[[${item.location}]]</p>
 
-					<p th:inline="text">
-						[[${item.vendorStyle!=null}?${#strings.append(#strings.capitalize(item.vendorStyle),'
+					<p th:inline="text">[[${not
+						item.vendorStyle.equals('')}?${#strings.append(#strings.capitalize(item.vendorStyle),'
 						style')}: ${#strings.append(#strings.append('Start from
 						Rp.',#numbers.formatDecimal(item.paxPrice,3,'POINT',2,'COMMA')),'
 						/pax')} ]]</p>

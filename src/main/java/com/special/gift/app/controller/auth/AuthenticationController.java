@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,19 +27,26 @@ public class AuthenticationController {
   public static final String LOGOUT = PATH + "logout";
 
 
+  @Value("${sessionLife}")
+  public int sessionLifeTime;
+
+
   @RequestMapping(value = LOGIN, method = RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public AuthenticationResponse renderLoginPage(ServletRequest request, HttpSession httpSession) {
     log.debug("role from filter : {}", request.getAttribute("role"));
-    final AuthenticationResponse authResponse = new AuthenticationResponse("/",
+    final HttpServletRequest req = (HttpServletRequest) request;
+    final AuthenticationResponse authResponse = new AuthenticationResponse(req.getContextPath(),
         (String) request.getAttribute("user"), "200", "authenticated");
 
     httpSession.setAttribute("user", authResponse.getUsername());
     httpSession.setAttribute("userEmail", request.getAttribute("userEmail"));
     httpSession.setAttribute("isVendor", request.getAttribute("isVendorExist"));
 
-    httpSession.setMaxInactiveInterval(10);
+    log.debug("session life time : {}", sessionLifeTime);
+
+    httpSession.setMaxInactiveInterval(sessionLifeTime);
 
 
     log.debug("is vendor exist : {}", request.getAttribute("isVendorExist"));
@@ -50,8 +58,9 @@ public class AuthenticationController {
   @ResponseBody
   public AuthenticationResponse redirectToLogout(HttpSession httpSession,
       HttpServletResponse response, HttpServletRequest request) {
+    final HttpServletRequest req = request;
     httpSession.removeAttribute("user");
-    final AuthenticationResponse authResponse = new AuthenticationResponse("/",
+    final AuthenticationResponse authResponse = new AuthenticationResponse(req.getContextPath(),
         (String) request.getAttribute("user"), "200", "authenticated");
     return authResponse;
   }

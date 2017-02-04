@@ -1,7 +1,8 @@
+//servlet context should be same with server side
 var servletContext = "kado-web";
-// contents of the displayed record
+// contents of the displayed record (should be same withs server side)
 var pagingPageSize = 12;
-// pagination number
+// visible pagination number
 var pagingNumber = 5;
 
 /**
@@ -135,7 +136,7 @@ function authenticate() {
 	var enc = window.btoa(username + ":" + password);
 
 	$.ajax({
-		url : 'login',
+		url : '/' + servletContext + '/login',
 		method : 'POST',
 		headers : {
 			'isigunyaziso' : enc
@@ -158,7 +159,7 @@ function authenticate() {
  */
 function invalidate() {
 	$.ajax({
-		url : 'logout',
+		url : '/' + servletContext + '/logout',
 		method : 'POST',
 		success : function(data) {
 			window.location.replace(data.url);
@@ -559,8 +560,6 @@ function loadContent(start, size) {
 
 function loadPagination() {
 
-	var visible = 5;
-
 	var total = Number($('#total_search_page').text());
 	var itemPerPage = Number($('#total_displayed_item').text());
 
@@ -570,7 +569,7 @@ function loadPagination() {
 		$('#search-pagination').twbsPagination(
 				{
 					totalPages : Number(total),
-					visiblePages : visible,
+					visiblePages : pagingNumber,
 					onPageClick : function(event, page) {
 						loadContent((page - 1) * itemPerPage,
 								((page - 1) * itemPerPage) + itemPerPage);
@@ -597,17 +596,51 @@ function advanceSearch() {
 		"capacity" : groupSize
 	}
 
-	$.ajax({
-		url : 'search',
-		method : 'POST',
-		data : object,
-		success : function(data) {
-			var result = $(data).find('#search-result');
-			$('#search-result').html(result.children());
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log("error occured : " + errorThrown);
-		}
-	});
+	var service = 'advance-search';
+
+	$("#search-result").load(
+			service + " #search-item",
+			object,
+			function(data) {
+
+				var total_search_page = Number($(data).find(
+						'#total_search_page').text());
+				var itemPerPage = Number($(data).find('#total_displayed_item')
+						.text());
+
+				if (total_search_page == 0) {
+					total_search_page = 1;
+				}
+
+				console.log('total page :' + total_search_page);
+
+				$('#search-pagination').twbsPagination('destroy');
+				$('#search-pagination').twbsPagination(
+						{
+							totalPages : total_search_page,
+							visiblePages : pagingNumber,
+							onPageClick : function(event, page) {
+
+								var start = (page - 1) * pagingPageSize;
+								var limit = ((page - 1) * pagingPageSize)
+										+ pagingPageSize;
+
+								advanceSearchPagination(start, limit, object)
+
+							}
+						});
+
+			});
+
+}
+
+function advanceSearchPagination(start, limit, criteria) {
+
+	console.log('start=' + start + ',limit=' + limit);
+
+	var service = 'advance-search'
+			.concat('?start=' + start + '&limit=' + limit);
+
+	$("#search-result").load(service + " #search-item", criteria);
 
 }

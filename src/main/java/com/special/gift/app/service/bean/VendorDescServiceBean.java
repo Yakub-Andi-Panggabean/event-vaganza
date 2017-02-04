@@ -68,14 +68,18 @@ public class VendorDescServiceBean implements VendorDescService {
     List<VendorDesc> contents = new ArrayList<>();
 
     for (final VendorDesc vendorDesc : categories) {
-      if (String.valueOf(vendorDesc.getVendorType().charAt(1))
-          .equals(String.valueOf(parent.charAt(1)))) {
+
+      // check if the first two digits character is equal
+      if (vendorDesc.getVendorType().substring(0, 2).equals(parent.substring(0, 2))) {
+
         vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
 
         if (!parent.equals(vendorDesc.getVendorType()) && !String
             .valueOf(vendorDesc.getVendorType().charAt(vendorDesc.getVendorType().length() - 1))
             .equals("0")) {
+
           contents.add(vendorDesc);
+
         }
       }
     }

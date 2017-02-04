@@ -111,7 +111,9 @@ public class ListingServiceBean implements ListingService {
 
       log.debug("filter : {}", filter.toString());
 
-      if ((filter.getCapacity() == null || filter.getCapacity() == 0)
+      if ((filter.getCategory() == null || filter.getCategory().isEmpty()
+          || filter.getCategory().equals(""))
+          && (filter.getCapacity() == null || filter.getCapacity() == 0)
           && (filter.getCity() == null || filter.getCity().isEmpty() || filter.getCity().equals(""))
           && (filter.getKeyword() == null || filter.getKeyword().isEmpty()
               || filter.getKeyword().equals(""))
@@ -123,67 +125,79 @@ public class ListingServiceBean implements ListingService {
         log.debug("no filtering");
         filteredList.addAll(list);
       } else {
+
+        log.debug("filtering processed");
+
         for (final ItemListDto item : list) {
 
+          boolean isItemValid = false;
 
-          // filter capacity
-          if (filter.getId() != null
-              && filter.getId().toLowerCase().equals(item.getId().toLowerCase())) {
+          // filter id
+          if (filter.getId() != null) {
             log.debug("filtering id : {}", filter.getId());
             log.debug("item filtered : {}", item.toString());
-            filteredList.add(item);
-            return filteredList;
+            // filteredList.add(item);
+            isItemValid = filter.getId().equalsIgnoreCase(item.getId());
           }
 
           // filter capacity
-          if (filter.getCapacity() != null && filter.getCapacity() > 0
-              && item.getCapacity() == filter.getCapacity()) {
+          if (filter.getCapacity() != null && filter.getCapacity() > 0) {
             log.debug("filtering capacity : {}", filter.getCapacity());
-            filteredList.add(item);
+            isItemValid = item.getCapacity() == filter.getCapacity();
           }
 
           // filter city
           if (filter.getCity() != null && !filter.getCity().isEmpty() && item.getLocation() != null
-              && !item.getLocation().isEmpty()
-              && (item.getLocation().equalsIgnoreCase(filter.getCity())
-                  || item.getLocation().contains(filter.getCity()))) {
+              && !item.getLocation().isEmpty()) {
             log.debug("filtering city : {}", filter.getCity());
-            filteredList.add(item);
+            isItemValid = (item.getLocation().equalsIgnoreCase(filter.getCity())
+                || item.getLocation().toLowerCase().contains(filter.getCity().toLowerCase()));
           }
 
-          if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()
-              && item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase())) {
+          if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             log.debug("filtering keyword : {}", filter.getKeyword());
-            filteredList.add(item);
+            isItemValid = item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase());
           }
 
           if ((filter.getMaxPrice() != null && filter.getMaxPrice() > 0
-              && filter.getMinPrice() != null && filter.getMinPrice() > 0)
-              && (item.getPrice() <= filter.getMaxPrice()
-                  && item.getPrice() >= filter.getMinPrice())) {
+              && filter.getMinPrice() != null && filter.getMinPrice() > 0)) {
             log.debug("filtering min price : {} and max price : {}", filter.getMinPrice(),
                 filter.getMaxPrice());
-            filteredList.add(item);
+            isItemValid = (item.getPrice() <= filter.getMaxPrice()
+                && item.getPrice() >= filter.getMinPrice());
           }
 
           // max prize
-          if (filter.getMaxPrice() != null && filter.getMaxPrice() > 0 && filter.getMinPrice() == 0
-              && item.getPrice() <= filter.getMaxPrice()) {
+          if (filter.getMaxPrice() != null && filter.getMaxPrice() > 0
+              && filter.getMinPrice() == 0) {
             log.debug("filtering max price : {}", filter.getMaxPrice());
             log.debug("item price : {}", item.getPrice());
-            filteredList.add(item);
+            isItemValid = item.getPrice() <= filter.getMaxPrice();
           }
 
-          if (filter.getMinPrice() != null && filter.getMinPrice() > 0 && filter.getMaxPrice() == 0
-              && item.getPrice() >= filter.getMinPrice()) {
+          if (filter.getMinPrice() != null && filter.getMinPrice() > 0
+              && filter.getMaxPrice() == 0) {
             log.debug("filtering min price : {}", filter.getMinPrice());
-            filteredList.add(item);
+            isItemValid = item.getPrice() >= filter.getMinPrice();
           }
 
           if (filter.getPackageType() != null && !filter.getPackageType().isEmpty()
-              && !filter.getPackageType().toLowerCase().equals("all") && filter.getPackageType()
-                  .toLowerCase().equals(item.getPackageType().toLowerCase())) {
-            log.debug("filtering package type : {}", filter.getPackageType());
+              && !filter.getPackageType().toLowerCase().equals("all")) {
+            log.debug("filtering package type : {},item type:{}", filter.getPackageType(),
+                item.getPackageType());
+
+            isItemValid = filter.getPackageType().equalsIgnoreCase(item.getPackageType());
+          }
+
+          if (filter.getCategory() != null) {
+
+            log.debug("filtering filter category : {}", filter.getCategory());
+            log.debug("filtering item category : {}", item.getCategory());
+
+            isItemValid = filter.getCategory().equalsIgnoreCase(item.getCategory());
+          }
+
+          if (isItemValid) {
             filteredList.add(item);
           }
 

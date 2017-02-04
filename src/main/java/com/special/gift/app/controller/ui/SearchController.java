@@ -137,7 +137,8 @@ public class SearchController {
    * @param session
    * @return
    */
-  @RequestMapping(value = SEARCH, method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
+  @RequestMapping(value = ADVANCE_SEARCH, method = RequestMethod.POST,
+      produces = MediaType.TEXT_HTML_VALUE)
   public String renderAdvanceSearchPage(Model model, HttpServletRequest request,
       @RequestParam(value = "start", defaultValue = "0", required = false) int start,
       @RequestParam(value = "limit", defaultValue = "12", required = false) int limit,
@@ -148,12 +149,14 @@ public class SearchController {
       final String city = formData.getFirst("city");
       final String capacity = formData.getFirst("capacity");
 
-      log.debug("event : {}, city : {}, capacity : {}", eventType, city, capacity);
+      log.debug("event : {}, city : {}, capacity : {},start : {},limit :{}", eventType, city,
+          capacity, start, limit);
 
       final FilterDto filter = new FilterDto();
 
       filter.setCity(city);
-      filter.setPackageType(eventType);
+      filter.setCategory(eventType);
+
 
       final List<ItemListDto> itemList = listingService.findAllList(request, null, filter);
 
@@ -163,21 +166,37 @@ public class SearchController {
 
       final List<ItemListDto> displayedItemList = new ArrayList<>();
 
-      final String[] fullCapacity = capacity.split(",");
 
-      log.debug("x {},x {}", fullCapacity[0], fullCapacity[1]);
+      String[] fullCapacity = null;
+
+      if (capacity != null && !capacity.isEmpty()) {
+
+        fullCapacity = capacity.split(",");
+
+        log.debug("x {},x {}", fullCapacity[0], fullCapacity[1]);
+
+      }
 
       for (final ItemListDto item : itemList) {
-        if (fullCapacity[0].equals(">")) {
-          if (item.getCapacity() > Integer.parseInt(fullCapacity[1])) {
-            displayedItemList.add(item);
+
+        if (fullCapacity != null) {
+          if (fullCapacity[0].equals(">")) {
+            if (item.getCapacity() > Integer.parseInt(fullCapacity[1])) {
+              displayedItemList.add(item);
+            }
+          } else {
+            if (item.getCapacity() < Integer.parseInt(fullCapacity[1])) {
+              displayedItemList.add(item);
+            }
           }
         } else {
-          if (item.getCapacity() < Integer.parseInt(fullCapacity[1])) {
-            displayedItemList.add(item);
-          }
+          displayedItemList.add(item);
         }
+
+
       }
+
+
 
       log.debug("start : {}", start);
 

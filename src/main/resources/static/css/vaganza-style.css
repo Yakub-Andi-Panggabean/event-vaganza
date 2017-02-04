@@ -514,6 +514,77 @@ label {
 	}
 }
 
+.book-request {
+	width: 100%;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	display: block;
+}
+
+.book-request-label {
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 20px;
+	color: #ccc;
+	margin: 10px 20px;
+}
+
+.book-request-box {
+	background-color: #464646;
+	border-radius: 8px;
+	padding: 20px 0px;
+	margin: 20px 0px;
+}
+
+p.box-label {
+	color: #f7c21d;
+	line-height: 30px;
+}
+
+p.box-info {
+	color: #fff;
+	font-weight: 700;
+	line-height: 30px;
+}
+
+.cost-estimate-box {
+	background-color: #fff;
+	border: 1px solid #464646;
+	border-radius: 8px;
+	padding: 20px 0px;
+	margin: 0px 0px 20px 0px;
+}
+
+.row.total {
+	background-color: #464646;
+	margin: 20px 0px -20px 0px;
+	padding: 5px;
+	height: 40px;
+	border-radius: 0px 0px 6px 6px;
+}
+
+.row.cost-title {
+	text-align: center;
+	color: #f7c21d;
+}
+
+.row.cost-title p {
+	line-height: 16px;
+}
+
+.row.cost-list {
+	color: #ccc;
+}
+
+.book-payment-label {
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 20px;
+	color: #ccc;
+	margin: 10px 20px;
+	text-align: center;
+}
+
 /*------------detail--------------------*/
 .big-button-trigger {
 	background-color: #f7c21d;;
@@ -576,6 +647,6 @@ body .well {
 	color: #f7c321;
 }
 
-.main-item-list li{
-	border:none;
+.main-item-list li {
+	border: none;
 }

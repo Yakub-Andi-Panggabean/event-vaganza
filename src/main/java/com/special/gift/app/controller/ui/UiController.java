@@ -59,6 +59,11 @@ public class UiController {
   // package
   public static final String PACKAGE_DETAIL = "/packages/{type}/{packageId}";
 
+
+  // booking
+  public static final String BOOKING_REQUEST = "/booking/request";
+  public static final String BOOKING_PAYMENT = "/booking/payment";
+
   public static final String ITEM_OPTION = "/items/car";
 
 
@@ -386,6 +391,9 @@ public class UiController {
         vendorTypes.add(vendorDescService.findById(vendor.getVendorId().getType()));
       }
 
+
+      log.debug("vendor types : {}", vendorTypes.toString());
+
       model.addAttribute("existingVendor", vendorDto);
       model.addAttribute("vendorTypes", vendorTypes);
 
@@ -403,6 +411,17 @@ public class UiController {
   @RequestMapping(value = ITEM_OPTION, method = RequestMethod.GET)
   public String renderItemOptionViewPage(Model model) {
     return "/contents/item-option";
+  }
+
+
+  @RequestMapping(value = BOOKING_REQUEST, method = RequestMethod.GET)
+  public String renderBookingRequestView(Model model) {
+    return "/contents/booking-request";
+  }
+
+  @RequestMapping(value = BOOKING_PAYMENT, method = RequestMethod.GET)
+  public String renderBookingPaymentView(Model model) {
+    return "/contents/booking-payment";
   }
 
 }

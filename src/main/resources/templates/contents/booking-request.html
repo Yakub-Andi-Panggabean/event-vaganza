@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div class="content" th:fragment="content">
+		<div class="container">
+			<div class="row">
+				<h3 class="headline">BOOKING REQUEST</h3>
+				<hr class="headline-line">
+			</div>
+			<div class="book-request">
+				<div class="row" style="margin-bottom: 30px">
+					<img th:src="@{/image/booking-request_24x32.png}"
+						style="width: 24px; height: 32px; margin: 0px 20px; float: right"></img>
+					<div class="book-request-label">BOOKING REQUEST CONFIRMATION</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="row">
+							<div class="col-xs-3" style="padding: 0px">
+								<img th:src="@{/image/thumb01.jpg}" width="100%" height="auto"></img>
+							</div>
+							<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
+								<h6 style="margin-top: 0px">RITZ CARLTON HOTEL</h6>
+								<p>Ballroom A - Capacity 1000 Person</p>
+								<br>
+								<p>
+									<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
+										height="auto"></img>14 Februari 2017
+								</p>
+								<p>
+									<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
+										height="auto"></img>19.00 - 22.00 WIB
+								</p>
+							</div>
+						</div>
+
+						<div class="book-request-box">
+							<div class="row">
+								<div class="col-xs-4">
+									<p class="box-label">BOOK BY</p>
+								</div>
+								<div class="col-xs-8">
+									<p class="box-info">Ms. Sari Indri</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-4">
+									<p class="box-label">ADDRESS</p>
+								</div>
+								<div class="col-xs-8">
+									<p class="box-info">MPT. Kado Asia</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-4">
+									<p class="box-label">MOBILE</p>
+								</div>
+								<div class="col-xs-8">
+									<p class="box-info">+62 812 1314 1516</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-6">
+						<div class="cost-estimate-box">
+							<div class="row cost-title">
+								<p>
+									<img th:src="@{/image/icon-cost-orange_16x16.png}" width="16px"
+										height="auto" style="margin-right: 10px"></img>COST ESTIMATION
+								</p>
+							</div>
+							<hr>
+							<div class="row cost-list">
+								<div class="col-xs-7">
+									<p>Venue Rental for 4 Hours</p>
+								</div>
+								<div class="col-xs-5">
+									<p>Rp. 30.000.000</p>
+								</div>
+							</div>
+							<div class="row cost-list">
+								<div class="col-xs-7">
+									<p>Food and Beverages</p>
+								</div>
+								<div class="col-xs-5">
+									<p>Rp. 300.000.000</p>
+								</div>
+							</div>
+							<div class="row total">
+								<div class="col-xs-7">
+									<p class="box-label">TOTAL</p>
+								</div>
+								<div class="col-xs-5">
+									<p class="box-info">Rp. 330.000.000</p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<p>Banquet Manager will confirm the availability of the venue
+								and detail final price.</p>
+							<p>We will notify you within 24 Hours.</p>
+						</div>
+						<div class="row">
+							<a th:href="@{/booking/payment}">
+								<button class="btn btn-action">CONFIRM REQUEST</button>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

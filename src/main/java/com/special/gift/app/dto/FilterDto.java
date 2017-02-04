@@ -14,6 +14,7 @@ public class FilterDto implements Serializable {
   private Integer capacity;
   private String city;
   private String packageType;
+  private String category;
 
   public String getKeyword() {
     return keyword;
@@ -79,11 +80,19 @@ public class FilterDto implements Serializable {
     this.id = id;
   }
 
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
+  }
+
   @Override
   public String toString() {
     return "FilterDto [id=" + id + ", keyword=" + keyword + ", minPrice=" + minPrice + ", maxPrice="
         + maxPrice + ", sorting=" + sorting + ", capacity=" + capacity + ", city=" + city
-        + ", packageType=" + packageType + "]";
+        + ", packageType=" + packageType + ", category=" + category + "]";
   }
 
 

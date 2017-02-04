@@ -1,58 +1,202 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+	name="viewport" />
+<title>Event Vaganza</title>
+
 </head>
 <body>
-	<div class="container" th:fragment="content">
-		<div class="row container-package-detail">
-			<div class="col-sm-12 col-md-6">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<h5>Vendor Information</h5>
-						<dl class="dl-horizontal">
-							<dt>Name :</dt>
-							<dd th:text="${existingVendor.name}"></dd>
-							<dt>Address :</dt>
-							<dd th:text="${existingVendor.address}"></dd>
-							<dt>Description :</dt>
-							<dd th:text="${existingVendor.desc}"></dd>
-							<dt>Handphone :</dt>
-							<dd th:text="${existingVendor.handphone}"></dd>
-							<dt>Telp :</dt>
-							<dd th:text="${existingVendor.phone}"></dd>
-							<dt>Pic :</dt>
-							<dd th:text="${existingVendor.pic}"></dd>
-							<dt>Email :</dt>
-							<dd th:text="${existingVendor.email}"></dd>
-						</dl>
 
-						<h6>Vendor Types:</h6>
-						<ul class="list-inline">
-							<li th:each="type : ${vendorTypes}"
-								th:text="${type.vendorTypeName}"></li>
-						</ul>
+	<div th:fragment="content" class="content">
+		<div class="container">
+			<div class="row">
+				<h3 class="headline">PARTNER CONFIRMATION</h3>
+				<hr class="headline-line">
+			</div>
 
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="row">
+						<p
+							style="font-size: 18px; font-weight: 700; line-height: 20px; color: #ccc; margin: 10px 0px">
+							VENDOR INFORMATION <span><i
+								class="input-icon pe-7s-angle-down"
+								style="font-size: 24px; position: absolute; top: 8px; margin-left: 20px; cursor: pointer"
+								onclick="toggle_visibility('more-info')"></i></span>
+						</p>
 					</div>
-					<div class="panel-footer">
-						<a th:href="@{/vendor-update}">Update Data</a>
+					<div class="row">
+						<div class="col-sm-5" style="color: #898989">
+							<label>NAME</label>
+						</div>
+						<div class="col-sm-7">
+							<label th:text="${existingVendor.name}">name</label>
+						</div>
+					</div>
+					<div id="more-info" style="display: none">
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>ADDRESS</label>
+							</div>
+							<div class="col-sm-7">
+								<label th:text="${existingVendor.address}">address</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>DESCRIPTION</label>
+							</div>
+							<div class="col-sm-7">
+								<label th:text="${existingVendor.desc}">desc</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>PIC</label>
+							</div>
+							<div class="col-sm-7">
+								<label th:text="${existingVendor.pic}">pic</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>PHONE</label>
+							</div>
+							<div class="col-sm-7">
+								<label th:text="${existingVendor.phone}">+62-21 580 1866</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>MOBILE PHONE</label>
+							</div>
+							<div class="col-sm-7">
+								<label th:text="${existingVendor.handphone}">+62812 9876
+									1234</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>E-MAIL</label>
+							</div>
+							<div class="col-sm-7">
+								<label th:text="${existingVendor.email}">lemonz@flatstudio.com</label>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<p
+							style="font-size: 18px; font-weight: 700; line-height: 20px; color: #ccc; margin: 10px 0px">VENDOR
+							TYPE</p>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<label th:each="type : ${vendorTypes}"
+								th:text="${type.vendorTypeName}">Photography,
+								Videography, Decor</label>
+						</div>
+					</div>
+					<div class="row">
+						<a th:href="@{/vendor-update}">
+							<button class="btn btn-action">Update Data</button>
+						</a>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="row">
+						<p
+							style="font-size: 18px; font-weight: 700; line-height: 20px; color: #ccc; margin: 10px 0px">REQUIRED
+							CONFIRMATION</p>
+					</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<img th:src="@{/image/thumb01.jpg}" width="100%" height="auto"
+								style="max-width: 96px"></img>
+						</div>
+						<div class="col-sm-6">
+							<h6>RITZ CARLTON HOTEL</h6>
+							<p>Ballroom A - Capacity 1000 Person</p>
+							<p>
+								<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
+									height="auto"></img>14 Februari 2017
+							</p>
+							<p>
+								<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
+									height="auto"></img>19.00 - 22.00 WIB
+							</p>
+						</div>
+						<div class="col-sm-3" style="padding: 5px">
+							<label class="radio"><input type="radio" value="a"
+								name="confirm1" data-toggle="radio" checked />ACCEPT</label> <label
+								class="radio"><input type="radio" value="d"
+								name="confirm1" data-toggle="radio" />DECLINE</label>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-sm-3">
+							<img th:src="@{/image/thumb01.jpg}" width="100%" height="auto"
+								style="max-width: 96px"></img>
+						</div>
+						<div class="col-sm-6">
+							<h6>RITZ CARLTON HOTEL</h6>
+							<p>Ballroom A - Capacity 1000 Person</p>
+							<p>
+								<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
+									height="auto"></img>14 Februari 2017
+							</p>
+							<p>
+								<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
+									height="auto"></img>19.00 - 22.00 WIB
+							</p>
+						</div>
+						<div class="col-sm-3" style="padding: 5px">
+							<label class="radio"><input type="radio" value="a"
+								name="confirm2" data-toggle="radio" checked />ACCEPT</label> <label
+								class="radio"><input type="radio" value="d"
+								name="confirm2" data-toggle="radio" />DECLINE</label>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-sm-3">
+							<img th:src="@{/image/thumb01.jpg}" width="100%" height="auto"
+								style="max-width: 96px"></img>
+						</div>
+						<div class="col-sm-6">
+							<h6>RITZ CARLTON HOTEL</h6>
+							<p>Ballroom A - Capacity 1000 Person</p>
+							<p>
+								<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
+									height="auto"></img>14 Februari 2017
+							</p>
+							<p>
+								<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
+									height="auto"></img>19.00 - 22.00 WIB
+							</p>
+						</div>
+						<div class="col-sm-3" style="padding: 5px">
+							<label class="radio"><input type="radio" value="a"
+								name="confirm3" data-toggle="radio" checked />ACCEPT</label> <label
+								class="radio"><input type="radio" value="d"
+								name="confirm3" data-toggle="radio" />DECLINE</label>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<button class="btn btn-action">SUBMIT</button>
 					</div>
 				</div>
 			</div>
-
-
-			<div class="col-sm-12 col-md-4">
-				<div class="panel panel-default">
-					<div class="panel-body">
-
-						<h5>Confirmation List</h5>
-
-					</div>
-				</div>
-			</div>
-
 		</div>
 	</div>
+
+
 </body>
 </html>

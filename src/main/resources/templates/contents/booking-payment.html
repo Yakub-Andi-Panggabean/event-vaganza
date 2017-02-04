@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div class="content" th:fragment="content">
+		<div class="container">
+			<div class="row">
+				<h3 class="headline">BOOKING PAYMENT</h3>
+				<hr class="headline-line">
+			</div>
+
+			<div class="row" style="margin-bottom: 30px">
+				<div class="book-payment-label">YOUR BOOKING AS DESCRIBE BELOW</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-xs-3" style="padding: 0px">
+							<img th:src="@{/image/thumb01.jpg}" width="100%" height="auto"></img>
+						</div>
+						<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
+							<h6 style="margin-top: 0px">RITZ CARLTON HOTEL</h6>
+							<p>Ballroom A - Capacity 1000 Person</p>
+							<br>
+							<p>
+								<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
+									height="auto"></img>14 Februari 2017
+							</p>
+							<p>
+								<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
+									height="auto"></img>19.00 - 22.00 WIB
+							</p>
+						</div>
+					</div>
+					<div class="book-request-box">
+						<div class="row">
+							<div class="col-xs-4">
+								<p class="box-label">BOOK BY</p>
+							</div>
+							<div class="col-xs-8">
+								<p class="box-info">Ms. Sari Indri</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4">
+								<p class="box-label">ADDRESS</p>
+							</div>
+							<div class="col-xs-8">
+								<p class="box-info">MPT. Kado Asia</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4">
+								<p class="box-label">MOBILE</p>
+							</div>
+							<div class="col-xs-8">
+								<p class="box-info">+62 812 1314 1516</p>
+							</div>
+						</div>
+					</div>
+					<div class="cost-estimate-box">
+						<div class="row cost-title">
+							<p>
+								<img th:src="@{/image/icon-cost-orange_16x16.png}" width="16px"
+									height="auto" style="margin-right: 10px"></img>FINAL COST
+							</p>
+						</div>
+						<hr>
+						<div class="row cost-list">
+							<div class="col-xs-7">
+								<p>Venue Rental for 4 Hours</p>
+							</div>
+							<div class="col-xs-5">
+								<p>Rp. 30.000.000</p>
+							</div>
+						</div>
+						<div class="row cost-list">
+							<div class="col-xs-7">
+								<p>Food and Beverages</p>
+							</div>
+							<div class="col-xs-5">
+								<p>Rp. 300.000.000</p>
+							</div>
+						</div>
+						<div class="row total">
+							<div class="col-xs-7">
+								<p class="box-label">TOTAL</p>
+							</div>
+							<div class="col-xs-5">
+								<p class="box-info">Rp. 330.000.000</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="row">
+						<p>Please confirm your booking :</p>
+					</div>
+					<div class="row">
+						<label class="radio"><input type="radio" value="dp"
+							name="pay-amount" data-toggle="radio" checked />I will Pay
+							Booking Fee only (10%)</label> <label class="radio"><input
+							type="radio" value="fp" name="pay-amount" data-toggle="radio" />I
+							will Pay Full (100%)</label>
+					</div>
+					<br>
+					<div class="row">
+						<p>
+							<strong>PAY BOOKING FEE ONLY</strong>
+						</p>
+						<p>Booking Cost</p>
+						<div style="font-size: 18px; color: #f7c21d; font-weight: 700">Rp.
+							33.000.000</div>
+						<br>
+						<p>Full payment should be transferred before DD-MM-YYYY (D-30
+							of the event date) to Event Vaganza account</p>
+						<p>
+							<img th:src="@{/image/logo-bca.png}" width="40px" height="auto"
+								style="margin-right: 10px"></img>Account Number : 920 1908 170 |
+							Account Name : PT Event Vaganza
+						</p>
+						<p>
+							<img th:src="@{/image/logo-mandiri.png}" width="40px"
+								height="auto" style="margin-right: 10px"></img>Account Number :
+							920 1908 170 | Account Name : PT Event Vaganza
+						</p>
+					</div>
+					<br>
+					<div class="row">
+						<p>
+							<strong>SELECT YOUR PAYMENT METHOD</strong>
+						</p>
+						<label class="radio"><input type="radio" value="cc"
+							name="pay-method" data-toggle="radio" checked />Credit Card <img
+							th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
+							<img th:src="@{/image/logo-mastercard.png}" width="48px"
+							height="auto"></img> </label> <label class="radio"><input
+							type="radio" value="trf" name="pay-method" data-toggle="radio"
+							checked />Bank Transfer <img
+							th:src="@{/image/logo-bank-transfer.png}" width="24px"
+							height="auto"></img> </label>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="text" class="form-control"
+									placeholder="Card Number" value="">
+							</div>
+						</div>
+						<div class="col-sm-8">
+							<div class="form-group">
+								<input type="text" class="form-control"
+									placeholder="Expiry Date" value="">
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="CVV"
+									value="">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<button class="btn btn-action">PAY NOW</button>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

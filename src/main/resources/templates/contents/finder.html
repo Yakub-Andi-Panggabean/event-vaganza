@@ -14,35 +14,42 @@
 						<span><a
 							th:text="*{parentName != null}? *{parentName} : ''"
 							th:href="@{/categories/{category}(category=${parent},c=${root_type})}"></a></span>
-						<h1
-							th:text="${#strings.capitalize(child_name!=null?child_name:category_name)}">Title</h1>
+						<h3 style="color: #f7c62b; font-style: oblique;"
+							th:text="${#strings.capitalize(child_name!=null?child_name:category_name)}">Title</h3>
 						<p class="fs-12 mb-20"
 							th:text="${#strings.capitalize(child_description!=null?child_description:category_description)}"></p>
 					</div>
+
 					<div class="col col-md-8">
-						<div class="row" style="padding-top: 8%;">
-							<div class="col col-md-4" align="center">
+						<div class="row">
+							<div class="col col-md-4 main-item-list">
 								<ul class="list-group">
 									<li class="list-group-item"
-										th:each="child,rowStat : ${children1}"><a
-										th:text="${#strings.capitalize(child.vendorTypeName)}"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}"></a></li>
+										th:each="child,rowStat : ${children1}"><a class="item"
+										th:inline="text"
+										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}">
+											<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(child.vendorTypeName)}]]
+									</a></li>
 								</ul>
 							</div>
-							<div class="col col-md-4" align="center">
+							<div class="col col-md-4 main-item-list">
 								<ul class="list-group">
 									<li class="list-group-item"
-										th:each="child,rowStat : ${children2}"><a
-										th:text="${#strings.capitalize(child.vendorTypeName)}"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}"></a></li>
+										th:each="child,rowStat : ${children2}"><a class="item"
+										th:inline="text"
+										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}">
+											<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(child.vendorTypeName)}]]
+									</a></li>
 								</ul>
 							</div>
-							<div class="col col-md-4" align="center">
+							<div class="col col-md-4 main-item-list">
 								<ul class="list-group">
 									<li class="list-group-item"
-										th:each="child,rowStat : ${children3}"><a
-										th:text="${#strings.capitalize(child.vendorTypeName)}"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}"></a></li>
+										th:each="child,rowStat : ${children3}"><a class="item"
+										th:inline="text"
+										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}">
+											<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(child.vendorTypeName)}]]
+									</a></li>
 								</ul>
 							</div>
 						</div>
@@ -50,14 +57,19 @@
 				</div>
 			</div>
 			<!-- end of header box -->
+
+			<div class="row">
+				<hr class="headline-line">
+			</div>
 		</div>
 		<!-- end of first container -->
 
 		<div class="col col-md-12">
-			<ol class="breadcrumb">
-				<li><a th:href="@{/}">Home</a></li>
-				<li><a th:href="@{/categories}">Categories</a></li>
-				<li><a th:text="*{parentName != null}? *{parentName} : ''"
+			<ol class="breadcrumb" style="background-color: #fff;">
+				<li><a style="color: #f7c62b" th:href="@{/}">Home</a></li>
+				<li><a style="color: #f7c62b" th:href="@{/categories}">Categories</a></li>
+				<li><a style="color: #f7c62b"
+					th:text="*{parentName != null}? *{parentName} : ''"
 					th:href="@{/categories/{category}(category=${parent},c=${root_type})}"></a></li>
 			</ol>
 		</div>

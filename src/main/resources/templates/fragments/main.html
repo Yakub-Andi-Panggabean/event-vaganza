@@ -80,7 +80,7 @@
 						<ul class="list-group">
 							<li class="list-group-item"
 								th:each="category,rowStat : ${categories2}"
-								th:id="${category.vendorType}"><a
+								th:id="${category.vendorType}"><a class="item"
 								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
 								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
 							</a></li>
@@ -90,7 +90,7 @@
 						<ul class="list-group">
 							<li class="list-group-item"
 								th:each="category,rowStat : ${categories3}"
-								th:id="${category.vendorType}"><a
+								th:id="${category.vendorType}"><a class="item"
 								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
 								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
 							</a></li>

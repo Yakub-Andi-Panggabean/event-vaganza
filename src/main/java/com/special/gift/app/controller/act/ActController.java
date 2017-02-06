@@ -1,16 +1,23 @@
 package com.special.gift.app.controller.act;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -18,8 +25,11 @@ import com.special.gift.app.controller.ui.UiController;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
+import com.special.gift.app.dto.FilterDto;
+import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.dto.VendorDto;
+import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.SequenceService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorService;
@@ -40,6 +50,10 @@ public class ActController {
   private static final String VENDOR_ACT_PATH = "vendor";
   private static final String VENDOR_UPDATE_ACT_PATH = "vendor-update";
 
+  // booking
+  public static final String BOOKING_REQUEST = "booking/request";
+  public static final String BOOKING_PAYMENT = "booking/payment";
+
 
 
   @Inject
@@ -50,6 +64,9 @@ public class ActController {
 
   @Inject
   private SequenceService sequenceService;
+
+  @Inject
+  private ListingService listingService;
 
 
 
@@ -170,5 +187,49 @@ public class ActController {
   }
 
 
+
+  @PostMapping(value = BOOKING_REQUEST, produces = MediaType.TEXT_HTML_VALUE)
+  public String renderBookingRequestView(Model model,
+      @RequestBody MultiValueMap<String, String> formData, HttpServletRequest request,
+      HttpSession session) {
+
+    final String time = formData.getFirst("event-request-time");
+    final String capacity = formData.getFirst("event-request-capacity");
+    final String eventId = formData.getFirst("event-request-id");
+
+    log.debug("time : {}, capacity : {}, event id : {}", time, capacity, eventId);
+
+    final SimpleDateFormat pattern = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+    final String fixCapacity =
+        capacity != null && !capacity.equals("") && capacity.split(",").length > 0
+            ? capacity.split(",")[1] : "";
+
+    final FilterDto filter = new FilterDto();
+    filter.setId(eventId);
+    try {
+      final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
+      log.debug("item : {}", item.toString());
+
+      final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+
+      final Calendar calendar = Calendar.getInstance();
+      calendar.setTime(pattern.parse(time));
+      calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(item.getRentDuration()));
+
+      model.addAttribute("packageStartime", pattern.parse(time));
+      model.addAttribute("packageEndTime", calendar.getTime());
+      model.addAttribute("requester", user);
+
+      model.addAttribute("package", item);
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
+    return "/contents/booking-request";
+  }
+
+  @PostMapping(value = BOOKING_PAYMENT)
+  public String renderBookingPaymentView(Model model) {
+    return "/contents/booking-payment";
+  }
 
 }

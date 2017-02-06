@@ -134,35 +134,35 @@ public class ListingServiceBean implements ListingService {
 
           // filter id
           if (filter.getId() != null) {
-            log.debug("filtering id : {}", filter.getId());
-            log.debug("item filtered : {}", item.toString());
+            // log.debug("filtering id : {}", filter.getId());
+            // log.debug("item filtered : {}", item.toString());
             // filteredList.add(item);
             isItemValid = filter.getId().equalsIgnoreCase(item.getId());
           }
 
           // filter capacity
           if (filter.getCapacity() != null && filter.getCapacity() > 0) {
-            log.debug("filtering capacity : {}", filter.getCapacity());
+            // log.debug("filtering capacity : {}", filter.getCapacity());
             isItemValid = item.getCapacity() == filter.getCapacity();
           }
 
           // filter city
           if (filter.getCity() != null && !filter.getCity().isEmpty() && item.getLocation() != null
               && !item.getLocation().isEmpty()) {
-            log.debug("filtering city : {}", filter.getCity());
+            // log.debug("filtering city : {}", filter.getCity());
             isItemValid = (item.getLocation().equalsIgnoreCase(filter.getCity())
                 || item.getLocation().toLowerCase().contains(filter.getCity().toLowerCase()));
           }
 
           if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
-            log.debug("filtering keyword : {}", filter.getKeyword());
+            // log.debug("filtering keyword : {}", filter.getKeyword());
             isItemValid = item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase());
           }
 
           if ((filter.getMaxPrice() != null && filter.getMaxPrice() > 0
               && filter.getMinPrice() != null && filter.getMinPrice() > 0)) {
-            log.debug("filtering min price : {} and max price : {}", filter.getMinPrice(),
-                filter.getMaxPrice());
+            // log.debug("filtering min price : {} and max price : {}", filter.getMinPrice(),
+            // filter.getMaxPrice());
             isItemValid = (item.getPrice() <= filter.getMaxPrice()
                 && item.getPrice() >= filter.getMinPrice());
           }
@@ -170,29 +170,29 @@ public class ListingServiceBean implements ListingService {
           // max prize
           if (filter.getMaxPrice() != null && filter.getMaxPrice() > 0
               && filter.getMinPrice() == 0) {
-            log.debug("filtering max price : {}", filter.getMaxPrice());
-            log.debug("item price : {}", item.getPrice());
+            // log.debug("filtering max price : {}", filter.getMaxPrice());
+            // log.debug("item price : {}", item.getPrice());
             isItemValid = item.getPrice() <= filter.getMaxPrice();
           }
 
           if (filter.getMinPrice() != null && filter.getMinPrice() > 0
               && filter.getMaxPrice() == 0) {
-            log.debug("filtering min price : {}", filter.getMinPrice());
+            // log.debug("filtering min price : {}", filter.getMinPrice());
             isItemValid = item.getPrice() >= filter.getMinPrice();
           }
 
           if (filter.getPackageType() != null && !filter.getPackageType().isEmpty()
               && !filter.getPackageType().toLowerCase().equals("all")) {
-            log.debug("filtering package type : {},item type:{}", filter.getPackageType(),
-                item.getPackageType());
+            // log.debug("filtering package type : {},item type:{}", filter.getPackageType(),
+            // item.getPackageType());
 
             isItemValid = filter.getPackageType().equalsIgnoreCase(item.getPackageType());
           }
 
           if (filter.getCategory() != null) {
 
-            log.debug("filtering filter category : {}", filter.getCategory());
-            log.debug("filtering item category : {}", item.getCategory());
+            // log.debug("filtering filter category : {}", filter.getCategory());
+            // log.debug("filtering item category : {}", item.getCategory());
 
             isItemValid = filter.getCategory().equalsIgnoreCase(item.getCategory());
           }

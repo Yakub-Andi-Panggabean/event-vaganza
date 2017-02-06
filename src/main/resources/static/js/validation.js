@@ -838,3 +838,50 @@ function validateVendorRegistrationForm() {
 			});
 
 }
+
+function validateBookingRequest() {
+	$("#confirm-booking-request")
+			.click(
+					function() {
+
+						var eventDate = $('#booking-date').val();
+						var eventSize = $('#capacity-dropdown :selected').val();
+
+						console.log('event date :' + eventDate)
+						console.log('event size :' + eventSize);
+
+						if (eventDate == '' || eventDate == null) {
+							$('#booking-request-error-message').text(
+									'event date may not be empty');
+						} else if (eventSize == '' || eventSize == null) {
+
+							$('#booking-request-error-message').text(
+									'event capacity may not be empty');
+						} else {
+
+							$
+									.ajax({
+										url : '/' + servletContext
+												+ '/api/auth/status',
+										method : 'POST',
+										success : function(data) {
+											console.log(data.content);
+											if (data.content == '0') {
+												$('#z-exception')
+														.html(
+																'<label>You have to login in order to be able make booking request</label>');
+												$('#login_modal').modal();
+											} else {
+												$('#booking-request-form')
+														.submit();
+											}
+
+										},
+										error : function(jqXHR, textStatus,
+												errorThrown) {
+										}
+									});
+						}
+
+					});
+}

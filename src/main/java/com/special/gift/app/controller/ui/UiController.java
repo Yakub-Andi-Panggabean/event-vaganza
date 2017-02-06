@@ -59,11 +59,6 @@ public class UiController {
   // package
   public static final String PACKAGE_DETAIL = "/packages/{type}/{packageId}";
 
-
-  // booking
-  public static final String BOOKING_REQUEST = "/booking/request";
-  public static final String BOOKING_PAYMENT = "/booking/payment";
-
   public static final String ITEM_OPTION = "/items/car";
 
 
@@ -350,6 +345,7 @@ public class UiController {
       log.debug("item from controller : {}", item.toString());
       model.addAttribute("packageDetail", item);
       model.addAttribute("package_type", Character.toUpperCase(type.charAt(0)) + type.substring(1));
+      model.addAttribute("packageId", id);
     } catch (final Exception e) {
       e.printStackTrace();
     }
@@ -408,20 +404,12 @@ public class UiController {
   }
 
 
+  // unused
   @RequestMapping(value = ITEM_OPTION, method = RequestMethod.GET)
   public String renderItemOptionViewPage(Model model) {
     return "/contents/item-option";
   }
 
 
-  @RequestMapping(value = BOOKING_REQUEST, method = RequestMethod.GET)
-  public String renderBookingRequestView(Model model) {
-    return "/contents/booking-request";
-  }
-
-  @RequestMapping(value = BOOKING_PAYMENT, method = RequestMethod.GET)
-  public String renderBookingPaymentView(Model model) {
-    return "/contents/booking-payment";
-  }
 
 }

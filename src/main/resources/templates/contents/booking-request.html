@@ -22,19 +22,24 @@
 					<div class="col-sm-6">
 						<div class="row">
 							<div class="col-xs-3" style="padding: 0px">
-								<img th:src="@{/image/thumb01.jpg}" width="100%" height="auto"></img>
+								<img th:src="${#strings.arraySplit(package.image, ',')[0]}"
+									width="100%" height="auto"></img>
 							</div>
 							<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
-								<h6 style="margin-top: 0px">RITZ CARLTON HOTEL</h6>
-								<p>Ballroom A - Capacity 1000 Person</p>
+								<h6 style="margin-top: 0px" th:text="${package.name}"></h6>
+								<p th:inline="text">[[${package.room}]] - Capacity
+									[[${package.capacity}]] Person</p>
 								<br>
-								<p>
+								<p th:inline="text">
 									<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
-										height="auto"></img>14 Februari 2017
+										height="auto"></img>&nbsp;[[${#dates.format(packageStartime,
+									'dd &nbsp; MMMM &nbsp; yyyy')}]]
 								</p>
-								<p>
+								<p th:inline="text">
 									<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
-										height="auto"></img>19.00 - 22.00 WIB
+										height="auto"></img>&nbsp;[[${#dates.format(packageStartime,
+									'HH.mm')}]] &nbsp;- &nbsp;[[${#dates.format(packageEndTime,
+									'HH.mm')}]] &nbsp;WIB
 								</p>
 							</div>
 						</div>
@@ -45,7 +50,7 @@
 									<p class="box-label">BOOK BY</p>
 								</div>
 								<div class="col-xs-8">
-									<p class="box-info">Ms. Sari Indri</p>
+									<p class="box-info" th:inline="text">[[${requester.username}]]</p>
 								</div>
 							</div>
 							<div class="row">
@@ -53,7 +58,7 @@
 									<p class="box-label">ADDRESS</p>
 								</div>
 								<div class="col-xs-8">
-									<p class="box-info">MPT. Kado Asia</p>
+									<p class="box-info" th:inline="text">[[${requester.userAddress}]]</p>
 								</div>
 							</div>
 							<div class="row">
@@ -61,7 +66,7 @@
 									<p class="box-label">MOBILE</p>
 								</div>
 								<div class="col-xs-8">
-									<p class="box-info">+62 812 1314 1516</p>
+									<p class="box-info" th:inline="text">[[${requester.handphone}]]</p>
 								</div>
 							</div>
 						</div>
@@ -78,26 +83,31 @@
 							<hr>
 							<div class="row cost-list">
 								<div class="col-xs-7">
-									<p>Venue Rental for 4 Hours</p>
+									<p th:inline="text">Rental for [[${package.rentDuration}]]
+										Hours</p>
 								</div>
 								<div class="col-xs-5">
-									<p>Rp. 30.000.000</p>
+									<p
+										th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.000</p>
 								</div>
 							</div>
-							<div class="row cost-list">
-								<div class="col-xs-7">
-									<p>Food and Beverages</p>
-								</div>
-								<div class="col-xs-5">
-									<p>Rp. 300.000.000</p>
-								</div>
-							</div>
+							<!-- 							<div class="row cost-list"> -->
+							<!-- 								<div class="col-xs-7"> -->
+							<!-- 									<p>Food and Beverages</p> -->
+							<!-- 								</div> -->
+							<!-- 								<div class="col-xs-5"> -->
+							<!-- 									<p>Rp. 300.000.000</p> -->
+							<!-- 								</div> -->
+							<!-- 							</div> -->
+							<br />
 							<div class="row total">
 								<div class="col-xs-7">
 									<p class="box-label">TOTAL</p>
 								</div>
 								<div class="col-xs-5">
-									<p class="box-info">Rp. 330.000.000</p>
+									<p class="box-info"
+										th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.
+										000</p>
 								</div>
 							</div>
 						</div>

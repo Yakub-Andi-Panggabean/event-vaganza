@@ -22,6 +22,7 @@ function init() {
 	getUrlVars();
 	validateRegisterForm();
 	validateVendorRegistrationForm();
+	validateBookingRequest();
 	fetchAllAvailableCategory();
 	fetchItemList(0, pagingPageSize, 1);
 	filteringKeyword();
@@ -34,7 +35,9 @@ function init() {
 	authProcess();
 	loadPagination();
 
-	$('.datepicker').datepicker();
+	 $( "#booking-date" ).datetimepicker({
+		 style:'padding-top:0px;'
+	 });
 
 	$('#button_pick_update_vendor_type').click(
 			function() {
@@ -78,7 +81,7 @@ function showModal() {
 		$('#login_modal').modal();
 	});
 
-	$('#book-event-date').datepicker();
+	// $('#book-event-date').datepicker();
 
 	$('#button-booking').click(function() {
 		$('#book_modal').modal();

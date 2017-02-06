@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
 import com.special.gift.app.util.response.GenericMultipleResponse;
 import com.special.gift.app.util.response.GenericResponse;
+import com.special.gift.app.util.response.GenericSingleResponse;
 
 @RestController
 @RequestMapping(value = ApiController.BASE_PATH)
@@ -40,6 +42,7 @@ public class ApiController {
   public static final String VENDOR_TYPE_API = "/categories";
   public static final String ITEMS_LIST_API = "/items/{page}/{size}/{type}";
   public static final String SEARCH_ITEM_API = "/search";
+  public static final String AUTHENTICATE_STATUS = "/auth/status";
 
   @Inject
   private UserService userService;
@@ -140,6 +143,19 @@ public class ApiController {
     }
 
 
+  }
+
+  @PostMapping(value = AUTHENTICATE_STATUS)
+  public GenericSingleResponse<String> authenticateLoginStatus(HttpSession session) {
+
+    log.debug("logged user : {}", session.getAttribute("user"));
+
+    String result = "1";
+    if (session.getAttribute("user") == null) {
+      result = "0";
+    }
+
+    return new GenericSingleResponse<String>(true, "success", result);
   }
 
 

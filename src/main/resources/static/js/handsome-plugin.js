@@ -118,6 +118,8 @@ $.fn.pickCategory = function(picked) {
 $.fn.cancelCategory = function(available) {
 	var selected = this.find(':selected');
 	selected.remove();
-	$('#'+available).append(selected);
+	$('#' + available).append(selected);
 	this.prop("selected", true);
 };
+
+

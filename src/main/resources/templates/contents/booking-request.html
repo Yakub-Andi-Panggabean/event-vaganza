@@ -27,8 +27,9 @@
 							</div>
 							<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
 								<h6 style="margin-top: 0px" th:text="${package.name}"></h6>
-								<p th:inline="text">[[${package.room}]] - Capacity
-									[[${package.capacity}]] Person</p>
+								<p th:inline="text">[[${package.room!=null &&
+									!package.room.equals('')?#strings.append(package.room,' -
+									'):''}]] Capacity [[${package.capacity}]] Person</p>
 								<br>
 								<p th:inline="text">
 									<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
@@ -117,9 +118,14 @@
 							<p>We will notify you within 24 Hours.</p>
 						</div>
 						<div class="row">
-							<a th:href="@{/booking/payment}">
+							<form id="booking-request-form" th:action="@{/booking/payment}" method="POST">
+								<input name="package_id" type="hidden" th:value="${package.id}">
+								<input name="event_date" type="hidden"
+									th:value="${#dates.format(packageStartime,
+									'yyyy/MM/dd HH:mm')}">
 								<button class="btn btn-action">CONFIRM REQUEST</button>
-							</a>
+							</form>
+
 						</div>
 					</div>
 				</div>

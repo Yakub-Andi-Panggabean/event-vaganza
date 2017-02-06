@@ -839,6 +839,42 @@ function validateVendorRegistrationForm() {
 
 }
 
+
+/**
+ * 
+ * authenticate booking request
+ * 
+ * @returns
+ */
+function authenticateBooking() {
+	var username = $('#z-user').val();
+	var password = $('#z-password').val();
+
+	var enc = window.btoa(username + ":" + password);
+
+	$.ajax({
+		url : '/' + servletContext + '/login',
+		method : 'POST',
+		headers : {
+			'isigunyaziso' : enc
+		},
+		success : function(data) {
+			$('#booking-request-form').submit();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			var error = JSON.parse(jqXHR.responseText);
+			$('#z-exception').html(error.errorMessage);
+		}
+	});
+}
+
+
+/**
+ * 
+ *  validate booking request
+ * 
+ * @returns
+ */
 function validateBookingRequest() {
 	$("#confirm-booking-request")
 			.click(
@@ -871,6 +907,11 @@ function validateBookingRequest() {
 														.html(
 																'<label>You have to login in order to be able make booking request</label>');
 												$('#login_modal').modal();
+
+												$('#z-auth').unbind('click');
+												$('#z-auth').click(
+														authenticateBooking);
+
 											} else {
 												$('#booking-request-form')
 														.submit();

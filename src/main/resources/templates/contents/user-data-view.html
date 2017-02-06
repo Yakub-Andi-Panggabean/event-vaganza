@@ -7,42 +7,74 @@
 <body>
 	<div class="container" th:fragment="content">
 		<div class="row container-package-detail">
-			<div class="col-md-4 col-md-offset-4">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h4>User Info</h4>
+			<div class="col-sm-6 col-sm-offset-2">
+				<div class="row">
+					<p
+						style="font-size: 18px; font-weight: 700; line-height: 20px; color: #ccc; margin: 10px 0px">
+						USER INFORMATION <span><i
+							class="input-icon pe-7s-angle-down"
+							style="font-size: 24px; position: absolute; top: 8px; margin-left: 20px; cursor: pointer"
+							onclick="toggle_visibility('more-info')"></i></span>
+					</p>
+				</div>
+				<div class="row">
+					<div class="col-sm-5" style="color: #898989">
+						<label>NAME</label>
 					</div>
-					<div class="panel-body">
-						<dl class="dl-horizontal">
-							<dt>Username :</dt>
-							<dd>
-								<span th:text="${existingData.username}">Value</span>
-							</dd>
-							<dt>Email :</dt>
-							<dd>
-								<span th:text="${existingData.email}">Value</span>
-							</dd>
-							<dt>Handphone :</dt>
-							<dd>
-								<span th:text="${existingData.handphone}">Value</span>
-							</dd>
-							<dt>Phone :</dt>
-							<dd>
-								<span th:text="${existingData.phone}">Value</span>
-							</dd>
-							<dt>Zip :</dt>
-							<dd>
-								<span th:text="${existingData.userZip}">Value</span>
-							</dd>
-							<dt>Address :</dt>
-							<dd>
-								<span th:text="${existingData.userAddress}">Value</span>
-							</dd>
-						</dl>
+					<div class="col-sm-7">
+						<label th:text="${existingData.username}">name</label>
 					</div>
-					<div class="panel-footer">
-						<a th:href="@{/user-update}">Update Data</a>
+				</div>
+				<div id="more-info" style="display: none">
+
+					<div class="row">
+						<div class="col-sm-5" style="color: #898989">
+							<label>PHONE</label>
+						</div>
+						<div class="col-sm-7">
+							<label th:text="${existingData.phone}">+62-21 580 1866</label>
+						</div>
 					</div>
+					<div class="row">
+						<div class="col-sm-5" style="color: #898989">
+							<label>MOBILE PHONE</label>
+						</div>
+						<div class="col-sm-7">
+							<label th:text="${existingData.handphone}">+62812 9876
+								1234</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-5" style="color: #898989">
+							<label>E-MAIL</label>
+						</div>
+						<div class="col-sm-7">
+							<label th:text="${existingData.email}">lemonz@flatstudio.com</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-5" style="color: #898989">
+							<label>ZIP CODE</label>
+						</div>
+						<div class="col-sm-7">
+							<label th:text="${existingData.userZip}">zip</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-5" style="color: #898989">
+							<label>ADDRESS</label>
+						</div>
+						<div class="col-sm-7">
+							<label th:text="${existingData.userAddress}">address</label>
+						</div>
+					</div>
+				</div>
+				<br>
+
+				<div class="row">
+					<a th:href="@{/user-update}">
+						<button class="btn btn-action">Update Data</button>
+					</a>
 				</div>
 			</div>
 		</div>

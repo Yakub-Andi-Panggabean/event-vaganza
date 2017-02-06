@@ -154,6 +154,8 @@ function authenticate() {
 	});
 }
 
+
+
 /**
  * 
  * used for logout mechanism

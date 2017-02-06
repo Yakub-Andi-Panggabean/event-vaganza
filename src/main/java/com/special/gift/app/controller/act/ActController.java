@@ -228,7 +228,39 @@ public class ActController {
   }
 
   @PostMapping(value = BOOKING_PAYMENT)
-  public String renderBookingPaymentView(Model model) {
+  public String renderBookingPaymentView(Model model,
+      @RequestBody MultiValueMap<String, String> formData, HttpServletRequest request,
+      HttpSession session) {
+
+    final String packageId = formData.getFirst("package_id");
+    final String eventDate = formData.getFirst("event_date");
+
+    log.debug("package id : {}, event date : {}", packageId, eventDate);
+
+    final SimpleDateFormat pattern = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
+    try {
+
+      final FilterDto filter = new FilterDto();
+      filter.setId(packageId);
+
+      final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
+
+      final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+
+      final Calendar calendar = Calendar.getInstance();
+      calendar.setTime(pattern.parse(eventDate));
+      calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(item.getRentDuration()));
+
+      model.addAttribute("packageStartime", pattern.parse(eventDate));
+      model.addAttribute("packageEndTime", calendar.getTime());
+      model.addAttribute("requester", user);
+      model.addAttribute("package", item);
+
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+    }
+
     return "/contents/booking-payment";
   }
 

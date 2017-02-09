@@ -24,7 +24,7 @@ public class Vendor {
   @Column(name = "vendor_name", nullable = false, length = 50)
   private String name;
 
-  @Column(name = "vendor_desc", nullable = false, length = 100)
+  @Column(name = "vendor_desc", nullable = false, columnDefinition = "longtext")
   private String desc;
 
   @Column(name = "vendor_address", nullable = false, length = 100)

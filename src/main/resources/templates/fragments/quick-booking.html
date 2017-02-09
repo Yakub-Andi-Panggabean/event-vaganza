@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="content">
+		<div class="container-package-detail">
+			<div class="row">
+				<h3 class="headline">Pilih kategori</h3>
+				<hr class="headline-line">
+			</div>
+
+			<!-- carousel -->
+			<br />
+			<div class="row category-container">
+				<!-- end of category header -->
+				<div class="col-md-12 main-item-list">
+					<div class="col-md-4">
+						<ul class="list-group">
+							<li class="list-group-item"
+								th:each="category,rowStat : ${categories1}"
+								th:id="${category.vendorType}"><a class="item"
+								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
+								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
+							</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<ul class="list-group">
+							<li class="list-group-item"
+								th:each="category,rowStat : ${categories2}"
+								th:id="${category.vendorType}"><a class="item"
+								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
+								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
+							</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<ul class="list-group">
+							<li class="list-group-item"
+								th:each="category,rowStat : ${categories3}"
+								th:id="${category.vendorType}"><a class="item"
+								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
+								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
+							</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>

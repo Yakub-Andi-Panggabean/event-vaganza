@@ -53,6 +53,7 @@ public class ActController {
   // booking
   public static final String BOOKING_REQUEST = "booking/request";
   public static final String BOOKING_PAYMENT = "booking/payment";
+  public static final String BOOKING_TRANSACTION = "booking/transaction";
 
 
 
@@ -262,6 +263,12 @@ public class ActController {
     }
 
     return "/contents/booking-payment";
+  }
+
+  @PostMapping(value = BOOKING_TRANSACTION)
+  public String bookingTransaction() {
+
+    return "";
   }
 
 }

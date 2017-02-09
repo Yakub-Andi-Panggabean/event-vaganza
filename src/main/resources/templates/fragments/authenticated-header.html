@@ -3,23 +3,20 @@
 		<a th:href="@{/}"><img th:src="@{/image/logo-nav.png}"
 			width="auto" height="40px"></img></a>
 	</div>
-	<div class="nav-shop">
-		<ul>
-			<li class="dropdown"><a class="dropdown-toggle"
-				data-toggle="dropdown"><img th:src="@{/image/user.png}"
-					width="auto" height="40px"></img></a>
-				<ul class="dropdown-menu">
-					<li><a th:text="${session.user}" th:href="@{/user-view}">Profile</a></li>
-					<li><a th:href="@{/vendor-view}"
-						th:remove="${session.isVendor}?none:all">Vendor Status</a></li>
-					<li><a href="#">Setting</a></li>
-					<li><a onclick="invalidate()">Logout</a></li>
-				</ul></li>
-		</ul>
-	</div>
 	<div class="nav-user">
 		<a th:href="@{/help}">Bantuan</a> <a th:href="@{/vendor-registration}"
 			th:remove="${session.isVendor}?all:none"> Vendor</a>
+	</div>
+	<div class="nav-shop">
+		<a data-toggle="dropdown"><img th:src="@{/image/button-user.png}"
+			width="auto" height="40px"></img></a>
+		<ul class='dropdown-menu' role='menu'>
+			<li><a th:text="${session.user}" th:href="@{/user-view}">Profile</a></li>
+			<li><a th:href="@{/vendor-view}"
+				th:remove="${session.isVendor}?none:all">Vendor Status</a></li>
+			<li><a href="#">Setting</a></li>
+			<li><a onclick="invalidate()">Logout</a></li>
+		</ul>
 	</div>
 	<div class="nav-search">
 		<form id="form-search-header" th:action="@{/search}">

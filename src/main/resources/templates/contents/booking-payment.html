@@ -159,24 +159,32 @@
 							height="auto"></img> </label>
 					</div>
 					<div class="row">
-						<div class="col-sm-12">
-							<div class="form-group">
-								<input type="text" class="form-control"
-									placeholder="Card Number" value="">
+						<form id="booking_transaction_form"
+							th:action="@{/booking/transaction}" method="POST">
+							<input type="hidden" name="event_id"> <input
+								type="hidden" name="user_id"> <input type="hidden"
+								name="booking_date"> <input type="hidden"
+								name="booking_time"> <input type="hidden" name="methode">
+							<input type="hidden"> <input type="hidden">
+							<div class="col-sm-12">
+								<div class="form-group">
+									<input type="text" class="form-control"
+										placeholder="Card Number" value="">
+								</div>
 							</div>
-						</div>
-						<div class="col-sm-8">
-							<div class="form-group">
-								<input type="text" class="form-control"
-									placeholder="Expiry Date" value="">
+							<div class="col-sm-8">
+								<div class="form-group">
+									<input type="text" class="form-control"
+										placeholder="Expiry Date" value="">
+								</div>
 							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<input type="text" class="form-control" placeholder="CVV"
-									value="">
+							<div class="col-sm-4">
+								<div class="form-group">
+									<input type="text" class="form-control" placeholder="CVV"
+										value="">
+								</div>
 							</div>
-						</div>
+						</form>
 					</div>
 					<div class="row">
 						<button class="btn btn-action">PAY NOW</button>

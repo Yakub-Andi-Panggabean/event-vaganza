@@ -58,8 +58,10 @@ public class UiController {
 
   // package
   public static final String PACKAGE_DETAIL = "/packages/{type}/{packageId}";
-
   public static final String ITEM_OPTION = "/items/car";
+
+
+  public static final String QUICK_BOOKING = "quick-booking";
 
 
   @Inject
@@ -84,9 +86,7 @@ public class UiController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public String renderIndex(Model model, HttpSession session) {
-    model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
-    model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
-    model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
+
     return "fragments/main";
   }
 
@@ -403,6 +403,17 @@ public class UiController {
     return "/contents/vendor-data-view";
   }
 
+
+  @RequestMapping(value = QUICK_BOOKING, method = RequestMethod.GET)
+  public String renderQuickBookingPage(Model model) {
+
+
+    model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
+    model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
+    model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
+
+    return "fragments/quick-booking";
+  }
 
   // unused
   @RequestMapping(value = ITEM_OPTION, method = RequestMethod.GET)

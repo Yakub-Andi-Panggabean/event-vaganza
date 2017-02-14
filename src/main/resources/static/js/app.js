@@ -35,9 +35,9 @@ function init() {
 	authProcess();
 	loadPagination();
 
-	 $( "#booking-date" ).datetimepicker({
-		 style:'padding-top:0px;'
-	 });
+	$("#booking-date").datetimepicker({
+		timeFormat: "HH:mm"
+	});
 
 	$('#button_pick_update_vendor_type').click(
 			function() {
@@ -58,6 +58,7 @@ function init() {
 	$('#button_cancel_vendor_type').click(function() {
 		$('#choosen_category_list').cancelCategory('available_category_list');
 	});
+	
 
 }
 
@@ -153,8 +154,6 @@ function authenticate() {
 		}
 	});
 }
-
-
 
 /**
  * 
@@ -647,5 +646,19 @@ function advanceSearchPagination(start, limit, criteria) {
 			.concat('?start=' + start + '&limit=' + limit);
 
 	$("#search-result").load(service + " #search-item", criteria);
+
+}
+
+function createBookingTransaction() {
+
+	var paymentAmount = $('input[name="pay-amount"]:checked').val();
+	var paymentMethod = $('input[name="pay-method"]:checked').val();
+
+	console.log('used methode : ' + paymentAmount+', method :'+paymentMethod);
+	
+	$('#payment_amount').val(paymentAmount);
+	$('#payment_method').val(paymentMethod);
+	
+	$('#booking_transaction_form').submit();
 
 }

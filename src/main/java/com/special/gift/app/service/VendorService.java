@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
+import com.special.gift.app.domain.VendorId;
 import com.special.gift.app.dto.VendorDto;
 
 public interface VendorService {
@@ -23,5 +24,7 @@ public interface VendorService {
   Page<Vendor> findAll(long start, long limit);
 
   List<Vendor> findByUser(User user);
+
+  Vendor findById(VendorId id);
 
 }

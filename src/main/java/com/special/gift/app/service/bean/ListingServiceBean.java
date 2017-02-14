@@ -55,7 +55,8 @@ public class ListingServiceBean implements ListingService {
             packages.getPackagePrice(), packages.getPackageCapacity(),
             packages.getVendor().getAddress(), packages.getDiscountRate(),
             packages.getMinimumPayment(), 0, String.valueOf(packages.getTimePackage()),
-            packages.getPackageDesc(), "", packages.getPackageStyle()));
+            packages.getPackageDesc(), "", packages.getPackageStyle(),
+            packages.getVendor().getVendorId().getVendorId()));
 
       }
 
@@ -67,7 +68,8 @@ public class ListingServiceBean implements ListingService {
                 .append("/").append(venue.getVenueId()).toString(),
             venue.getRentalPrice(), Integer.valueOf(venue.getRoomCapacity()), venue.getCity(),
             venue.getDiscountRate(), venue.getMinimumPayment(), venue.getPaxPrice(),
-            venue.getTimeRent(), venue.getVenuePackage(), venue.getVenueRoom(), ""));
+            venue.getTimeRent(), venue.getVenuePackage(), venue.getVenueRoom(), "",
+            venue.getVendor().getVendorId().getVendorId()));
       }
 
 

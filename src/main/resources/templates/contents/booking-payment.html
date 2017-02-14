@@ -114,11 +114,12 @@
 						<p>Please confirm your booking :</p>
 					</div>
 					<div class="row">
-						<label class="radio"><input type="radio" value="dp"
+						<label class="radio"> <input type="radio" value="dp"
 							name="pay-amount" data-toggle="radio" checked />I will Pay
-							Booking Fee only (10%)</label> <label class="radio"><input
-							type="radio" value="fp" name="pay-amount" data-toggle="radio" />I
-							will Pay Full (100%)</label>
+							Booking Fee only (10%)
+						</label> <label class="radio"> <input type="radio" value="fp"
+							name="pay-amount" data-toggle="radio" />I will Pay Full (100%)
+						</label>
 					</div>
 					<br>
 					<div class="row">
@@ -148,24 +149,25 @@
 						<p>
 							<strong>SELECT YOUR PAYMENT METHOD</strong>
 						</p>
-						<label class="radio"><input type="radio" value="cc"
-							name="pay-method" data-toggle="radio" checked />Credit Card <img
-							th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
-							<img th:src="@{/image/logo-mastercard.png}" width="48px"
-							height="auto"></img> </label> <label class="radio"><input
-							type="radio" value="trf" name="pay-method" data-toggle="radio"
-							checked />Bank Transfer <img
-							th:src="@{/image/logo-bank-transfer.png}" width="24px"
-							height="auto"></img> </label>
+						<label class="radio">
+						<input type="radio" value="P" name="pay-method" data-toggle="radio" checked />
+						Credit Card <img th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
+						<img th:src="@{/image/logo-mastercard.png}" width="48px" height="auto"></img> 
+						</label> 
+						<label class="radio">
+						<input type="radio" value="T" name="pay-method" data-toggle="radio" checked />Bank Transfer
+						 <img th:src="@{/image/logo-bank-transfer.png}" width="24px"
+							height="auto"></img> 
+						</label>
 					</div>
 					<div class="row">
 						<form id="booking_transaction_form"
 							th:action="@{/booking/transaction}" method="POST">
-							<input type="hidden" name="event_id"> <input
-								type="hidden" name="user_id"> <input type="hidden"
-								name="booking_date"> <input type="hidden"
-								name="booking_time"> <input type="hidden" name="methode">
-							<input type="hidden"> <input type="hidden">
+							<input type="hidden" name="package_id" th:value="${package.id}">
+							<input type="hidden" name="booking_date"
+								th:value="${#dates.format(packageStartime,'yyyy/MM/dd HH:mm')}">
+							<input id="payment_amount" type="hidden" name="payment_amount">
+							<input id="payment_method" type="hidden" name="payment_method">
 							<div class="col-sm-12">
 								<div class="form-group">
 									<input type="text" class="form-control"
@@ -187,7 +189,8 @@
 						</form>
 					</div>
 					<div class="row">
-						<button class="btn btn-action">PAY NOW</button>
+						<button onclick="createBookingTransaction()"
+							class="btn btn-action">PAY NOW</button>
 					</div>
 				</div>
 			</div>

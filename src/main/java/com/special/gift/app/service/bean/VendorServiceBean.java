@@ -107,5 +107,10 @@ public class VendorServiceBean implements VendorService {
     }
   }
 
+  @Override
+  public Vendor findById(VendorId id) {
+    return repository.findOne(id);
+  }
+
 
 }

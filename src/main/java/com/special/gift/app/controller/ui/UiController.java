@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,6 +63,7 @@ public class UiController {
 
 
   public static final String QUICK_BOOKING = "quick-booking";
+  public static final String PLAN_MY_EVENT = "plan-event";
 
 
   @Inject
@@ -75,6 +77,9 @@ public class UiController {
 
   @Inject
   private VendorService vendorService;
+
+  @Value("${image.path.location}")
+  private String imagePath;
 
 
   /**
@@ -412,14 +417,29 @@ public class UiController {
     model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
     model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
 
+    model.addAttribute("imageRoot", imagePath);
+
     return "fragments/quick-booking";
   }
 
-  // unused
-  @RequestMapping(value = ITEM_OPTION, method = RequestMethod.GET)
-  public String renderItemOptionViewPage(Model model) {
-    return "/contents/item-option";
+
+  @RequestMapping(value = PLAN_MY_EVENT, method = RequestMethod.GET)
+  public String renderPlanPage(Model model) {
+
+    model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
+    model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
+    model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
+
+    model.addAttribute("imageRoot", imagePath);
+
+    return "contents/plan-event";
   }
+
+  // unused
+  // @RequestMapping(value = ITEM_OPTION, method = RequestMethod.GET)
+  // public String renderItemOptionViewPage(Model model) {
+  // return "/contents/item-option";
+  // }
 
 
 

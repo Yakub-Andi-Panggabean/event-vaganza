@@ -18,34 +18,62 @@
 				<!-- end of category header -->
 				<div class="col-md-12 main-item-list">
 					<div class="col-md-4">
-						<ul class="list-group">
-							<li class="list-group-item"
-								th:each="category,rowStat : ${categories1}"
-								th:id="${category.vendorType}"><a class="item"
+
+						<div class="col-md-12" th:each="category,rowStat : ${categories1}"
+							th:id="${category.vendorType}" style="text-align: center">
+
+							<label class="radio-thumb"> <input type="radio"
+								value="wd" name="event-type" /> <a
 								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
-								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
-							</a></li>
-						</ul>
+								class="radio-img"> <img
+									th:src="${#strings.append(imageRoot,category.image)}"></img>
+									<div class="radio-img-desc" th:inline="text">
+										[[${#strings.capitalize(category.vendorTypeName)}]]</div>
+							</a>
+							</label>
+
+						</div>
+
+
 					</div>
 					<div class="col-md-4">
-						<ul class="list-group">
-							<li class="list-group-item"
-								th:each="category,rowStat : ${categories2}"
-								th:id="${category.vendorType}"><a class="item"
+
+						<div class="col-md-12" th:each="category,rowStat : ${categories2}"
+							th:id="${category.vendorType}" style="text-align: center">
+
+							<label class="radio-thumb"> <input type="radio"
+								value="wd" name="event-type" /> <a
 								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
-								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
-							</a></li>
-						</ul>
+								class="radio-img"> <img
+									th:src="${#strings.append(imageRoot,category.image)}"></img>
+									<div class="radio-img-desc" th:inline="text">
+										[[${#strings.capitalize(category.vendorTypeName)}]]</div>
+							</a>
+							</label>
+
+						</div>
+
+
 					</div>
+
 					<div class="col-md-4">
-						<ul class="list-group">
-							<li class="list-group-item"
-								th:each="category,rowStat : ${categories3}"
-								th:id="${category.vendorType}"><a class="item"
+
+						<div class="col-md-12" th:each="category,rowStat : ${categories3}"
+							th:id="${category.vendorType}" style="text-align: center">
+
+							<label class="radio-thumb"> <input type="radio"
+								value="wd" name="event-type" /> <a
 								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
-								th:inline="text"> <i class="fa fa-bars" aria-hidden="true""></i>&nbsp;[[${#strings.capitalize(category.vendorTypeName)}]]
-							</a></li>
-						</ul>
+								class="radio-img"> <img
+									th:src="${#strings.append(imageRoot,category.image)}"></img>
+									<div class="radio-img-desc" th:inline="text">
+										[[${#strings.capitalize(category.vendorTypeName)}]]</div>
+							</a>
+							</label>
+
+						</div>
+
+
 					</div>
 				</div>
 			</div>

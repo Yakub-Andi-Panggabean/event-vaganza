@@ -22,6 +22,7 @@ import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.PackageCityService;
 import com.special.gift.app.service.VendorDescService;
+import com.special.gift.app.util.CommonUtil;
 
 @Controller
 @RequestMapping(value = SearchController.PATH)
@@ -30,8 +31,6 @@ public class SearchController {
   private static final Logger log = LoggerFactory.getLogger(SearchController.class);
 
   public static final String PATH = "/";
-
-  public static final int PAGING_NUMBER = 5;
 
   public static final String SEARCH = "search";
 
@@ -108,7 +107,7 @@ public class SearchController {
       model.addAttribute("totalPage",
           new Double(Math.ceil((double) itemList.size() / (double) limit)).intValue());
       model.addAttribute("totalDisplayItem", start > limit ? start - limit : limit);
-      model.addAttribute("pagingNumber", PAGING_NUMBER);
+      model.addAttribute("pagingNumber", CommonUtil.PAGING_NUMBER);
 
 
 
@@ -162,7 +161,6 @@ public class SearchController {
 
       log.debug("data found : {}", itemList.size());
 
-      final List<ItemListDto> filteredItemList = new ArrayList<>();
 
       final List<ItemListDto> displayedItemList = new ArrayList<>();
 
@@ -205,9 +203,7 @@ public class SearchController {
       model.addAttribute("totalPage",
           new Double(Math.ceil((double) itemList.size() / (double) limit)).intValue());
       model.addAttribute("totalDisplayItem", start > limit ? start - limit : limit);
-      model.addAttribute("pagingNumber", PAGING_NUMBER);
-
-
+      model.addAttribute("pagingNumber", CommonUtil.PAGING_NUMBER);
 
       model.addAttribute("itemList",
           displayedItemList.subList(

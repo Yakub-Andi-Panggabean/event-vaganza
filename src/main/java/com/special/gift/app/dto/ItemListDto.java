@@ -5,6 +5,7 @@ public class ItemListDto {
   private String id;
   private String name;
   private String packageType;
+  private String vendorId;
   private String category;
   private String image;
   private String url;
@@ -26,7 +27,7 @@ public class ItemListDto {
   public ItemListDto(String id, String name, String packageType, String category, String image,
       String url, Integer price, Integer capacity, String location, Integer discountRate,
       Integer minimumPayment, Integer paxPrice, String rentDuration, String description,
-      String room, String vendorStyle) {
+      String room, String vendorStyle, String vendorId) {
     super();
     this.id = id;
     this.name = name;
@@ -44,6 +45,7 @@ public class ItemListDto {
     this.description = description;
     this.room = room;
     this.vendorStyle = vendorStyle;
+    this.vendorId = vendorId;
   }
 
   public String getId() {
@@ -175,14 +177,22 @@ public class ItemListDto {
     this.vendorStyle = vendorStyle;
   }
 
+  public String getVendorId() {
+    return vendorId;
+  }
+
+  public void setVendorId(String vendorId) {
+    this.vendorId = vendorId;
+  }
+
   @Override
   public String toString() {
     return "ItemListDto [id=" + id + ", name=" + name + ", packageType=" + packageType
-        + ", category=" + category + ", image=" + image + ", url=" + url + ", price=" + price
-        + ", capacity=" + capacity + ", location=" + location + ", discountRate=" + discountRate
-        + ", minimumPayment=" + minimumPayment + ", paxPrice=" + paxPrice + ", rentDuration="
-        + rentDuration + ", description=" + description + ", room=" + room + ", vendorStyle="
-        + vendorStyle + "]";
+        + ", vendorId=" + vendorId + ", category=" + category + ", image=" + image + ", url=" + url
+        + ", price=" + price + ", capacity=" + capacity + ", location=" + location
+        + ", discountRate=" + discountRate + ", minimumPayment=" + minimumPayment + ", paxPrice="
+        + paxPrice + ", rentDuration=" + rentDuration + ", description=" + description + ", room="
+        + room + ", vendorStyle=" + vendorStyle + "]";
   }
 
 

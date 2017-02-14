@@ -23,6 +23,7 @@ public class VendorDescServiceBean implements VendorDescService {
   @Autowired
   private VendorDescriptionRepository repository;
 
+
   @Override
   public Page<VendorDesc> findAllParents(long start, long limit) {
     final Iterable<VendorDesc> categories = repository.findAll();

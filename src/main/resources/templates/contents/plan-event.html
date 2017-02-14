@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+	name="viewport" />
+
+</head>
+
+<body>
+
+	<div class="content" th:fragment="content">
+		<div class="container">
+			<div class="row">
+				<h3 class="headline">PLAN MY EVENT</h3>
+				<hr class="headline-line">
+			</div>
+
+			<div class="row">
+				<div id="wizard" style="text-align: center">
+					<ol id="wizard-steps" class="wizard-steps">
+						<li id="generalinfoactive" class="active child">EVENT</li>
+						<li id="package_plan_step" class="child">PACKAGE</li>
+						<li id="venue_plan_step" class="child">VENUE</li>
+						<li id="date_plan_step" class="child">DATE</li>
+						<li id="confirmation_plan_step" class="child">CONFIRMATION</li>
+						<li id="placeholderactive" class="child">PAYMENT</li>
+					</ol>
+				</div>
+
+				<div class="wizard-wrap">
+					<div class="row">
+						<div class="wizard-title">SELECT YOUR EVENT TYPE</div>
+						<hr style="margin: 0px 20px 30px 20px">
+					</div>
+					<div id="wizard_content" class="row" align="center">
+
+						<div class="col-md-12 main-item-list">
+							<div class="col-md-4">
+
+								<div class="col-md-12"
+									th:each="category,rowStat : ${categories1}"
+									th:id="${category.vendorType}" style="text-align: center"
+									th:onclick="'Javacript:choseEventType(\''+${category.vendorType}+'\');'">
+
+									<label class="radio-thumb"> <input type="radio"
+										value="wd" name="event-type" /> <a class="radio-img"> <img
+											th:src="${#strings.append(imageRoot,category.image)}"></img>
+											<div class="radio-img-desc" th:inline="text">
+												[[${#strings.capitalize(category.vendorTypeName)}]]</div>
+									</a>
+									</label>
+
+								</div>
+
+
+							</div>
+							<div class="col-md-4">
+
+								<div class="col-md-12"
+									th:each="category,rowStat : ${categories2}"
+									th:id="${category.vendorType}" style="text-align: center">
+
+									<label class="radio-thumb"> <input type="radio"
+										value="wd" name="event-type" /> <a class="radio-img"> <img
+											th:src="${#strings.append(imageRoot,category.image)}"></img>
+											<div class="radio-img-desc" th:inline="text">
+												[[${#strings.capitalize(category.vendorTypeName)}]]</div>
+									</a>
+									</label>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+
+								<div class="col-md-12"
+									th:each="category,rowStat : ${categories3}"
+									th:id="${category.vendorType}" style="text-align: center">
+
+									<label class="radio-thumb"> <input type="radio"
+										value="wd" name="event-type" /> <a class="radio-img"> <img
+											th:src="${#strings.append(imageRoot,category.image)}"></img>
+											<div class="radio-img-desc" th:inline="text">
+												[[${#strings.capitalize(category.vendorTypeName)}]]</div>
+									</a>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<input type="hidden" id="choosen_type_value"> <input
+						type="hidden" id="choosen_package_value"> <input
+						type="hidden" id="choosen_venue_value"> <input
+						type="hidden" id="choosen_date_value"> <input
+						type="hidden" id="choosen_capacity_value">
+					<div class="col-sm-2 col-sm-offset-5">
+						<button id="wizard-process-button" class="btn btn-next">NEXT</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

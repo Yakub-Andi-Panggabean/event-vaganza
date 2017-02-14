@@ -1,0 +1,104 @@
+<div class="col-sm-12">
+	<div class="book-request">
+		<br /> <br />
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-xs-3" style="padding: 0px">
+						<img th:src="${#strings.arraySplit(venue.image, ',')[0]}"
+							width="100%" height="auto"></img>
+					</div>
+					<div class="col-xs-9" align="left">
+						<h6 style="margin-top: 0px" th:text="${venue.name}"></h6>
+						<p th:inline="text">[[${#strings.append(venue.room,' - ')}]]
+							Capacity [[${venue.capacity}]] Person</p>
+						<br>
+						<p>
+							<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
+								height="auto"></img>14 Februari 2017
+						</p>
+						<p>
+							<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
+								height="auto"></img>19.00 - 22.00 WIB
+						</p>
+					</div>
+				</div>
+
+				<div class="book-request-box">
+					<div class="row">
+						<div class="col-xs-4">
+							<p class="box-label">BOOK BY</p>
+						</div>
+						<div class="col-xs-8">
+							<p class="box-info" th:inline="text">[[${requester.username}]]</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<p class="box-label">ADDRESS</p>
+						</div>
+						<div class="col-xs-8">
+							<p class="box-info" th:inline="text">[[${requester.userAddress}]]</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<p class="box-label">MOBILE</p>
+						</div>
+						<div class="col-xs-8">
+							<p class="box-info" th:inline="text">[[${requester.handphone}]]</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="cost-estimate-box">
+					<div class="row cost-title">
+						<p>
+							<img th:src="@{/image/icon-cost-orange_16x16.png}" width="16px"
+								height="auto" style="margin-right: 10px"></img>COST ESTIMATION
+						</p>
+					</div>
+					<hr>
+					<div class="row cost-list">
+						<div class="col-xs-7">
+							<p th:inline="text">Venue Rental for
+								[[${venue.rentDuration}]] Hours</p>
+						</div>
+						<div class="col-xs-5">
+							<p
+								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(venue.price,3,'POINT',2,'COMMA'))}">Rp.
+								30.000.000</p>
+						</div>
+					</div>
+					<div class="row cost-list">
+						<div class="col-xs-7">
+							<p th:text="${vendor.name}">Food and Beverages</p>
+						</div>
+						<div class="col-xs-5">
+							<p
+								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(vendor.price,3,'POINT',2,'COMMA'))}">Rp.
+								300.000.000</p>
+						</div>
+					</div>
+					<div class="row total">
+						<div class="col-xs-7">
+							<p class="box-label">TOTAL</p>
+						</div>
+						<div class="col-xs-5">
+							<p class="box-info"
+								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(vendor.price+venue.price,3,'POINT',2,'COMMA'))}">Rp.
+								330.000.000</p>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<p>Banquet Manager will confirm the availability of the venue
+						and detail final price.</p>
+					<p>We will notify you within 24 Hours.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

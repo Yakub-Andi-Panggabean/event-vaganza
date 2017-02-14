@@ -21,6 +21,9 @@ public class VendorDesc {
   @Column(name = "vendor_description", nullable = false, length = 100)
   private String vendorDescription;
 
+  @Column(name = "image", nullable = false, length = 255)
+  private String image;
+
   public String getVendorType() {
     return vendorType;
   }
@@ -43,6 +46,20 @@ public class VendorDesc {
 
   public void setVendorTypeName(String vendorTypeName) {
     this.vendorTypeName = vendorTypeName;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
+  @Override
+  public String toString() {
+    return "VendorDesc [vendorType=" + vendorType + ", vendorTypeName=" + vendorTypeName
+        + ", vendorDescription=" + vendorDescription + ", image=" + image + "]";
   }
 
 

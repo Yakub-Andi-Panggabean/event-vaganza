@@ -1,0 +1,77 @@
+<div id="ajax-content">
+	<div th:each="item, row: ${itemList}"
+		th:with="numList=${ {5,4,3,2,1,0} }"
+		th:if="${row.count % 6 == 0 or row.last}" class="row">
+		<!-- Show all rows except the leftovers -->
+		
+		<div
+			th:onclick="'Javascript:secondWizardStep(\''+${itemList[dataIndex].id}+'\')'"
+			class="col-sm-2" th:each="num : ${numList}"
+			th:with="dataIndex=(${row.index} - ${num})"
+			th:if="${row.count % 6 == 0}" align="left"
+			style="margin-bottom: 20px; cursor: pointer; opacity: 0.7;">
+
+			<img
+				th:src=" ${#strings.arraySplit(itemList[dataIndex].image, ',')[0]}"
+				width="100%" height="250px" style="max-width: 180px;"></img>
+
+			<h6 th:inline="text">[[${itemList[dataIndex].name}]]</h6>
+			<br />
+			<p th:inline="text">[[${itemList[dataIndex].room!=null
+				&&!itemList[dataIndex].room.equals('')}?${#strings.append(#strings.toUpperCase(itemList[dataIndex].room),'-')}:'']]
+				Capacity [[${itemList[dataIndex].capacity}]] Person</p>
+
+			<p th:inline="text">[[${itemList[dataIndex].location}]]</p>
+
+			<p th:inline="text">[[${not
+				itemList[dataIndex].vendorStyle.equals('')}?${#strings.append(#strings.capitalize(itemList[dataIndex].vendorStyle),'
+				style')}: ${#strings.append(#strings.append('Start from
+				Rp.',#numbers.formatDecimal(itemList[dataIndex].paxPrice,3,'POINT',2,'COMMA')),'
+				/pax')} ]]</p>
+
+			<p th:inline="text">Only For [[${#strings.append('Rp.
+				',#numbers.formatDecimal(itemList[dataIndex].price,3,'POINT',2,'COMMA'))}]]</p>
+
+			<p th:inline="text">
+				Book now only for <br /> [[${#strings.append('Rp.
+				',#numbers.formatDecimal(itemList[dataIndex].minimumPayment,3,'POINT',2,'COMMA'))}]]
+			</p>
+
+		</div>
+
+		<!-- Show the remainders (eg, if there are 9 items, the last row will have one item in it) -->
+
+		<div class="col-sm-2" th:each="num : ${numList}"
+			th:with="dataIndex=(${row.index} - ${num})"
+			th:if="${row.last} and ${row.count % 6 != 0} and ${num &lt; row.count % 6}"
+			align="left"
+			style="margin-bottom: 20px; cursor: pointer; opacity: 0.7;"
+			th:onclick="'Javascript:secondWizardStep(\''+${itemList[dataIndex].id}+'\')'">
+
+			<img
+				th:src=" ${#strings.arraySplit(itemList[dataIndex].image, ',')[0]}"
+				width="100%" height="250px" style="max-width: 180px;"></img>
+
+			<h6 th:inline="text">[[${itemList[dataIndex].name}]]</h6>
+			<br />
+			<p th:inline="text">[[${itemList[dataIndex].room!=null
+				&&!itemList[dataIndex].room.equals('')}?${#strings.append(#strings.toUpperCase(itemList[dataIndex].room),'-')}:'']]
+				Capacity [[${itemList[dataIndex].capacity}]] Person</p>
+
+			<p th:inline="text">[[${itemList[dataIndex].location}]]</p>
+
+			<p th:inline="text">[[${not
+				itemList[dataIndex].vendorStyle.equals('')}?${#strings.append(#strings.capitalize(itemList[dataIndex].vendorStyle),'
+				style')}: ${#strings.append(#strings.append('Start from
+				Rp.',#numbers.formatDecimal(itemList[dataIndex].paxPrice,3,'POINT',2,'COMMA')),'
+				/pax')} ]]</p>
+
+			<p th:inline="text">Only For [[${#strings.append('Rp.
+				',#numbers.formatDecimal(itemList[dataIndex].price,3,'POINT',2,'COMMA'))}]]</p>
+
+			<p th:inline="text">
+				Book now only for <br /> [[${#strings.append('Rp.
+				',#numbers.formatDecimal(itemList[dataIndex].minimumPayment,3,'POINT',2,'COMMA'))}]]
+			</p>
+		</div>
+	</div>

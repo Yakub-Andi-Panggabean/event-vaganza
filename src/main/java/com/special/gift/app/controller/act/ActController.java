@@ -2,6 +2,7 @@ package com.special.gift.app.controller.act;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,13 +24,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.special.gift.app.controller.ui.UiController;
+import com.special.gift.app.domain.BookingTransaction;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
+import com.special.gift.app.dto.BookingTransactionDto;
 import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.dto.VendorDto;
+import com.special.gift.app.service.BookingTransactionService;
 import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.SequenceService;
 import com.special.gift.app.service.UserService;
@@ -69,7 +74,11 @@ public class ActController {
   @Inject
   private ListingService listingService;
 
+  @Inject
+  private BookingTransactionService bookingService;
 
+  @Autowired
+  private SequenceService sequence;
 
   @PostMapping(value = USER_ACT_PATH)
   public String addNewuser(@ModelAttribute UserDto user, RedirectAttributes redirectAttributes) {
@@ -266,9 +275,58 @@ public class ActController {
   }
 
   @PostMapping(value = BOOKING_TRANSACTION)
-  public String bookingTransaction() {
+  public String bookingTransaction(Model model, @RequestBody MultiValueMap<String, String> formData,
+      HttpServletRequest request, HttpSession session) {
 
-    return "";
+    final SimpleDateFormat pattern = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
+    try {
+      final String packageId = formData.getFirst("package_id");
+      final String bookingDate = formData.getFirst("booking_date");
+      final char method = formData.getFirst("payment_method").charAt(0);
+      final String amount = formData.getFirst("payment_amount");
+
+      final FilterDto filter = new FilterDto();
+      filter.setId(packageId);
+
+      log.debug("package id : {}, booking date : {}, methode : {}", packageId, bookingDate, method);
+
+      final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
+
+      final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+
+      final BookingTransactionDto dto = new BookingTransactionDto();
+
+      final Date bookingTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(bookingDate);
+
+      dto.setDateBooking(new SimpleDateFormat("dd/MM/yy").format(bookingTime));
+      dto.setTimeBooking(new SimpleDateFormat("HH:mm").format(bookingTime));
+      dto.setEventId(packageId);
+      dto.setMethodPayment(method);
+      dto.setPriceAll(item.getPrice());
+      dto.setPricePayment(item.getMinimumPayment());
+      dto.setStatuspayment('0');
+      dto.setStatusTransaction('0');
+      dto.setTransactionDate(new SimpleDateFormat("dd/MM/yy").format(new Date()));
+      dto.setTransactionTime(new SimpleDateFormat("HH:mm").format(new Date()));
+      dto.setUser(user);
+      dto.setVendor(vendorService.findById(new VendorId(item.getVendorId(), item.getCategory())));
+      dto.setTransactionId(sequence.generateSequence(SequenceUtil.TRANSACTION_ID_SEQ));
+
+      final BookingTransaction transaction = new BookingTransaction();
+
+      BeanUtils.copyProperties(dto, transaction);
+
+      log.debug("vendor type : {},id :{}", item.getVendorId(), item.getCategory());
+      log.debug("transaction  {}", transaction.toString());
+
+      bookingService.saveBookingTransaction(transaction);
+
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
+
+    return "outer/help";
   }
 
 }

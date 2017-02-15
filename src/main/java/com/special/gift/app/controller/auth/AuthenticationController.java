@@ -50,6 +50,7 @@ public class AuthenticationController {
 
 
     log.debug("is vendor exist : {}", request.getAttribute("isVendorExist"));
+    log.debug("url : {}", authResponse.getUrl());
 
     return authResponse;
   }

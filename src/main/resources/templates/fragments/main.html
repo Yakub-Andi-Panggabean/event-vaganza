@@ -4,38 +4,44 @@
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<body>
-	<div th:fragment="content">
-
-		<div class="row">
-
-			<div class="col-xs-12 col-md-10 col-md-offset-1">
-
-				<div class="col-md-4" align="center">
-					<a th:href="@{/quick-booking}"> <img
-						th:src="@{/image/login-icon.png}"
-						class="img-rounded" alt="Cinque Terre" width="200" height="250">
-						<label>Quick Booking</label>
-					</a>
-				</div>
-				<div class="col-md-4" align="center">
-					<a th:href="@{/plan-event}"> <img
-						th:src="@{/image/login-icon.png}"
-						class="img-rounded" alt="Cinque Terre" width="200" height="250">
-						<label>Start planning event</label>
-					</a>
-				</div>
-				<div class="col-md-4" align="center">
-					<img
-						th:src="@{/image/login-icon.png}"
-						class="img-rounded" alt="Cinque Terre" width="200" height="250">
-					<label>My Booking History</label>
-				</div>
-
-			</div>
-
-		</div>
-
+<div th:fragment="content">
+	<div class="row" style="text-align: center; margin-bottom: 20px">
+		<img th:src="@{/image/main-logo.png}" width="220px" height="auto"></img>
+		<p style="color: #ccc">The Friendly Event Organizer</p>
 	</div>
-</body>
+
+	<div class="row">
+		<div class="col-sm-4 col-sm-offset-2" style="text-align: center">
+			<div class="row">
+				<img th:src="@{/image/misseva.png}" width="100%" height="auto"
+					style="max-width: 280px"></img>
+			</div>
+			<div class="row">
+				<p
+					style="font-size: 18px; font-weight: 700; color: #f7c21d; line-height: 24px; margin: 10px">Booking
+					your event at your finger tips</p>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="row" style="text-align: center">
+				<p
+					style="font-size: 18px; font-weight: 300; color: #464646; margin: 20px 0px; line-height: 30px">
+					Booking venues easily<br>Get quote from supporting vendor<br>Manage
+					event using mobile apps
+				</p>
+			</div>
+			<div class="row">
+				<a th:href="@{/plan-event}"><button class="btn btn-plan">Start
+						Planning Event</button></a>
+			</div>
+			<div class="row">
+				<a th:href="@{/quick-booking}"><button class="btn btn-quick">Quick
+						Event Booking</button></a>
+			</div>
+			<div class="row">
+				<button class="btn btn-history">My History</button>
+			</div>
+		</div>
+	</div>
+</div>
 </html>

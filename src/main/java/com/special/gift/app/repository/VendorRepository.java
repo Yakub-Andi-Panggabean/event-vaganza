@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.special.gift.app.domain.User;
@@ -17,5 +18,8 @@ public interface VendorRepository extends CrudRepository<Vendor, VendorId> {
   List<Vendor> findByUser(User user);
 
   void deleteByUser(User user);
+
+  @Query(value = "select * from vendor where vendor_id=?1 limit 1", nativeQuery = true)
+  Vendor findSingleVendorById(String id);
 
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +45,9 @@ public class SearchController {
 
   @Inject
   private PackageCityService packageCityService;
+
+  @Value("${image.path.location}")
+  private String imagePath;
 
   /**
    *
@@ -108,6 +112,7 @@ public class SearchController {
           new Double(Math.ceil((double) itemList.size() / (double) limit)).intValue());
       model.addAttribute("totalDisplayItem", start > limit ? start - limit : limit);
       model.addAttribute("pagingNumber", CommonUtil.PAGING_NUMBER);
+      model.addAttribute("imagePath", imagePath);
 
 
 
@@ -204,6 +209,7 @@ public class SearchController {
           new Double(Math.ceil((double) itemList.size() / (double) limit)).intValue());
       model.addAttribute("totalDisplayItem", start > limit ? start - limit : limit);
       model.addAttribute("pagingNumber", CommonUtil.PAGING_NUMBER);
+      model.addAttribute("imagePath", imagePath);
 
       model.addAttribute("itemList",
           displayedItemList.subList(

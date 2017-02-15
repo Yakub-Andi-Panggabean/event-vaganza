@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,6 +80,9 @@ public class ActController {
 
   @Autowired
   private SequenceService sequence;
+
+  @Value("${image.path.location}")
+  private String imagePath;
 
   @PostMapping(value = USER_ACT_PATH)
   public String addNewuser(@ModelAttribute UserDto user, RedirectAttributes redirectAttributes) {
@@ -229,6 +233,7 @@ public class ActController {
       model.addAttribute("packageStartime", pattern.parse(time));
       model.addAttribute("packageEndTime", calendar.getTime());
       model.addAttribute("requester", user);
+      model.addAttribute("imageRoot", imagePath);
 
       model.addAttribute("package", item);
     } catch (final Exception exception) {
@@ -266,6 +271,7 @@ public class ActController {
       model.addAttribute("packageEndTime", calendar.getTime());
       model.addAttribute("requester", user);
       model.addAttribute("package", item);
+      model.addAttribute("imageRoot", imagePath);
 
     } catch (final Exception ex) {
       ex.printStackTrace();

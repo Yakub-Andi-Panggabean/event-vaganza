@@ -55,7 +55,7 @@ public class BookingTransaction {
 
   @OneToOne
   @JoinColumns({@JoinColumn(name = "vendor_type", columnDefinition = "CHAR(3)"),
-      @JoinColumn(name = "vendor_id"),})
+      @JoinColumn(name = "vendor_id")})
   private Vendor vendor;
 
   @OneToOne(targetEntity = TransactionConfirmation.class, cascade = CascadeType.ALL,

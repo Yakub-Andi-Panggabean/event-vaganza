@@ -16,8 +16,8 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 
 war {
-    baseName = 'special-gift'
-    version =  '0.0.1-SNAPSHOT'
+    baseName = 'kado-web'
+    //version =  '0.0.1'
 }
 
 jar {

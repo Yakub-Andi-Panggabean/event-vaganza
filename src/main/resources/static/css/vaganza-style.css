@@ -464,6 +464,48 @@ label {
 	color: #f7941d;
 	border: 1px solid #f7941d;
 }
+.btn-plan {
+	color: #fff;
+	background-color: #f7c21d;
+	width: 100%;
+	border: none;
+	height: 40px;
+	border-radius: 6px;
+	margin: 10px 0px;
+}
+.btn-plan:hover,
+.btn-plan:focus {
+	color: #fff;
+	background-color: #f7941d;
+}
+.btn-quick {
+	color: #000;
+	background-color: #fff;
+	border: 1px solid #f7c21d;
+	width: 100%;
+	height: 40px;
+	border-radius: 6px;
+	margin: 10px 0px;
+}
+.btn-quick:hover,
+.btn-quick:focus {
+	color: #f7941d;
+	border: 1px solid #f7941d;
+}
+.btn-history {
+	color: #000;
+	background-color: #fff;
+	border: 1px solid #f7c21d;
+	width: 100%;
+	height: 40px;
+	border-radius: 6px;
+	margin: 10px 0px;
+}
+.btn-history:hover,
+.btn-history:focus {
+	color: #f7941d;
+	border: 1px solid #f7941d;
+}
 
 @media (max-width: 991px) {
 	.content {
@@ -694,7 +736,6 @@ a.radio-img {
 	color: #fff;
 	background-color: #000;
 }
-
 /*------------detail--------------------*/
 .big-button-trigger {
 	background-color: #f7c21d;;

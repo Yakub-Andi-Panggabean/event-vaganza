@@ -351,6 +351,7 @@ public class UiController {
       model.addAttribute("packageDetail", item);
       model.addAttribute("package_type", Character.toUpperCase(type.charAt(0)) + type.substring(1));
       model.addAttribute("packageId", id);
+      model.addAttribute("imageRoot", imagePath);
     } catch (final Exception e) {
       e.printStackTrace();
     }

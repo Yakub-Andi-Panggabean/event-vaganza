@@ -10,7 +10,7 @@
 				<!-- Indicators -->
 				<ol class="carousel-indicators">
 					<li
-						th:each="img,status : ${#strings.arraySplit(packageDetail.image, ',')}"
+						th:each="img,status : ${#strings.arraySplit(packageDetail.image, ':')}"
 						th:classappend="${status.index==0}?'active':''"
 						data-target="#image-slide" th:attr="data-slide-to=${status.index}"></li>
 				</ol>
@@ -21,9 +21,10 @@
 				<div th:unless="${packageDetail.image == null}"
 					class="carousel-inner" role="listbox">
 					<div
-						th:each="img,status : ${#strings.arraySplit(packageDetail.image, ',')}"
+						th:each="img,status : ${#strings.arraySplit(packageDetail.image, ':')}"
 						class="item" th:classappend="${status.index==0}?'active':''">
-						<img class="center-block" th:src="${img}" alt="Chania"
+						<img class="center-block"
+							th:src="${#strings.append(imageRoot,img)}" alt="Chania"
 							style="height: 350px;">
 					</div>
 				</div>
@@ -41,6 +42,8 @@
 			</div>
 			<div class="carousel-description" th:inline="text">
 				[[${#strings.toUpperCase(packageDetail.name)}]] <small>[[${#strings.capitalize(packageDetail.room)}]]
+
+
 
 
 
@@ -102,29 +105,12 @@
 				method="POST">
 				<input type="hidden" name="event-request-id" th:value="${packageId}">
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-sm-6 col-sm-offset-4">
 						<label>EVENT DATE</label>
 						<div class="form-group">
 							<input id="booking-date" name="event-request-time" type="text"
 								class="form-control" placeholder="Select Event Date" value="">
 							<span class="input-icon pe-7s-date"></span>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<label>GROUP SIZE</label>
-						<div class="form-group">
-							<select id="capacity-dropdown" class="form-control"
-								name="event-request-capacity">
-								<option></option>
-								<option value="<,300">< 300</option>
-								<option value="<,500">< 500</option>
-								<option value="<,1000">< 1000</option>
-								<option value="<,2000">< 2000</option>
-								<option value="<,3000">< 3000</option>
-								<option value="<,4000">< 4000</option>
-								<option value="<,5000">< 5000</option>
-								<option value=">,5000">> 5000</option>
-							</select>
 						</div>
 					</div>
 				</div>

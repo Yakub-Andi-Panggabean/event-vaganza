@@ -69,7 +69,7 @@
 							th:if="${row.count % 4 == 0}" style="margin-bottom: 20px">
 
 							<a th:href="${itemList[dataIndex].url}"> <img
-								th:src=" ${#strings.arraySplit(itemList[dataIndex].image, ',')[0]}"
+								th:src=" ${#strings.append(imagePath,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}"
 								width="100%" height="250px" style="max-width: 180px;"></img>
 							</a>
 							<h6 th:inline="text">[[${itemList[dataIndex].name}]]</h6>
@@ -103,7 +103,7 @@
 							th:if="${row.last} and ${row.count % 4 != 0} and ${num &lt; row.count % 4}">
 
 							<a th:href="${itemList[dataIndex].url}"> <img
-								th:src=" ${#strings.arraySplit(itemList[dataIndex].image, ',')[0]}"
+								th:src=" ${#strings.append(imagePath,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}"
 								width="100%" height="250px" style="max-width: 180px;"></img>
 							</a>
 							<h6 th:inline="text">[[${itemList[dataIndex].name}]]</h6>

@@ -1,12 +1,9 @@
 package com.special.gift.app.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -53,10 +50,12 @@ public class PackageVendor {
   @Column(name = "time_package", nullable = false, length = 20)
   private String timePackage;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-  @JoinColumns({@JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id"), @JoinColumn(
-      name = "vendor_type", referencedColumnName = "vendor_type", columnDefinition = "CHAR(2)")})
-  private Vendor vendor;
+  @Column(name = "vendor_id", nullable = false, length = 60)
+  private String vendorId;
+
+  @ManyToOne
+  @JoinColumn(name = "vendor_type", referencedColumnName = "vendor_type")
+  private VendorDesc vendorDesc;
 
   public String getPackageId() {
     return packageId;
@@ -154,12 +153,33 @@ public class PackageVendor {
     this.timePackage = timePackage;
   }
 
-  public Vendor getVendor() {
-    return vendor;
+  public String getVendorId() {
+    return vendorId;
   }
 
-  public void setVendor(Vendor vendor) {
-    this.vendor = vendor;
+  public void setVendorId(String vendorId) {
+    this.vendorId = vendorId;
   }
+
+  public VendorDesc getVendorDesc() {
+    return vendorDesc;
+  }
+
+  public void setVendorDesc(VendorDesc vendorDesc) {
+    this.vendorDesc = vendorDesc;
+  }
+
+  @Override
+  public String toString() {
+    return "PackageVendor [packageId=" + packageId + ", packageName=" + packageName
+        + ", packageCapacity=" + packageCapacity + ", packageDesc=" + packageDesc
+        + ", packageCategory=" + packageCategory + ", packageStyle=" + packageStyle
+        + ", packagePrice=" + packagePrice + ", packageImg=" + packageImg + ", packagePromo="
+        + packagePromo + ", discountRate=" + discountRate + ", minimumPayment=" + minimumPayment
+        + ", timePackage=" + timePackage + ", vendorId=" + vendorId + ", vendorDesc=" + vendorDesc
+        + "]";
+  }
+
+
 
 }

@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.special.gift.app.domain.PackageVendor;
 import com.special.gift.app.domain.User;
-import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
 import com.special.gift.app.repository.GlobalSequenceRepository;
 import com.special.gift.app.repository.PackageVendorRepository;
@@ -94,7 +93,7 @@ public class ApplicationTests {
       id.setType("80");
       id.setVendorId("5000000000");
 
-      pVendor.setVendor(vendorRepository.findOne(id));
+      // pVendor.setVendor(vendorRepository.findOne(id));
 
 
       pVendorRepsitory.save(pVendor);
@@ -104,14 +103,14 @@ public class ApplicationTests {
 
   }
 
-  // @Test
-  public void selectVendor() {
-    try {
-      final Vendor vendor = vendorRepository.findOne(new VendorId("5000000000", "80"));
-      log.debug("vendor : {}", vendor.toString());
-    } catch (final Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+  // // @Test
+  // public void selectVendor() {
+  // try {
+  // final Vendor vendor = vendorRepository.findOne(new VendorId("5000000000", "80"));
+  // log.debug("vendor : {}", vendor.toString());
+  // } catch (final Exception ex) {
+  // ex.printStackTrace();
+  // }
+  // }
 
 }

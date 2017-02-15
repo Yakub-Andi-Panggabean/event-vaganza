@@ -5,6 +5,9 @@ var pagingPageSize = 12;
 // visible pagination number
 var pagingNumber = 5;
 
+var imagePathLocation = 'http://139.59.241.223:8080/kado-cms/image/'
+// var imagePathLocation='http://localhost:8080/kado-web/image/'
+
 /**
  * 
  */
@@ -36,7 +39,8 @@ function init() {
 	loadPagination();
 
 	$("#booking-date").datetimepicker({
-		timeFormat: "HH:mm"
+		dateFormat:'yy/mm/dd',
+		timeFormat : "HH:mm"
 	});
 
 	$('#button_pick_update_vendor_type').click(
@@ -58,7 +62,6 @@ function init() {
 	$('#button_cancel_vendor_type').click(function() {
 		$('#choosen_category_list').cancelCategory('available_category_list');
 	});
-	
 
 }
 
@@ -235,8 +238,9 @@ function fetchItemList(start, limit) {
 												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">");
 										result = result
 												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
-														+ value.image
-																.split(',')[0]
+														+ imagePathLocation
+																.concat(value.image
+																		.split(':')[0])
 														+ "\" alt=\"Responsive image\">");
 										result = result.concat("</a>");
 										result = result.concat("</div>");
@@ -433,8 +437,8 @@ function fetchItemsSelectionList(start, limit, destroy) {
 												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">");
 										result = result
 												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
-														+ value.image
-																.split(',')[0]
+														+ imagePathLocation.concat(value.image
+																.split(':')[0])
 														+ "\" alt=\"Responsive image\">");
 										result = result.concat("</a>");
 										result = result.concat("</div>");
@@ -654,11 +658,12 @@ function createBookingTransaction() {
 	var paymentAmount = $('input[name="pay-amount"]:checked').val();
 	var paymentMethod = $('input[name="pay-method"]:checked').val();
 
-	console.log('used methode : ' + paymentAmount+', method :'+paymentMethod);
-	
+	console.log('used methode : ' + paymentAmount + ', method :'
+			+ paymentMethod);
+
 	$('#payment_amount').val(paymentAmount);
 	$('#payment_method').val(paymentMethod);
-	
+
 	$('#booking_transaction_form').submit();
 
 }

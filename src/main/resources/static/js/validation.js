@@ -839,7 +839,6 @@ function validateVendorRegistrationForm() {
 
 }
 
-
 /**
  * 
  * authenticate booking request
@@ -868,10 +867,9 @@ function authenticateBooking() {
 	});
 }
 
-
 /**
  * 
- *  validate booking request
+ * validate booking request
  * 
  * @returns
  */
@@ -881,18 +879,12 @@ function validateBookingRequest() {
 					function() {
 
 						var eventDate = $('#booking-date').val();
-						var eventSize = $('#capacity-dropdown :selected').val();
 
 						console.log('event date :' + eventDate)
-						console.log('event size :' + eventSize);
 
 						if (eventDate == '' || eventDate == null) {
 							$('#booking-request-error-message').text(
 									'event date may not be empty');
-						} else if (eventSize == '' || eventSize == null) {
-
-							$('#booking-request-error-message').text(
-									'event capacity may not be empty');
 						} else {
 
 							$
@@ -911,6 +903,12 @@ function validateBookingRequest() {
 												$('#z-auth').unbind('click');
 												$('#z-auth').click(
 														authenticateBooking);
+												
+												$('#z-user').unbind('keypress');
+												$('#z-user').keypress(authenticateBooking);
+												
+												$('#z-password').unbind('keypress');
+												$('#z-password').keypress(authenticateBooking);
 
 											} else {
 												$('#booking-request-form')

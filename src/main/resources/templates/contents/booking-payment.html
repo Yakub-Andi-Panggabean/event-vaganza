@@ -21,7 +21,7 @@
 				<div class="col-sm-6">
 					<div class="row">
 						<div class="col-xs-3" style="padding: 0px">
-							<img th:src="${#strings.arraySplit(package.image, ',')[0]}"
+							<img th:src="${#strings.append(imageRoot,#strings.arraySplit(package.image, ',')[0])}"
 								width="100%" height="auto"></img>
 						</div>
 						<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
@@ -168,24 +168,6 @@
 								th:value="${#dates.format(packageStartime,'yyyy/MM/dd HH:mm')}">
 							<input id="payment_amount" type="hidden" name="payment_amount">
 							<input id="payment_method" type="hidden" name="payment_method">
-							<div class="col-sm-12">
-								<div class="form-group">
-									<input type="text" class="form-control"
-										placeholder="Card Number" value="">
-								</div>
-							</div>
-							<div class="col-sm-8">
-								<div class="form-group">
-									<input type="text" class="form-control"
-										placeholder="Expiry Date" value="">
-								</div>
-							</div>
-							<div class="col-sm-4">
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="CVV"
-										value="">
-								</div>
-							</div>
 						</form>
 					</div>
 					<div class="row">

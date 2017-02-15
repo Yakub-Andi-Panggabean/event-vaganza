@@ -13,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.special.gift.app.domain.PackageVendor;
-import com.special.gift.app.domain.PackageVenue;
+import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.repository.PackageVendorRepository;
 import com.special.gift.app.repository.PackageVenueRepository;
+import com.special.gift.app.repository.VendorRepository;
 import com.special.gift.app.service.ListingService;
 
 @Service
@@ -30,6 +31,9 @@ public class ListingServiceBean implements ListingService {
 
   @Autowired
   private PackageVenueRepository pVenueRepository;
+
+  @Autowired
+  private VendorRepository vendorRepository;
 
   private static final String PACKAGE_VENUE = "venue";
   private static final String PACKAGE_VENDOR = "vendor";
@@ -45,31 +49,64 @@ public class ListingServiceBean implements ListingService {
       log.debug("servlet context : {}", request.getContextPath());
 
       // add package vendor
-      for (final PackageVendor packages : pVendorRepository.findAll()) {
-
-        // add package vendor
-        items.add(new ItemListDto(packages.getPackageId(), packages.getPackageName(),
-            PACKAGE_VENDOR, packages.getVendor().getVendorId().getType(), packages.getPackageImg(),
-            new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENDOR)
-                .append("/").append(packages.getPackageId()).toString(),
-            packages.getPackagePrice(), packages.getPackageCapacity(),
-            packages.getVendor().getAddress(), packages.getDiscountRate(),
-            packages.getMinimumPayment(), 0, String.valueOf(packages.getTimePackage()),
-            packages.getPackageDesc(), "", packages.getPackageStyle(),
-            packages.getVendor().getVendorId().getVendorId()));
-
-      }
+      // for (final PackageVendor packages : pVendorRepository.findAll()) {
+      //
+      //
+      //
+      // // add package vendor
+      // items.add(new ItemListDto(packages.getPackageId(), packages.getPackageName(),
+      // PACKAGE_VENDOR, packages.getVendor().getVendorId().getType(), packages.getPackageImg(),
+      // new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENDOR)
+      // .append("/").append(packages.getPackageId()).toString(),
+      // packages.getPackagePrice(), packages.getPackageCapacity(),
+      // packages.getVendor().getAddress(), packages.getDiscountRate(),
+      // packages.getMinimumPayment(), 0, String.valueOf(packages.getTimePackage()),
+      // packages.getPackageDesc(), "", packages.getPackageStyle(),
+      // packages.getVendor().getVendorId().getVendorId()));
+      //
+      // }
 
       // add package venue
-      for (final PackageVenue venue : pVenueRepository.findAll()) {
-        items.add(new ItemListDto(venue.getVenueId(), venue.getVenueName(), PACKAGE_VENUE,
-            venue.getVendor().getVendorId().getType(), venue.getVenuePortofolio(),
-            new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENUE)
-                .append("/").append(venue.getVenueId()).toString(),
-            venue.getRentalPrice(), Integer.valueOf(venue.getRoomCapacity()), venue.getCity(),
-            venue.getDiscountRate(), venue.getMinimumPayment(), venue.getPaxPrice(),
-            venue.getTimeRent(), venue.getVenuePackage(), venue.getVenueRoom(), "",
-            venue.getVendor().getVendorId().getVendorId()));
+      // for (final PackageVenue venue : pVenueRepository.findAll()) {
+      // items.add(new ItemListDto(venue.getVenueId(), venue.getVenueName(), PACKAGE_VENUE,
+      // venue.getVendor().getVendorId().getType(), venue.getVenuePortofolio(),
+      // new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENUE)
+      // .append("/").append(venue.getVenueId()).toString(),
+      // venue.getRentalPrice(), Integer.valueOf(venue.getRoomCapacity()), venue.getCity(),
+      // venue.getDiscountRate(), venue.getMinimumPayment(), venue.getPaxPrice(),
+      // venue.getTimeRent(), venue.getVenuePackage(), venue.getVenueRoom(), "",
+      // venue.getVendor().getVendorId().getVendorId()));
+      // }
+
+      // add package vendor
+      for (final PackageVendor packages : pVendorRepository.findAll()) {
+
+        final ItemListDto dto = new ItemListDto();
+        final Vendor vendor = vendorRepository.findSingleVendorById(packages.getVendorId());
+
+        dto.setCapacity(packages.getPackageCapacity());
+        dto.setCategory(packages.getVendorDesc().getVendorType());
+        dto.setDescription(packages.getPackageDesc());
+        dto.setDiscountRate(packages.getDiscountRate());
+        dto.setId(packages.getPackageId());
+        dto.setImage(packages.getPackageImg().substring(0,
+            (packages.getPackageImg().length() > 0 ? packages.getPackageImg().length() - 1 : 0)));
+        dto.setLocation(vendor.getAddress());
+        dto.setMinimumPayment(packages.getMinimumPayment());
+        dto.setName(packages.getPackageName());
+        dto.setPackageType(PACKAGE_VENDOR);
+        dto.setPaxPrice(0);
+        dto.setPrice(packages.getPackagePrice());
+        dto.setRentDuration(String.valueOf(packages.getTimePackage()));
+        dto.setRoom("");
+        dto.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
+            .append(PACKAGE_VENDOR).append("/").append(packages.getPackageId()).toString());
+        dto.setVendorId(packages.getVendorId());
+        dto.setVendorStyle(packages.getPackageStyle());
+
+        // find vendor by vendor id
+        items.add(dto);
+
       }
 
 

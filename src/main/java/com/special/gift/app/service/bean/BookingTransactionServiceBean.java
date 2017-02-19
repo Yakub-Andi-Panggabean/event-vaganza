@@ -49,4 +49,11 @@ public class BookingTransactionServiceBean implements BookingTransactionService 
     return repository.findOne(id);
   }
 
+  @Transactional(readOnly = false)
+  @Override
+  public void saveBookingBatch(Iterable<BookingTransaction> bookingTransactions) {
+    repository.save(bookingTransactions);
+
+  }
+
 }

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="content" th:fragment="content">
+
+
+		<div class="row">
+			<div class="col-sm-6">
+				<label>EVENT DATE</label>
+				<div class="form-group">
+					<input name="event-request-time" type="text" class="form-control"
+						placeholder="Select Event Date" disabled="disabled"
+						th:value="${eventDate}"> <span
+						class="input-icon pe-7s-date"></span>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<br />
+				<form name="plan-package-payment-form"
+					id="plan-package-payment-form" th:action="@{/plan/booking/payment}"
+					method="POST">
+					<input type="hidden" name="eventDate" id="eventDate"
+						th:value="${customPackage.date}"> <input type="hidden"
+						name="eventVenue" id="eventVenue"
+						th:value="${customPackage.venue}"> <input type="hidden"
+						name="eventCatering" id="eventCatering"
+						th:value="${customPackage.catering}"> <input type="hidden"
+						name="eventDecoration" id="eventDecoration"
+						th:value="${customPackage.decoration}"> <input
+						type="hidden" name="eventMakeup" id="eventMakeup"
+						th:value="${customPackage.makeUp}"> <input type="hidden"
+						name="eventPhoto" id="eventPhoto"
+						th:value="${customPackage.photography}"> <input
+						type="hidden" name="eventEo" id="eventEo"
+						th:value="${customPackage.eo}"> <input type="hidden"
+						name="eventOthers" id="eventOthers"
+						th:value="${customPackage.others}"> <input type="hidden"
+						name="eventTransport" id="eventTransport"
+						th:value="${customPackage.transport}">
+					<button type="submit" class="btn btn-warning">Confirm</button>
+				</form>
+
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="panel-group" id="accordion" role="tablist"
+				aria-multiselectable="true">
+				<div class="panel panel-default" th:each="item, row: ${items}">
+					<div class="panel-heading" role="tab" id="headingOne"
+						style="background-color: #f7c21d; color: #fff; font-size: 17px;">
+						<h4 class="panel-title">
+							<a role="button" data-toggle="collapse" data-parent="#accordion"
+								th:href="${#strings.append('#',item.id)}" aria-expanded="true"
+								aria-controls="collapseOne" th:inline="text">
+								[[${item.name}]] </a>
+						</h4>
+					</div>
+					<div th:id="${item.id}"
+						th:class="${row.index >0?'panel-collapse collapse':'panel-collapse collapse in'}"
+						role="tabpanel" aria-labelledby="headingOne">
+						<div class="panel-body">
+
+
+							<div class="col-sm-2">
+								<img alt=""
+									th:src="${#strings.append(imageRoot,#strings.arraySplit(item.image,':')[0])}"
+									style="max-width: 150px;">
+							</div>
+							<div class="col-sm-10">
+								<div id="more-info">
+									<div class="row">
+										<div class="col-sm-5" style="color: #898989">
+											<label>ADDRESS</label>
+										</div>
+										<div class="col-sm-7">
+											<label th:text="${item.location}"></label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-5" style="color: #898989">
+											<label>DESCRIPTION</label>
+										</div>
+										<div class="col-sm-7">
+											<label th:text="${item.description}"></label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-5" style="color: #898989">
+											<label>Minimum Payment</label>
+										</div>
+										<div class="col-sm-7">
+											<label
+												th:text="${#strings.append('Rp. ',#numbers.formatDecimal(item.minimumPayment,3,'POINT',2,'COMMA'))}"></label>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-5" style="color: #898989">
+											<label>Price</label>
+										</div>
+										<div class="col-sm-7">
+											<label
+												th:text="${#strings.append('Rp. ',#numbers.formatDecimal(item.price,3,'POINT',2,'COMMA'))}"></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

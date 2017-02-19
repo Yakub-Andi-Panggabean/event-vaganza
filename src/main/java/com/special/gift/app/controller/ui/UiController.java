@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.special.gift.app.domain.PackageVenue;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorDesc;
@@ -30,6 +31,7 @@ import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
 import com.special.gift.app.service.VendorService;
+import com.special.gift.app.service.VenueService;
 
 @Controller
 @SessionAttributes(value = {"menus"})
@@ -78,6 +80,9 @@ public class UiController {
   @Inject
   private VendorService vendorService;
 
+  @Inject
+  private VenueService venueService;
+
   @Value("${image.path.location}")
   private String imagePath;
 
@@ -90,9 +95,9 @@ public class UiController {
    * @return
    */
   @RequestMapping(method = RequestMethod.GET)
-  public String renderIndex(Model model, HttpSession session) {
-
-    return "fragments/main";
+  public String renderIndex() {
+    log.debug("main page visited");
+    return "/fragments/main";
   }
 
   /**
@@ -322,14 +327,29 @@ public class UiController {
       }
 
 
-      log.debug("picked types : {}", pickedList.toString());
-      log.debug("available types : {}", availableList.toString());
+      final List<VendorDesc> parents = new ArrayList<>();
+      for (final VendorDesc v : availableList) {
+        if (v.getVendorType().length() > 2
+            && String.valueOf(v.getVendorType().charAt(2)).equals("0"))
+          parents.add(v);
+      }
 
+
+      log.debug("picked types : {}", pickedList.toString());
+      // log.debug("available types : {}", availableList.toString());
+
+      final VendorDto vendor = (VendorDto) session.getAttribute("vendorData");
+
+      final PackageVenue venue = venueService.findVenue(vendor.getVenueVendor());
+
+      log.debug("venue data : {}", venue.toString());
 
       model.addAttribute("vendor", new VendorDto());
-      model.addAttribute("vendorData", session.getAttribute("vendorData"));
+      model.addAttribute("vendorData", vendor);
+      model.addAttribute("venueData", venue);
       model.addAttribute("vendorTypes", session.getAttribute("vendorTypes"));
-      model.addAttribute("availableVendorTypes", availableList);
+      model.addAttribute("availableVendorTypes", parents);
+
 
     } catch (final Exception ex) {
       ex.printStackTrace();
@@ -435,12 +455,6 @@ public class UiController {
 
     return "contents/plan-event";
   }
-
-  // unused
-  // @RequestMapping(value = ITEM_OPTION, method = RequestMethod.GET)
-  // public String renderItemOptionViewPage(Model model) {
-  // return "/contents/item-option";
-  // }
 
 
 

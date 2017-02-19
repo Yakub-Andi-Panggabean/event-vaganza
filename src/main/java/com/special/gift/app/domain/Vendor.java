@@ -39,6 +39,9 @@ public class Vendor {
   @Column(name = "vendor_email", nullable = false, length = 100)
   private String email;
 
+  @Column(name = "vendor_id_venue", nullable = false, length = 100)
+  private String venueVendor;
+
   @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = true)
   private User user;
@@ -114,5 +117,15 @@ public class Vendor {
   public void setVendorId(VendorId vendorId) {
     this.vendorId = vendorId;
   }
+
+  public String getVenueVendor() {
+    return venueVendor;
+  }
+
+  public void setVenueVendor(String venueVendor) {
+    this.venueVendor = venueVendor;
+  }
+
+
 
 }

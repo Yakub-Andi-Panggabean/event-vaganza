@@ -1,12 +1,15 @@
 package com.special.gift.app.controller.act;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -32,6 +35,7 @@ import com.special.gift.app.domain.VendorId;
 import com.special.gift.app.dto.BookingTransactionDto;
 import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
+import com.special.gift.app.dto.PlanEventDto;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.dto.VendorDto;
 import com.special.gift.app.service.BookingTransactionService;
@@ -62,6 +66,10 @@ public class ActController {
   public static final String BOOKING_TRANSACTION = "booking/transaction";
 
 
+  public static final String PLAN_PACKAGE_PATH = "plan-package";
+  public static final String PLAN_PACKAGE_PAYMENT = "plan/booking/payment";
+  public static final String PLAN_BOOKING_TRANSACTION = "plan/booking/transaction";
+
 
   @Inject
   private UserService userService;
@@ -83,6 +91,22 @@ public class ActController {
 
   @Value("${image.path.location}")
   private String imagePath;
+
+  @Value("${account.name1}")
+  private String accountName1;
+
+  @Value("${account.name2}")
+  private String accountName2;
+
+  @Value("${account.rek1}")
+  private String norek1;
+
+  @Value("${account.rek2}")
+  private String norek2;
+
+  final SimpleDateFormat pattern = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+  private static final String SEPARATOR = ":";
+
 
   @PostMapping(value = USER_ACT_PATH)
   public String addNewuser(@ModelAttribute UserDto user, RedirectAttributes redirectAttributes) {
@@ -213,7 +237,6 @@ public class ActController {
 
     log.debug("time : {}, capacity : {}, event id : {}", time, capacity, eventId);
 
-    final SimpleDateFormat pattern = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     final String fixCapacity =
         capacity != null && !capacity.equals("") && capacity.split(",").length > 0
             ? capacity.split(",")[1] : "";
@@ -267,11 +290,20 @@ public class ActController {
       calendar.setTime(pattern.parse(eventDate));
       calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(item.getRentDuration()));
 
+      final Calendar calendarMaxPayment = Calendar.getInstance();
+      calendarMaxPayment.setTime(pattern.parse(eventDate));
+      calendarMaxPayment.add(Calendar.DATE, -30);
+
       model.addAttribute("packageStartime", pattern.parse(eventDate));
       model.addAttribute("packageEndTime", calendar.getTime());
       model.addAttribute("requester", user);
       model.addAttribute("package", item);
       model.addAttribute("imageRoot", imagePath);
+      model.addAttribute("maxPaymentDate", calendarMaxPayment.getTime());
+      model.addAttribute("acc1", accountName1);
+      model.addAttribute("acc2", accountName2);
+      model.addAttribute("norek1", norek1);
+      model.addAttribute("norek2", norek2);
 
     } catch (final Exception ex) {
       ex.printStackTrace();
@@ -327,6 +359,307 @@ public class ActController {
       log.debug("transaction  {}", transaction.toString());
 
       bookingService.saveBookingTransaction(transaction);
+
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
+
+    return "outer/help";
+  }
+
+
+  @PostMapping(value = PLAN_PACKAGE_PATH)
+  public String planPackage(Model model, @RequestBody MultiValueMap<String, String> formData,
+      HttpServletRequest request, HttpServletResponse response) {
+    try {
+
+      final String date = formData.getFirst("wizard-event-date");
+      final String venue = formData.getFirst("wizard-event-venue");
+      final String catering = formData.getFirst("wizard-event-catering");
+      final String decoration = formData.getFirst("wizard-event-decoration");
+      final String makeup = formData.getFirst("wizard-event-makeup");
+      final String photo = formData.getFirst("wizard-event-photo");
+      final String eo = formData.getFirst("wizard-event-eo");
+      final String others = formData.getFirst("wizard-event-others");
+      final String transport = formData.getFirst("wizard-event-transport");
+
+      final PlanEventDto dto = new PlanEventDto();
+
+      dto.setDate(date);
+      dto.setDecoration(decoration);
+      dto.setEo(eo);
+      dto.setMakeUp(makeup);
+      dto.setOthers(others);
+      dto.setPhotography(photo);
+      dto.setTransport(transport);
+      dto.setVenue(venue);
+
+      final List<String> list = new ArrayList<>();
+      final List<ItemListDto> result = new ArrayList<>();
+
+      if (venue != null && !venue.equals("")) {
+        list.add(venue);
+      }
+      if (catering != null && !catering.equals("")) {
+        list.add(catering);
+      }
+      if (decoration != null && !decoration.equals("")) {
+        list.add(decoration);
+      }
+      if (makeup != null && !makeup.equals("")) {
+        list.add(makeup);
+      }
+      if (photo != null && !photo.equals("")) {
+        list.add(photo);
+      }
+      if (eo != null && !eo.equals("")) {
+        list.add(eo);
+      }
+      if (others != null && !others.equals("")) {
+        list.add(others);
+      }
+      if (transport != null && !transport.equals("")) {
+        list.add(transport);
+      }
+
+
+      log.debug(
+          "-> date : {}, venue : {}, catering: {},decoration : {}, makeup : {}, photo : {}, eo: {}, others : {}, transport : {}",
+          date, venue, catering, decoration, makeup, photo, eo, others, transport);
+
+      FilterDto filter;
+      if (list.size() > 0) {
+        for (final String key : list) {
+
+          filter = new FilterDto();
+          filter.setId(key);
+          result.add(listingService.findAllList(request, null, filter).get(0));
+        }
+      }
+
+
+
+      log.debug("res : {}", result.toString());
+
+      model.addAttribute("customPackage", dto);
+      model.addAttribute("items", result);
+      model.addAttribute("eventDate", date);
+      model.addAttribute("imageRoot", imagePath);
+
+
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
+    return "/contents/custom-package";
+  }
+
+
+  @PostMapping(value = PLAN_PACKAGE_PAYMENT)
+  public String planPayment(Model model, @RequestBody MultiValueMap<String, String> formData,
+      HttpServletRequest request, HttpSession session) {
+
+    try {
+
+      final String eventDate = formData.getFirst("eventDate");
+      final String eventVenue = formData.getFirst("eventVenue");
+      final String eventCatering = formData.getFirst("eventCatering");
+      final String eventDecoration = formData.getFirst("eventDecoration");
+      final String eventMakeUp = formData.getFirst("eventMakeup");
+      final String eventPhoto = formData.getFirst("eventPhoto");
+      final String eventEo = formData.getFirst("eventEo");
+      final String eventOthers = formData.getFirst("eventOthers");
+      final String eventTransport = formData.getFirst("eventTransport");
+
+      log.debug(
+          "  --> date : {}, venue: {}, catering : {}, decoration : {}, makeup :{}, photo : {}, eo: {}, others : {},trasport : {}",
+          eventDate, eventVenue, eventCatering, eventDecoration, eventMakeUp, eventPhoto, eventEo,
+          eventOthers, eventTransport);
+
+      int totalPrice = 0;
+      int minimumPrice = 0;
+      StringBuilder listOfPackages = new StringBuilder();
+
+      final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+      final List<ItemListDto> list = new ArrayList<>();
+      FilterDto filter;
+
+      ItemListDto venue = null;
+
+      if (eventVenue != null && !eventVenue.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventVenue);
+        venue = listingService.findAllList(request, null, filter).get(0);
+      }
+
+      if (eventCatering != null && !eventCatering.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventCatering);
+        list.add(listingService.findAllList(request, null, filter).get(0));
+      }
+
+      if (eventDecoration != null && !eventDecoration.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventDecoration);
+        list.add(listingService.findAllList(request, null, filter).get(0));
+      }
+
+      if (eventMakeUp != null && !eventMakeUp.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventMakeUp);
+        list.add(listingService.findAllList(request, null, filter).get(0));
+      }
+
+      if (eventPhoto != null && !eventPhoto.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventPhoto);
+        list.add(listingService.findAllList(request, null, filter).get(0));
+      }
+
+      if (eventEo != null && !eventEo.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventEo);
+        list.add(listingService.findAllList(request, null, filter).get(0));
+      }
+
+      if (eventOthers != null && !eventOthers.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventOthers);
+        list.add(listingService.findAllList(request, null, filter).get(0));
+      }
+
+      if (eventTransport != null && !eventTransport.equals("")) {
+        filter = new FilterDto();
+        filter.setId(eventTransport);
+        list.add(listingService.findAllList(request, null, filter).get(0));
+      }
+
+      for (final ItemListDto dto : list) {
+        totalPrice += dto.getPrice();
+        minimumPrice += dto.getMinimumPayment();
+        listOfPackages = listOfPackages.append(dto.getId()).append(SEPARATOR);
+      }
+
+      if (venue != null) {
+        totalPrice += venue.getPrice();
+        minimumPrice += venue.getPrice();
+      }
+
+      final Calendar calendar = Calendar.getInstance();
+      calendar.setTime(pattern.parse(eventDate));
+      calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(venue.getRentDuration()));
+
+      final Calendar calendarMaxPayment = Calendar.getInstance();
+      calendarMaxPayment.setTime(pattern.parse(eventDate));
+      calendarMaxPayment.add(Calendar.DATE, -30);
+
+      model.addAttribute("imageRoot", imagePath);
+      model.addAttribute("eventDate", calendar.getTime());
+      model.addAttribute("eventEndTime", calendar.getTime());
+      model.addAttribute("eventVenue", venue);
+      model.addAttribute("packages", list);
+      model.addAttribute("minimumPrice", minimumPrice);
+      model.addAttribute("totalPrice", totalPrice);
+      model.addAttribute("requester", user);
+      model.addAttribute("maxPaymentDate", calendarMaxPayment.getTime());
+      model.addAttribute("listOfPackages",
+          listOfPackages.toString().substring(0, listOfPackages.length() - 1));
+
+      model.addAttribute("acc1", accountName1);
+      model.addAttribute("acc2", accountName2);
+      model.addAttribute("norek1", norek1);
+      model.addAttribute("norek2", norek2);
+
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
+
+    return "/contents/plan-payment";
+  }
+
+  @PostMapping(value = PLAN_BOOKING_TRANSACTION)
+  public String renderPlanBookingPage(Model model,
+      @RequestBody MultiValueMap<String, String> formData, HttpServletRequest request,
+      HttpSession session) {
+
+    try {
+
+      String packages = formData.getFirst("planned_packages_id");
+      final String venue = formData.getFirst("planned_venue");
+      final String eventDate = formData.getFirst("planned_event_date");
+      final char method = formData.getFirst("plan_payment_method").charAt(0);
+      final String amount = formData.getFirst("plan_payment_amount");
+
+      log.debug("packages : {}, venue : {}, date : {}", packages, venue, eventDate);
+
+
+      if (packages != null) {
+
+        final Date bookingTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(eventDate);
+
+        packages = packages.concat(":").concat(venue);
+
+        final String[] packagesArr = packages.split(":");
+
+        final FilterDto filter = new FilterDto();
+
+        final User user =
+            userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+
+        final List<BookingTransaction> bookingTransactions = new ArrayList<>();
+
+        String sequenceId = null;
+
+        final Vendor vendor = null;
+
+        for (int i = 0; i < packagesArr.length; i++) {
+
+
+          sequenceId = sequence.generateSequence(SequenceUtil.TRANSACTION_ID_SEQ);
+
+
+          filter.setId(packagesArr[i]);
+
+          log.debug("package id : {}, booking date : {}, methode : {}", packagesArr[i], eventDate,
+              method);
+
+          final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
+
+          log.debug("item to string : {}", item.toString());
+
+
+          final BookingTransactionDto dto = new BookingTransactionDto();
+          dto.setDateBooking(new SimpleDateFormat("dd/MM/yy").format(bookingTime));
+          dto.setTimeBooking(new SimpleDateFormat("HH:mm").format(bookingTime));
+          dto.setEventId(packagesArr[i]);
+          dto.setMethodPayment(method);
+          dto.setPriceAll(item.getPrice());
+          dto.setPricePayment(item.getMinimumPayment());
+          dto.setStatuspayment('0');
+          dto.setStatusTransaction('0');
+          dto.setTransactionDate(new SimpleDateFormat("dd/MM/yy").format(new Date()));
+          dto.setTransactionTime(new SimpleDateFormat("HH:mm").format(new Date()));
+          dto.setUser(user);
+          dto.setVendor(vendorService.findBySingleId(item.getVendorId()));
+          dto.setTransactionId(sequenceId);
+
+          final BookingTransaction transaction = new BookingTransaction();
+
+          BeanUtils.copyProperties(dto, transaction);
+
+          bookingTransactions.add(transaction);
+
+        }
+
+        final Iterable<BookingTransaction> iterable = bookingTransactions;
+
+
+        log.debug("iterable : {}", iterable.toString());
+
+        bookingService.saveBookingBatch(iterable);
+
+      }
+
+
 
     } catch (final Exception exception) {
       exception.printStackTrace();

@@ -21,85 +21,70 @@
 			<div class="row">
 				<div id="wizard" style="text-align: center">
 					<ol id="wizard-steps" class="wizard-steps">
-						<li id="generalinfoactive" class="active child">EVENT</li>
-						<li id="package_plan_step" class="child">PACKAGE</li>
-						<li id="venue_plan_step" class="child">VENUE</li>
-						<li id="date_plan_step" class="child">DATE</li>
-						<li id="confirmation_plan_step" class="child">CONFIRMATION</li>
-						<li id="placeholderactive" class="child">PAYMENT</li>
+						<li id="package_plan_date" class="active child">Date</li>
+						<li id="package_plan_venue" class="child">Venue</li>
+						<li id="package_plan_catering" class="child">Catering</li>
+						<li id="package_plan_decoration" class="child">Decoration</li>
+						<li id="package_plan_makeup" class="child">Make Up</li>
+						<li id="package_plan_photo" class="child">Photography</li>
+						<li id="package_plan_eo" class="child">EO</li>
+						<li id="package_plan_others" class="child">Others</li>
+						<li id="package_plan_transport" class="child">Cars</li>
 					</ol>
 				</div>
 
 				<div class="wizard-wrap">
 					<div class="row">
-						<div class="wizard-title">SELECT YOUR EVENT TYPE</div>
-						<hr style="margin: 0px 20px 30px 20px">
+						<div class="col-sm-11" id="text-plan-item"
+							style="line-height: 20px; font-size: 18px; margin-top: 18px;">SELECT
+							YOUR EVENT DATE</div>
+						<div class="col-sm-1">
+							<button class="btn btn-warning" id="wizard-skip-button">Skip</button>
+						</div>
 					</div>
+					<hr>
 					<div id="wizard_content" class="row" align="center">
 
-						<div class="col-md-12 main-item-list">
-							<div class="col-md-4">
-
-								<div class="col-md-12"
-									th:each="category,rowStat : ${categories1}"
-									th:id="${category.vendorType}" style="text-align: center"
-									th:onclick="'Javacript:choseEventType(\''+${category.vendorType}+'\');'">
-
-									<label class="radio-thumb"> <input type="radio"
-										value="wd" name="event-type" /> <a class="radio-img"> <img
-											th:src="${#strings.append(imageRoot,category.image)}"></img>
-											<div class="radio-img-desc" th:inline="text">
-												[[${#strings.capitalize(category.vendorTypeName)}]]</div>
-									</a>
-									</label>
-
-								</div>
-
-
-							</div>
-							<div class="col-md-4">
-
-								<div class="col-md-12"
-									th:each="category,rowStat : ${categories2}"
-									th:id="${category.vendorType}" style="text-align: center">
-
-									<label class="radio-thumb"> <input type="radio"
-										value="wd" name="event-type" /> <a class="radio-img"> <img
-											th:src="${#strings.append(imageRoot,category.image)}"></img>
-											<div class="radio-img-desc" th:inline="text">
-												[[${#strings.capitalize(category.vendorTypeName)}]]</div>
-									</a>
-									</label>
-								</div>
-							</div>
-
-							<div class="col-md-4">
-
-								<div class="col-md-12"
-									th:each="category,rowStat : ${categories3}"
-									th:id="${category.vendorType}" style="text-align: center">
-
-									<label class="radio-thumb"> <input type="radio"
-										value="wd" name="event-type" /> <a class="radio-img"> <img
-											th:src="${#strings.append(imageRoot,category.image)}"></img>
-											<div class="radio-img-desc" th:inline="text">
-												[[${#strings.capitalize(category.vendorTypeName)}]]</div>
-									</a>
-									</label>
-								</div>
+						<div class="col-sm-4 col-sm-offset-4">
+							<div class="form-group">
+								<input id="wizard-date" name="plan-event-date" type="text"
+									class="form-control" placeholder="Select Event Date" value="">
+								<span class="input-icon pe-7s-date"></span>
 							</div>
 						</div>
+
 					</div>
 				</div>
 				<div class="row">
-					<input type="hidden" id="choosen_type_value"> <input
-						type="hidden" id="choosen_package_value"> <input
-						type="hidden" id="choosen_venue_value"> <input
-						type="hidden" id="choosen_date_value"> <input
-						type="hidden" id="choosen_capacity_value">
+					<input type="hidden" id="wizard-event-status">
+					<form name="plan_event_form" id="plan_event_form" method="POST"
+						th:action="@{/plan-package}">
+						<input type="hidden" id="wizard-event-date"
+							name="wizard-event-date"> <input type="hidden"
+							id="wizard-event-venue" name="wizard-event-venue"> <input
+							type="hidden" id="wizard-event-catering"
+							name="wizard-event-catering"> <input type="hidden"
+							id="wizard-event-decoration" name="wizard-event-decoration">
+						<input type="hidden" id="wizard-event-makeup"
+							name="wizard-event-makeup"> <input type="hidden"
+							id="wizard-event-photo" name="wizard-event-photo"> <input
+							type="hidden" id="wizard-event-eo" name="wizard-event-eo">
+						<input type="hidden" id="wizard-event-others"
+							name="wizard-event-others"><input type="hidden"
+							id="wizard-event-transport" name="wizard-event-transport">
+					</form>
 					<div class="col-sm-2 col-sm-offset-5">
-						<button id="wizard-process-button" class="btn btn-next">NEXT</button>
+						<button id="wizard-process-button" class="btn btn-next"
+							onclick="firstWizardStep()">NEXT</button>
 					</div>
+					<div class="col-sm-2 col-sm-offset-4 col-xs-6">
+						<button id="wizard-process-button-prev" class="btn btn-warning">PREVIOUS</button>
+					</div>
+					<div class="col-sm-2 col-xs-6">
+						<button style="width: 70%;" id="wizard-process-button-next"
+							class="btn btn-warning" disabled="disabled">NEXT</button>
+					</div>
+
 				</div>
 			</div>
 		</div>

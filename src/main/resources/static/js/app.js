@@ -26,6 +26,7 @@ function init() {
 	validateRegisterForm();
 	validateVendorRegistrationForm();
 	validateBookingRequest();
+	validatePlanEvent();
 	fetchAllAvailableCategory();
 	fetchItemList(0, pagingPageSize, 1);
 	filteringKeyword();
@@ -37,9 +38,21 @@ function init() {
 	updateVendor();
 	authProcess();
 	loadPagination();
+	loadVenueList();
+	loadVenueListInfo();
+
+	$('#wizard-process-button-prev').hide();
+	$('#wizard-process-button-next').hide();
+	$('#text-plan-item').hide();
+	$('#wizard-skip-button').hide();
 
 	$("#booking-date").datetimepicker({
-		dateFormat:'yy/mm/dd',
+		dateFormat : 'yy/mm/dd',
+		timeFormat : "HH:mm"
+	});
+
+	$('#wizard-date').datetimepicker({
+		dateFormat : 'yy/mm/dd',
 		timeFormat : "HH:mm"
 	});
 
@@ -437,8 +450,9 @@ function fetchItemsSelectionList(start, limit, destroy) {
 												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">");
 										result = result
 												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
-														+ imagePathLocation.concat(value.image
-																.split(':')[0])
+														+ imagePathLocation
+																.concat(value.image
+																		.split(':')[0])
 														+ "\" alt=\"Responsive image\">");
 										result = result.concat("</a>");
 										result = result.concat("</div>");
@@ -665,5 +679,82 @@ function createBookingTransaction() {
 	$('#payment_method').val(paymentMethod);
 
 	$('#booking_transaction_form').submit();
+
+}
+
+function loadVenueList() {
+	$.ajax({
+		url : '/' + servletContext + '/api/venues',
+		method : 'GET',
+		success : function(data) {
+			var result = "";
+			$.each(data.contents.content, function(index, value) {
+				result = result.concat("<option value='" + value.venueId + "'>"
+						+ value.venueName + "</option>");
+			});
+			$('#available_venue_list').html(result);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log("error occured : " + errorThrown);
+		}
+	});
+}
+
+function loadVenueListInfo() {
+
+	$('#available_venue_list').change(function() {
+
+		var id = $('#available_venue_list').val();
+
+		console.log('this is id of selected venue' + id);
+
+		$.ajax({
+			url : '/' + servletContext + '/api/venues',
+			method : 'GET',
+			success : function(data) {
+				var result = "";
+				$.each(data.contents.content, function(index, value) {
+					if (value.venueId === id) {
+
+						$('#vendor_venue_name').text(value.venueName);
+						$('#vendor_venue_city').text(value.city);
+						$('#vendor_venue_address').text(value.venueAddress);
+						$('#button_venue_vendor').prop('disabled', false)
+
+					}
+				});
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log("error occured : " + errorThrown);
+			}
+		});
+
+	});
+}
+
+function useVenue() {
+	var id = $('#available_venue_list').val();
+	$('#venue_vendor_value').val(id)
+	$('#button_venue_vendor').text('venue used');
+}
+
+function useVenueUpdate() {
+	var id = $('#available_venue_list').val();
+	$('#venueVendor').val(id)
+	$('#button_venue_vendor_update').text('venue used');
+}
+
+function createPlanBookingTransaction() {
+
+	var paymentAmount = $('input[name="plan-pay-amount"]:checked').val();
+	var paymentMethod = $('input[name="plan-pay-method"]:checked').val();
+
+	console.log('used methode : ' + paymentAmount + ', method :'
+			+ paymentMethod);
+
+	$('#plan_payment_amount').val(paymentAmount);
+	$('#plan_payment_method').val(paymentMethod);
+
+	$('#booking_planned_transaction_form').submit();
 
 }

@@ -4,8 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -13,11 +12,6 @@ import javax.persistence.Table;
 public class PackageVenue {
 
   public static final String TABLE_NAME = "package_venue";
-
-  @OneToOne
-  @JoinColumns({@JoinColumn(name = "vendor_id", referencedColumnName = "vendor_id"), @JoinColumn(
-      name = "vendor_type", referencedColumnName = "vendor_type", columnDefinition = "CHAR(2)")})
-  Vendor vendor;
 
   @Id
   @Column(name = "venue_id", nullable = false, length = 10)
@@ -58,6 +52,16 @@ public class PackageVenue {
 
   @Column(name = "minimum_payment", nullable = false)
   private int minimumPayment;
+
+  @Column(name = "vendor_id", nullable = true)
+  private String vendor;
+
+  @Column(name = "venue_address", nullable = true, length = 60)
+  private String venueAddress;
+
+  @ManyToOne
+  @JoinColumn(name = "vendor_type", referencedColumnName = "vendor_type")
+  private VendorDesc vendorDesc;
 
   public String getVenueId() {
     return venueId;
@@ -155,14 +159,6 @@ public class PackageVenue {
     this.minimumPayment = minimumPayment;
   }
 
-  public Vendor getVendor() {
-    return vendor;
-  }
-
-  public void setVendor(Vendor vendor) {
-    this.vendor = vendor;
-  }
-
   public String getVenueName() {
     return venueName;
   }
@@ -171,6 +167,39 @@ public class PackageVenue {
     this.venueName = venueName;
   }
 
+  public String getVendor() {
+    return vendor;
+  }
+
+  public void setVendor(String vendor) {
+    this.vendor = vendor;
+  }
+
+  public String getVenueAddress() {
+    return venueAddress;
+  }
+
+  public void setVenueAddress(String venueAddress) {
+    this.venueAddress = venueAddress;
+  }
+
+  public VendorDesc getVendorDesc() {
+    return vendorDesc;
+  }
+
+  public void setVendorDesc(VendorDesc vendorDesc) {
+    this.vendorDesc = vendorDesc;
+  }
+
+  @Override
+  public String toString() {
+    return "PackageVenue [venueId=" + venueId + ", venueRoom=" + venueRoom + ", venueName="
+        + venueName + ", roomCapacity=" + roomCapacity + ", venuePackage=" + venuePackage
+        + ", venuePortofolio=" + venuePortofolio + ", venuePromo=" + venuePromo + ", discountRate="
+        + discountRate + ", rentalPrice=" + rentalPrice + ", timeRent=" + timeRent + ", city="
+        + city + ", paxPrice=" + paxPrice + ", minimumPayment=" + minimumPayment + ", vendor="
+        + vendor + ", venueAddress=" + venueAddress + ", vendorDesc=" + vendorDesc + "]";
+  }
 
 
 }

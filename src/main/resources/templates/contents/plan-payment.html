@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+	<div class="content" th:fragment="content">
+
+		<div class="row">
+			<h3 class="headline">BOOKING PAYMENT</h3>
+			<hr class="headline-line">
+		</div>
+
+		<div class="row" style="margin-bottom: 30px">
+			<div class="book-payment-label">YOUR BOOKING AS DESCRIBE BELOW</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-xs-3" style="padding: 0px">
+						<img
+							th:src="${#strings.append(imageRoot,#strings.arraySplit(eventVenue.image,':')[0])}"
+							width="100%" height="auto"></img>
+					</div>
+					<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
+						<h6 style="margin-top: 0px" th:text="${eventVenue.name}"></h6>
+						<p th:inline="text">[[${eventVenue.room!=null &&
+							!eventVenue.room.equals('')?#strings.append(eventVenue.room,' -
+							'):''}]] Capacity [[${eventVenue.capacity}]] Person</p>
+						<br>
+						<p th:inline="text">
+							<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
+								height="auto"></img>[[${#dates.format(eventDate, 'dd &nbsp; MMMM
+							&nbsp; yyyy')}]]
+						</p>
+						<p th:inline="text">
+							<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
+								height="auto"></img>&nbsp;[[${#dates.format(eventDate,
+							'HH.mm')}]] &nbsp;- &nbsp;[[${#dates.format(eventEndTime,
+							'HH.mm')}]] &nbsp;WIB
+						</p>
+					</div>
+				</div>
+				<div class="book-request-box">
+					<div class="row">
+						<div class="col-xs-4">
+							<p class="box-label">BOOK BY</p>
+						</div>
+						<div class="col-xs-8">
+							<p class="box-info" th:inline="text">[[${requester.username}]]</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<p class="box-label">ADDRESS</p>
+						</div>
+						<div class="col-xs-8">
+							<p class="box-info" th:inline="text">[[${requester.userAddress}]]</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<p class="box-label">MOBILE</p>
+						</div>
+						<div class="col-xs-8">
+							<p class="box-info" th:inline="text">[[${requester.handphone}]]</p>
+						</div>
+					</div>
+				</div>
+				<div class="cost-estimate-box">
+					<div class="row cost-title">
+						<p>
+							<img th:src="@{/image/icon-cost-orange_16x16.png}" width="16px"
+								height="auto" style="margin-right: 10px"></img>FINAL COST
+						</p>
+					</div>
+					<hr>
+
+					<div class="row cost-list">
+						<div class="col-xs-7">
+							<p th:text="${eventVenue.name}"></p>
+						</div>
+						<div class="col-xs-5">
+							<p
+								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(eventVenue.price,3,'POINT',2,'COMMA'))}">Rp.
+								330.000.000</p>
+						</div>
+					</div>
+					<div class="row cost-list" th:each="item,row:${packages}">
+						<div class="col-xs-7">
+							<p th:text="${item.name}">Venue Rental for 4 Hours</p>
+						</div>
+						<div class="col-xs-5">
+							<p
+								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(item.price,3,'POINT',2,'COMMA'))}">Rp.
+								30.000.000</p>
+						</div>
+					</div>
+
+					<div class="row total">
+						<div class="col-xs-7">
+							<p class="box-label">TOTAL</p>
+						</div>
+						<div class="col-xs-5">
+							<p class="box-info"
+								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(totalPrice,3,'POINT',2,'COMMA'))}">Rp.
+								330.000.000</p>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="row">
+					<p>Please confirm your booking :</p>
+				</div>
+				<div class="row">
+					<label class="radio">
+					<input type="radio" value="dp"
+						name="plan-pay-amount" data-toggle="radio" checked />I will Pay
+						Booking Fee only (10%)
+						</label> 
+						<label class="radio">
+						<input type="radio" value="fp" name="plan-pay-amount" data-toggle="radio" />I
+						will Pay Full (100%)
+						</label>
+				</div>
+				<br>
+				<div class="row">
+					<p>
+						<strong>PAY BOOKING FEE ONLY</strong>
+					</p>
+					<p>Booking Cost</p>
+					<div style="font-size: 18px; color: #f7c21d; font-weight: 700"
+						th:inline="text">[[${#strings.append('Rp.
+						',#numbers.formatDecimal(eventVenue.price,3,'POINT',2,'COMMA'))}]]
+					</div>
+					<br>
+					<p th:inline="text">Full payment should be transferred before
+						[[${#dates.format(maxPaymentDate, 'yyyy - MM -dd')}]] (D-30 of the
+						event date) to Event Vaganza account</p>
+					<p th:inline="text">
+						<img th:src="@{/image/logo-bca.png}" width="40px" height="auto"
+							style="margin-right: 10px"></img>Account Number : [[${norek1}]] |
+						Account Name : [[${acc1}]]
+					</p>
+					<p th:inline="text">
+						<img th:src="@{/image/logo-mandiri.png}" width="40px"
+							height="auto" style="margin-right: 10px"></img>Account Number :
+						[[${norek2}]] | Account Name : [[${acc2}]]
+					</p>
+				</div>
+				<br>
+				<div class="row">
+					<p>
+						<strong>SELECT YOUR PAYMENT METHOD</strong>
+					</p>
+					<label class="radio">
+					<input type="radio" value="P"
+						name="plan-pay-method" data-toggle="radio" checked />Credit Card <img
+						th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
+						<img th:src="@{/image/logo-mastercard.png}" width="48px"
+						height="auto"></img> </label> 
+					<label class="radio">
+					<input type="radio" value="T"
+					    name="plan-pay-method" data-toggle="radio" checked />Bank Transfer <img
+						th:src="@{/image/logo-bank-transfer.png}" width="24px"
+						height="auto"></img> </label>
+				</div>
+				<div class="row">
+
+					<form name="booking_planned_transaction_form"
+						id="booking_planned_transaction_form"
+						th:action="@{/plan/booking/transaction}" method="POST">
+						<input type="hidden" name="planned_packages_id"
+							th:value="${listOfPackages}"> <input type="hidden"
+							name="planned_event_date"
+							th:value="${#dates.format(eventDate,'yyyy/MM/dd HH:mm')}">
+						<input id="planned_venue" type="hidden" name="planned_venue" th:value="${eventVenue.id}">
+							<input id="plan_payment_amount" type="hidden" name="plan_payment_amount">
+							<input id="plan_payment_method" type="hidden" name="plan_payment_method">
+					</form>
+				</div>
+				<div class="row">
+					<button onclick="createPlanBookingTransaction()" type="button" class="btn btn-action">PAY NOW</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

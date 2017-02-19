@@ -903,12 +903,15 @@ function validateBookingRequest() {
 												$('#z-auth').unbind('click');
 												$('#z-auth').click(
 														authenticateBooking);
-												
+
 												$('#z-user').unbind('keypress');
-												$('#z-user').keypress(authenticateBooking);
-												
-												$('#z-password').unbind('keypress');
-												$('#z-password').keypress(authenticateBooking);
+												$('#z-user').keypress(
+														authenticateBooking);
+
+												$('#z-password').unbind(
+														'keypress');
+												$('#z-password').keypress(
+														authenticateBooking);
 
 											} else {
 												$('#booking-request-form')
@@ -921,6 +924,80 @@ function validateBookingRequest() {
 										}
 									});
 						}
+
+					});
+}
+
+/**
+ * 
+ * authenticate booking request
+ * 
+ * @returns
+ */
+function authenticatePlanEvent() {
+	var username = $('#z-user').val();
+	var password = $('#z-password').val();
+
+	var enc = window.btoa(username + ":" + password);
+
+	$.ajax({
+		url : '/' + servletContext + '/login',
+		method : 'POST',
+		headers : {
+			'isigunyaziso' : enc
+		},
+		success : function(data) {
+			window.location.replace('/' + servletContext + '/plan-event');
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			var error = JSON.parse(jqXHR.responseText);
+			$('#z-exception').html(error.errorMessage);
+		}
+	});
+}
+
+function validatePlanEvent() {
+	$('#start-plan-event')
+			.click(
+					function() {
+
+						$
+								.ajax({
+									url : '/' + servletContext
+											+ '/api/auth/status',
+									method : 'POST',
+									success : function(data) {
+										console.log(data.content);
+										if (data.content == '0') {
+											$('#z-exception')
+													.html(
+															'<label>You have to login in order to be able  plan event</label>');
+
+											$('#login_modal').modal();
+
+											$('#z-auth').unbind('click');
+											$('#z-auth').click(
+													authenticatePlanEvent);
+
+											$('#z-user').unbind('keypress');
+											$('#z-user').keypress(
+													authenticatePlanEvent);
+
+											$('#z-password').unbind('keypress');
+											$('#z-password').keypress(
+													authenticatePlanEvent);
+
+										} else {
+											window.location.replace('/'
+													+ servletContext
+													+ '/plan-event');
+										}
+
+									},
+									error : function(jqXHR, textStatus,
+											errorThrown) {
+									}
+								});
 
 					});
 }

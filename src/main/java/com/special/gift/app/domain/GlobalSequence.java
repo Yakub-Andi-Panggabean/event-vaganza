@@ -18,13 +18,13 @@ public class GlobalSequence implements Serializable {
   @Column(name = "SEQ_ID", nullable = false, length = 50)
   private String sequenceId;
 
-  @Column(name = "SEQ_CURRVALUE", nullable = false)
+  @Column(name = "SEQ_CURRVALUE", nullable = false, columnDefinition = "bigint(15)")
   private Long currentValue;
 
   @Column(name = "SEQ_INTERVAL", nullable = false)
   private int sequenceInterval;
 
-  @Column(name = "SEQ_NEXTVALUE", nullable = false)
+  @Column(name = "SEQ_NEXTVALUE", nullable = false, columnDefinition = "bigint(15)")
   private Long nextValue;
 
   public String getSequenceId() {

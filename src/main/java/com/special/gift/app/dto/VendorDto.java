@@ -18,6 +18,7 @@ public class VendorDto implements Serializable {
   private String pic;
   private String email;
   private String user;
+  private String venueVendor;
 
   public VendorDto() {
     super();
@@ -25,7 +26,7 @@ public class VendorDto implements Serializable {
   }
 
   public VendorDto(String vendorId, String vendorType, String name, String desc, String address,
-      String handphone, String phone, String pic, String email, String user) {
+      String handphone, String phone, String pic, String email, String user, String venueVendor) {
     super();
     this.vendorId = vendorId;
     this.vendorType = vendorType;
@@ -37,6 +38,7 @@ public class VendorDto implements Serializable {
     this.pic = pic;
     this.email = email;
     this.user = user;
+    this.venueVendor = venueVendor;
   }
 
 
@@ -129,11 +131,20 @@ public class VendorDto implements Serializable {
     this.user = user;
   }
 
+  public String getVenueVendor() {
+    return venueVendor;
+  }
+
+  public void setVenueVendor(String venueVendor) {
+    this.venueVendor = venueVendor;
+  }
+
   @Override
   public String toString() {
     return "VendorDto [vendorId=" + vendorId + ", vendorType=" + vendorType + ", name=" + name
         + ", desc=" + desc + ", address=" + address + ", handphone=" + handphone + ", phone="
-        + phone + ", pic=" + pic + ", email=" + email + ", user=" + user + "]";
+        + phone + ", pic=" + pic + ", email=" + email + ", user=" + user + ", venueVendor="
+        + venueVendor + "]";
   }
 
 

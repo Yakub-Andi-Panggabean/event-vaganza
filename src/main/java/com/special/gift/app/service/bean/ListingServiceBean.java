@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.special.gift.app.domain.PackageVendor;
+import com.special.gift.app.domain.PackageVenue;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
@@ -38,6 +39,13 @@ public class ListingServiceBean implements ListingService {
   private static final String PACKAGE_VENUE = "venue";
   private static final String PACKAGE_VENDOR = "vendor";
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * com.special.gift.app.service.ListingService#findAllList(javax.servlet.http.HttpServletRequest,
+   * java.lang.String)
+   */
   @Override
   public List<ItemListDto> findAllList(HttpServletRequest request, String category)
       throws Exception {
@@ -47,36 +55,6 @@ public class ListingServiceBean implements ListingService {
     try {
 
       log.debug("servlet context : {}", request.getContextPath());
-
-      // add package vendor
-      // for (final PackageVendor packages : pVendorRepository.findAll()) {
-      //
-      //
-      //
-      // // add package vendor
-      // items.add(new ItemListDto(packages.getPackageId(), packages.getPackageName(),
-      // PACKAGE_VENDOR, packages.getVendor().getVendorId().getType(), packages.getPackageImg(),
-      // new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENDOR)
-      // .append("/").append(packages.getPackageId()).toString(),
-      // packages.getPackagePrice(), packages.getPackageCapacity(),
-      // packages.getVendor().getAddress(), packages.getDiscountRate(),
-      // packages.getMinimumPayment(), 0, String.valueOf(packages.getTimePackage()),
-      // packages.getPackageDesc(), "", packages.getPackageStyle(),
-      // packages.getVendor().getVendorId().getVendorId()));
-      //
-      // }
-
-      // add package venue
-      // for (final PackageVenue venue : pVenueRepository.findAll()) {
-      // items.add(new ItemListDto(venue.getVenueId(), venue.getVenueName(), PACKAGE_VENUE,
-      // venue.getVendor().getVendorId().getType(), venue.getVenuePortofolio(),
-      // new StringBuilder(request.getContextPath()).append("/packages/").append(PACKAGE_VENUE)
-      // .append("/").append(venue.getVenueId()).toString(),
-      // venue.getRentalPrice(), Integer.valueOf(venue.getRoomCapacity()), venue.getCity(),
-      // venue.getDiscountRate(), venue.getMinimumPayment(), venue.getPaxPrice(),
-      // venue.getTimeRent(), venue.getVenuePackage(), venue.getVenueRoom(), "",
-      // venue.getVendor().getVendorId().getVendorId()));
-      // }
 
       // add package vendor
       for (final PackageVendor packages : pVendorRepository.findAll()) {
@@ -105,6 +83,35 @@ public class ListingServiceBean implements ListingService {
         dto.setVendorStyle(packages.getPackageStyle());
 
         // find vendor by vendor id
+        items.add(dto);
+
+      }
+
+      // add package venue
+      for (final PackageVenue venue : pVenueRepository.findAll()) {
+
+        final ItemListDto dto = new ItemListDto();
+
+        dto.setCapacity(Integer.parseInt(venue.getRoomCapacity()));
+        dto.setCategory(venue.getVendorDesc().getVendorType());
+        dto.setDescription(venue.getVenuePackage());
+        dto.setDiscountRate(venue.getDiscountRate());
+        dto.setId(venue.getVenueId());
+        dto.setImage(venue.getVenuePortofolio());
+        dto.setLocation(new StringBuilder(venue.getVenueAddress()).append(",")
+            .append(venue.getCity()).toString());
+        dto.setMinimumPayment(venue.getMinimumPayment());
+        dto.setName(venue.getVenueName());
+        dto.setPackageType(PACKAGE_VENUE);
+        dto.setPaxPrice(venue.getPaxPrice());
+        dto.setPrice(venue.getRentalPrice());
+        dto.setRentDuration(venue.getTimeRent());
+        dto.setRoom(venue.getVenueRoom());
+        dto.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
+            .append(PACKAGE_VENUE).append("/").append(venue.getVenueId()).toString());
+        dto.setVendorId(venue.getVendor());
+        dto.setVendorStyle("");
+
         items.add(dto);
 
       }
@@ -150,8 +157,9 @@ public class ListingServiceBean implements ListingService {
 
       log.debug("filter : {}", filter.toString());
 
-      if ((filter.getCategory() == null || filter.getCategory().isEmpty()
-          || filter.getCategory().equals(""))
+      if ((filter.getParent() == null || filter.getParent().isEmpty())
+          && (filter.getCategory() == null || filter.getCategory().isEmpty()
+              || filter.getCategory().equals(""))
           && (filter.getCapacity() == null || filter.getCapacity() == 0)
           && (filter.getCity() == null || filter.getCity().isEmpty() || filter.getCity().equals(""))
           && (filter.getKeyword() == null || filter.getKeyword().isEmpty()
@@ -170,6 +178,11 @@ public class ListingServiceBean implements ListingService {
         for (final ItemListDto item : list) {
 
           boolean isItemValid = false;
+
+          if (filter.getParent() != null) {
+            isItemValid = filter.getParent().length() > 2
+                && (filter.getParent().substring(0, 2).equals(item.getCategory().substring(0, 2)));
+          }
 
           // filter id
           if (filter.getId() != null) {
@@ -228,12 +241,24 @@ public class ListingServiceBean implements ListingService {
             isItemValid = filter.getPackageType().equalsIgnoreCase(item.getPackageType());
           }
 
-          if (filter.getCategory() != null) {
+          if (filter.getCategory() != null && !filter.getCategory().isEmpty()) {
 
             // log.debug("filtering filter category : {}", filter.getCategory());
             // log.debug("filtering item category : {}", item.getCategory());
 
-            isItemValid = filter.getCategory().equalsIgnoreCase(item.getCategory());
+            final boolean detailedChild = filter.getCategory().equalsIgnoreCase(item.getCategory());
+            final boolean parent = filter.getCategory().substring(0, 2)
+                .equalsIgnoreCase(item.getCategory().substring(0, 2));
+
+            isItemValid = detailedChild || parent;
+
+            if (filter.getCategory().length() > 2
+                && String.valueOf(filter.getCategory().charAt(2)).equals("0")) {
+              isItemValid = parent;
+            } else {
+              isItemValid = detailedChild;
+            }
+
           }
 
           if (isItemValid) {

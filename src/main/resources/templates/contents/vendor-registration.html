@@ -7,19 +7,69 @@
 <body>
 	<div class="container" th:fragment="content">
 		<div class="container-package-detail">
-			<div class="col-sm-2" style="padding: 0 auto">
+
+			<div class="col-sm-3" style="padding: 0 auto">
 				<div class="panel panel-default">
-					<div class="panel-heading" th:text="${session.user}">User Information</div>
-					<div class="panel-body">Panel content</div>
+					<div class="panel-heading">Available Venue</div>
+					<div class="panel-body">
+
+						<div class="col-sm-12">
+							<select class="form-control" id="available_venue_list">
+								<option>1</option>
+							</select>
+
+						</div>
+						<br />
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">Selected Venue</div>
+					<div class="panel-body" style="padding-left: 0px;">
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>NAME</label>
+							</div>
+							<div class="col-sm-7">
+								<label id="vendor_venue_name"></label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>City</label>
+							</div>
+							<div class="col-sm-7">
+								<label id="vendor_venue_city"></label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-5" style="color: #898989">
+								<label>ADDRESS</label>
+							</div>
+							<div class="col-sm-7">
+								<label id="vendor_venue_address" th:inline="text">
+									[[${venueData.venueAddress!=null&&!venueData.venueAddress.equals('')?venueData.venueAddress:''}]]
+								</label>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<br />
+							<button id="button_venue_vendor" class="btn btn-warning"
+								style="width: 100%;" disabled="disabled" onclick="useVenue()">Use
+								Venue</button>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="col-sm-10">
+			<div class="col-sm-9">
 				<div class="panel panel-default">
 					<div class="panel-heading">Fill Vendor Information</div>
 					<div class="panel-body">
 						<form name="vendor_registration" action="#" th:action="@{/vendor}"
 							th:object="${vendor}" method="post">
 							<div class="col-sm-6">
+								<input type="hidden" id="venue_vendor_value"
+									th:field="*{venueVendor}">
 								<div id="form_group_vendorname" class="form-group has-feedback">
 									<i class="glyphicon glyphicon-user form-control-feedback"></i>
 									<input type="text" class="form-control" name="vendorname"

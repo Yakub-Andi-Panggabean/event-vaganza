@@ -21,7 +21,8 @@
 				<div class="col-sm-6">
 					<div class="row">
 						<div class="col-xs-3" style="padding: 0px">
-							<img th:src="${#strings.append(imageRoot,#strings.arraySplit(package.image, ',')[0])}"
+							<img
+								th:src="${#strings.append(imageRoot,#strings.arraySplit(package.image, ':')[0])}"
 								width="100%" height="auto"></img>
 						</div>
 						<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
@@ -88,14 +89,7 @@
 									th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.000</p>
 							</div>
 						</div>
-						<!-- 						<div class="row cost-list"> -->
-						<!-- 							<div class="col-xs-7"> -->
-						<!-- 								<p>Food and Beverages</p> -->
-						<!-- 							</div> -->
-						<!-- 							<div class="col-xs-5"> -->
-						<!-- 								<p>Rp. 300.000.000</p> -->
-						<!-- 							</div> -->
-						<!-- 						</div> -->
+
 						<div class="row total">
 							<div class="col-xs-7">
 								<p class="box-label">TOTAL</p>
@@ -106,6 +100,7 @@
 									000.000</p>
 							</div>
 						</div>
+
 					</div>
 				</div>
 
@@ -131,17 +126,18 @@
 							th:inline="text">Rp.
 							[[${#numbers.formatDecimal(package.minimumPayment,3,'POINT',2,'COMMA')}]]</div>
 						<br>
-						<p>Full payment should be transferred before DD-MM-YYYY (D-30
-							of the event date) to Event Vaganza account</p>
-						<p>
+						<p th:inline="text">Full payment should be transferred before
+							[[${#dates.format(maxPaymentDate, 'yyyy - MM -dd')}]] (D-30 of
+							the event date) to Event Vaganza account</p>
+						<p th:inline="text">
 							<img th:src="@{/image/logo-bca.png}" width="40px" height="auto"
-								style="margin-right: 10px"></img>Account Number : 920 1908 170 |
-							Account Name : PT Event Vaganza
+								style="margin-right: 10px"></img>Account Number : [[${norek1}]] |
+							Account Name : [[${acc1}]]
 						</p>
-						<p>
+						<p th:inline="text">
 							<img th:src="@{/image/logo-mandiri.png}" width="40px"
 								height="auto" style="margin-right: 10px"></img>Account Number :
-							920 1908 170 | Account Name : PT Event Vaganza
+							[[${norek2}]] | Account Name : [[${acc2}]]
 						</p>
 					</div>
 					<br>
@@ -149,15 +145,15 @@
 						<p>
 							<strong>SELECT YOUR PAYMENT METHOD</strong>
 						</p>
-						<label class="radio">
-						<input type="radio" value="P" name="pay-method" data-toggle="radio" checked />
-						Credit Card <img th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
-						<img th:src="@{/image/logo-mastercard.png}" width="48px" height="auto"></img> 
-						</label> 
-						<label class="radio">
-						<input type="radio" value="T" name="pay-method" data-toggle="radio" checked />Bank Transfer
-						 <img th:src="@{/image/logo-bank-transfer.png}" width="24px"
-							height="auto"></img> 
+						<label class="radio"> <input type="radio" value="P"
+							name="pay-method" data-toggle="radio" checked /> Credit Card <img
+							th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
+							<img th:src="@{/image/logo-mastercard.png}" width="48px"
+							height="auto"></img>
+						</label> <label class="radio"> <input type="radio" value="T"
+							name="pay-method" data-toggle="radio" checked />Bank Transfer <img
+							th:src="@{/image/logo-bank-transfer.png}" width="24px"
+							height="auto"></img>
 						</label>
 					</div>
 					<div class="row">

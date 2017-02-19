@@ -4,44 +4,50 @@
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<div th:fragment="content">
-	<div class="row" style="text-align: center; margin-bottom: 20px">
-		<img th:src="@{/image/main-logo.png}" width="220px" height="auto"></img>
-		<p style="color: #ccc">The Friendly Event Organizer</p>
-	</div>
+<body>
+	<div th:fragment="content">
+		<div>
+			<div class="row" style="text-align: center; margin-bottom: 20px">
+				<img th:src="@{/image/main-logo.png}" width="220px" height="auto"></img>
+				<p style="color: #ccc">The Friendly Event Organizer</p>
+			</div>
 
-	<div class="row">
-		<div class="col-sm-4 col-sm-offset-2" style="text-align: center">
 			<div class="row">
-				<img th:src="@{/image/misseva.png}" width="100%" height="auto"
-					style="max-width: 280px"></img>
-			</div>
-			<div class="row">
-				<p
-					style="font-size: 18px; font-weight: 700; color: #f7c21d; line-height: 24px; margin: 10px">Booking
-					your event at your finger tips</p>
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="row" style="text-align: center">
-				<p
-					style="font-size: 18px; font-weight: 300; color: #464646; margin: 20px 0px; line-height: 30px">
-					Booking venues easily<br>Get quote from supporting vendor<br>Manage
-					event using mobile apps
-				</p>
-			</div>
-			<div class="row">
-				<a th:href="@{/plan-event}"><button class="btn btn-plan">Start
-						Planning Event</button></a>
-			</div>
-			<div class="row">
-				<a th:href="@{/quick-booking}"><button class="btn btn-quick">Quick
-						Event Booking</button></a>
-			</div>
-			<div class="row">
-				<button class="btn btn-history">My History</button>
+				<div class="col-sm-4 col-sm-offset-2" style="text-align: center">
+					<div class="row">
+						<img th:src="@{/image/misseva.png}" width="100%" height="auto"
+							style="max-width: 280px"></img>
+					</div>
+					<div class="row">
+						<p
+							style="font-size: 18px; font-weight: 700; color: #f7c21d; line-height: 24px; margin: 10px">Booking
+							your event at your finger tips</p>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="row" style="text-align: center">
+						<p
+							style="font-size: 18px; font-weight: 300; color: #464646; margin: 20px 0px; line-height: 30px">
+							Booking venues easily<br>Get quote from supporting vendor<br>Manage
+							event using mobile apps
+						</p>
+					</div>
+					<div class="row">
+						<!-- 				<a th:href="@{/plan-event}"> -->
+						<button id="start-plan-event" class="btn btn-plan"
+							onclick="validatePlanEvent()">Start Planning Event</button>
+						<!-- 						</a> -->
+					</div>
+					<div class="row">
+						<a th:href="@{/quick-booking}"><button class="btn btn-quick">Quick
+								Event Booking</button></a>
+					</div>
+					<div class="row">
+						<button class="btn btn-history">My History</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</body>
 </html>

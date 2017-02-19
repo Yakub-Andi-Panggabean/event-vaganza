@@ -1,5 +1,6 @@
 package com.special.gift.app.controller.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.special.gift.app.domain.PackageVenue;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.VendorDesc;
 import com.special.gift.app.dto.FilterDto;
@@ -27,6 +29,7 @@ import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
+import com.special.gift.app.service.VenueService;
 import com.special.gift.app.util.response.GenericMultipleResponse;
 import com.special.gift.app.util.response.GenericResponse;
 import com.special.gift.app.util.response.GenericSingleResponse;
@@ -43,6 +46,7 @@ public class ApiController {
   public static final String ITEMS_LIST_API = "/items/{page}/{size}/{type}";
   public static final String SEARCH_ITEM_API = "/search";
   public static final String AUTHENTICATE_STATUS = "/auth/status";
+  public static final String VENUE_LIST_API = "/venues";
 
   @Inject
   private UserService userService;
@@ -52,6 +56,9 @@ public class ApiController {
 
   @Inject
   private ListingService listingService;
+
+  @Inject
+  private VenueService venueService;
 
   @PostMapping(value = USER_API)
   public GenericResponse addNewuser(@RequestBody UserDto dto) {
@@ -69,7 +76,18 @@ public class ApiController {
 
   @GetMapping(value = VENDOR_TYPE_API)
   public GenericMultipleResponse<VendorDesc> getAllVendorType() {
-    return new GenericMultipleResponse<VendorDesc>(true, "ok", vendorDescService.findAll());
+
+    final List<VendorDesc> parents = new ArrayList<>();
+    for (final VendorDesc vendorCategory : vendorDescService.findAll()) {
+      if (vendorCategory.getVendorType().length() > 2
+          && String.valueOf(vendorCategory.getVendorType().charAt(2)).equals("0")) {
+        parents.add(vendorCategory);
+      }
+    }
+
+    final Page<VendorDesc> page = new PageImpl<>(parents);
+
+    return new GenericMultipleResponse<VendorDesc>(true, "ok", page);
   }
 
 
@@ -156,6 +174,12 @@ public class ApiController {
     }
 
     return new GenericSingleResponse<String>(true, "success", result);
+  }
+
+  @GetMapping(value = VENUE_LIST_API)
+  public GenericMultipleResponse<PackageVenue> findAllVenue() {
+    final Page<PackageVenue> venues = venueService.findAll();
+    return new GenericMultipleResponse<>(true, "success", venues);
   }
 
 

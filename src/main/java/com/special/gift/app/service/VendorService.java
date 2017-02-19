@@ -27,4 +27,6 @@ public interface VendorService {
 
   Vendor findById(VendorId id);
 
+  Vendor findBySingleId(String id);
+
 }

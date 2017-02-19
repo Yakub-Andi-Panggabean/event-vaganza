@@ -11,149 +11,280 @@ function resetStep() {
 	});
 }
 
-// event
-function firstWizardStep() {
+function findPackage(type) {
+	$('#wizard-skip-button').prop('disabled', false);
+	$.ajax({
+		url : 'ajax/wizard-package/' + type,
+		success : function(data) {
+			$('#wizard_content').html(data);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.log(errorThrown);
+		}
+	});
+}
 
-	var value = $('#choosen_type_value').val();
+function submitAllPlan() {
+	$('#plan_event_form').submit();
+}
+
+// transport
+function eightWizardStep() {
 
 	// reset all step
 	resetStep();
 
 	// activate step 2 header
-	$('#package_plan_step').addClass("active");
+	$('#package_plan_transport').addClass("active");
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#text-plan-item').html("");
+	$('#wizard-process-button-next').prop('disabled', true);
 
-	$.ajax({
-		url : 'ajax/wizard-second/' + value,
-		method : 'GET',
-		success : function(data) {
-			$('.wizard-title').text('Choose Your Package');
-			$('#wizard_content').html(data);
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log(errorThrown);
-		}
-	});
-}
+	$('#wizard-event-status').val('transport');
+	// others type
+	findPackage('050');
 
-function choseEventType(id) {
-
-	$('#choosen_type_value').val(id);
-
-	$('#wizard-process-button').unbind('click');
-	$('#wizard-process-button').click(firstWizardStep);
-
-}
-
-// package
-function proccessWizardSecondStep() {
-
-	// reset all step
-	resetStep();
-
-	// activate step 3 header
-	$('#venue_plan_step').addClass("active");
-
-	$.ajax({
-		url : 'ajax/wizard-third',
-		method : 'GET',
-		success : function(data) {
-			$('.wizard-title').text('Choose Your Venue');
-			$('#wizard_content').html(data);
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log(errorThrown);
-		}
-	});
-
-}
-
-function secondWizardStep(id) {
-
-	$('#choosen_package_value').val(id);
-
-	var value = $('#choosen_package_value').val();
-
-	$('#wizard-process-button').unbind('click');
-	$('#wizard-process-button').click(proccessWizardSecondStep);
-
-}
-
-// venue
-function proccessWizardThirdStep() {
-
-	// reset all step
-	resetStep();
-
-	// activate step 4 header
-	$('#date_plan_step').addClass("active");
-
-	$.ajax({
-		url : 'ajax/wizard-fourth',
-		method : 'GET',
-		success : function(data) {
-			$('.wizard-title').text('Choose Event Date');
-			$('#wizard_content').html(data);
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log(errorThrown);
-		}
-	});
-
-}
-
-function thirdWizardStep(id) {
-
-	$('#choosen_venue_value').val(id);
-
-	$('#wizard-process-button').unbind('click');
-	$('#wizard-process-button').click(proccessWizardThirdStep);
-
-}
-
-// confirm
-function proccessWizardFourthStep() {
-
-	// reset all step
-	resetStep();
-
-	// activate step 4 header
-	$('#confirmation_plan_step').addClass("active");
-
-	var packages = $('#choosen_package_value').val();
-	var venue = $('#choosen_venue_value').val();
-	var date = $('#choosen_date_value').val();
-	var capacity = $('#choosen_capacity_value').val();
-
-	var params = '?packages=' + packages + '&venue=' + venue + '&date=' + date
-			+ '&capacity=' + capacity;
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(submitAllPlan);
 	
-	console.log(params);
-
-	$.ajax({
-		url : 'ajax/wizard-fifth' + params.trim(),
-		method : 'GET',
-		success : function(data) {
-			$('.wizard-title').text('Package Confirmation');
-			$('#wizard_content').html(data);
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			console.log(errorThrown);
-		}
-	});
-
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(submitAllPlan);
+	
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(seventhWizardStep);
 }
 
+// others
+function seventhWizardStep() {
+
+	// reset all step
+	resetStep();
+
+	// activate step 2 header
+	$('#package_plan_others').addClass("active");
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#text-plan-item').html("");
+	$('#wizard-process-button-next').prop('disabled', true);
+
+	$('#wizard-event-status').val('others');
+	// others type
+	findPackage('111');
+
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(eightWizardStep);
+	
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(eightWizardStep);
+	
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(sixthWizardStep);
+}
+
+// e.o
+function sixthWizardStep() {
+
+	// reset all step
+	resetStep();
+
+	// activate step 2 header
+	$('#package_plan_eo').addClass("active");
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#text-plan-item').html("");
+	$('#wizard-process-button-next').prop('disabled', true);
+
+	$('#wizard-event-status').val('eo');
+	// e.o type
+	findPackage('080');
+
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(seventhWizardStep);
+	
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(seventhWizardStep);
+	
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(fifthWizardStep);
+}
+
+// photo
+function fifthWizardStep() {
+
+	// reset all step
+	resetStep();
+
+	// activate step 2 header
+	$('#package_plan_photo').addClass("active");
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#text-plan-item').html("");
+	$('#wizard-process-button-next').prop('disabled', true);
+
+	$('#wizard-event-status').val('photo');
+	// photo type
+	findPackage('060');
+
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(sixthWizardStep);
+	
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(sixthWizardStep);
+	
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(fourthWizardStep);
+}
+
+// make up
 function fourthWizardStep() {
 
-	var date = $('#wizard-date').val();
-	var capacity = $('#wizard-capacity').val();
+	// reset all step
+	resetStep();
 
-	$('#choosen_date_value').val(date);
-	$('#choosen_capacity_value').val(capacity);
+	// activate step 2 header
+	$('#package_plan_makeup').addClass("active");
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#text-plan-item').html("");
+	$('#wizard-process-button-next').prop('disabled', true);
 
-	console.log('change');
+	$('#wizard-event-status').val('makeup');
+	// make up type
+	findPackage('070');
 
-	$('#wizard-process-button').unbind('click');
-	$('#wizard-process-button').click(proccessWizardFourthStep);
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(fifthWizardStep);
+	
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(fifthWizardStep);
+	
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(thirdWizardStep);
+}
 
+// decoration
+function thirdWizardStep() {
+
+	// reset all step
+	resetStep();
+
+	// activate step 2 header
+	$('#package_plan_decoration').addClass("active");
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#text-plan-item').html("");
+	$('#wizard-process-button-next').prop('disabled', true);
+
+	$('#wizard-event-status').val('decoration');
+	// decoration type
+	findPackage('030');
+
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(fourthWizardStep);
+	
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(fourthWizardStep);
+	
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(secondWizardStep);
+}
+
+// catering
+
+function secondWizardStep() {
+
+	// reset all step
+	resetStep();
+
+	// activate step 2 header
+	$('#package_plan_catering').addClass("active");
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#text-plan-item').html("");
+	$('#wizard-process-button-next').prop('disabled', true);
+
+	$('#wizard-event-status').val('catering');
+	// catering type
+	findPackage('010');
+
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(thirdWizardStep);
+	
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(thirdWizardStep);
+	
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(firstWizardStep);
+}
+
+// venue -------
+function previousFirstWizardStep() {
+	location.reload();
+}
+
+function firstWizardStep() {
+
+	var value = $('#wizard-date').val();
+
+	if (value === '') {
+		alert('event date my not be empty');
+		return;
+	}
+
+	if(value!=null&&value!=''){
+		console.log('date updated');
+		$('#wizard-event-date').val(value);
+	}
+	
+
+	// reset all step
+	resetStep();
+
+	// activate step 2 header
+	$('#package_plan_venue').addClass("active");
+	$('#wizard-process-button-prev').show();
+	$('#wizard-process-button-next').show();
+	$('#wizard-skip-button').show();
+	$('#wizard-process-button').hide();
+
+	$('#wizard-event-status').val('venue');
+	findPackage('venue');
+
+	$('#wizard-process-button-next').unbind('click');
+	$('#wizard-process-button-next').click(secondWizardStep);
+	
+	$('#wizard-skip-button').unbind('click');
+	$('#wizard-skip-button').click(secondWizardStep);
+
+	$('#wizard-process-button-prev').unbind('click');
+	$('#wizard-process-button-prev').click(previousFirstWizardStep);
+
+}
+
+function selectItem(name, id) {
+	$('#text-plan-item').show();
+	$('#text-plan-item').html(name);
+	$('#wizard-process-button-next').prop('disabled', false);
+	$('#wizard-skip-button').prop('disabled', true);
+
+	var status = $('#wizard-event-status').val();
+
+	if (status === 'venue') {
+		$('#wizard-event-venue').val(id);
+	} else if (status === 'catering') {
+		$('#wizard-event-catering').val(id);
+	} else if (status === 'decoration') {
+		$('#wizard-event-decoration').val(id);
+	} else if (status === 'makeup') {
+		$('#wizard-event-makeup').val(id);
+	} else if (status === 'photo') {
+		$('#wizard-event-photo').val(id);
+	} else if (status === 'eo') {
+		$('#wizard-event-eo').val(id);
+	} else if (status === 'others') {
+		$('#wizard-event-others').val(id);
+	} else if (status === 'transport') {
+		$('#wizard-event-transport').val(id);
+	}
 }

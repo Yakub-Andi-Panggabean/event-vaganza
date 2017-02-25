@@ -116,6 +116,8 @@ public class ActController {
       BeanUtils.copyProperties(user, userData);
       userData.setUserId(sequenceService.generateSequence(SequenceUtil.USER_ID_SEQ));
       userService.insertUser(userData);
+      redirectAttributes.addFlashAttribute("existKey", "email");
+      redirectAttributes.addFlashAttribute("existValue", userData.getEmail());
     } catch (final Exception exception) {
       log.error("an error occured with message {}", exception.getMessage());
       if (exception instanceof DataAlreadyExistException) {
@@ -126,7 +128,7 @@ public class ActController {
       }
       return "redirect:/register";
     }
-    return "redirect:/";
+    return "redirect:/notification";
   }
 
   @PostMapping(value = USER_UPDATE_ACT_PATH)
@@ -337,7 +339,7 @@ public class ActController {
 
       final Date bookingTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(bookingDate);
 
-      dto.setDateBooking(new SimpleDateFormat("dd/MM/yy").format(bookingTime));
+      dto.setDateBooking(new SimpleDateFormat("yyyyMMdd").format(bookingTime));
       dto.setTimeBooking(new SimpleDateFormat("HH:mm").format(bookingTime));
       dto.setEventId(packageId);
       dto.setMethodPayment(method);
@@ -345,11 +347,13 @@ public class ActController {
       dto.setPricePayment(item.getMinimumPayment());
       dto.setStatuspayment('0');
       dto.setStatusTransaction('0');
-      dto.setTransactionDate(new SimpleDateFormat("dd/MM/yy").format(new Date()));
+      dto.setTransactionDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
       dto.setTransactionTime(new SimpleDateFormat("HH:mm").format(new Date()));
       dto.setUser(user);
       dto.setVendor(vendorService.findById(new VendorId(item.getVendorId(), item.getCategory())));
       dto.setTransactionId(sequence.generateSequence(SequenceUtil.TRANSACTION_ID_SEQ));
+      dto.setVenueAddress(user.getUserAddress());
+      dto.setGroupTransactionId(sequence.generateSequence(SequenceUtil.GROUP_TRANSACTION_ID_SEQ));
 
       final BookingTransaction transaction = new BookingTransaction();
 
@@ -382,6 +386,7 @@ public class ActController {
       final String eo = formData.getFirst("wizard-event-eo");
       final String others = formData.getFirst("wizard-event-others");
       final String transport = formData.getFirst("wizard-event-transport");
+      final String location = formData.getFirst("wizard-event-location");
 
       final PlanEventDto dto = new PlanEventDto();
 
@@ -393,6 +398,12 @@ public class ActController {
       dto.setPhotography(photo);
       dto.setTransport(transport);
       dto.setVenue(venue);
+      dto.setCatering(catering);
+      if (location == null) {
+        dto.setLocation("");
+      } else {
+        dto.setLocation(location);
+      }
 
       final List<String> list = new ArrayList<>();
       final List<ItemListDto> result = new ArrayList<>();
@@ -424,8 +435,8 @@ public class ActController {
 
 
       log.debug(
-          "-> date : {}, venue : {}, catering: {},decoration : {}, makeup : {}, photo : {}, eo: {}, others : {}, transport : {}",
-          date, venue, catering, decoration, makeup, photo, eo, others, transport);
+          " date : {}, venue : {}, catering: {},decoration : {}, makeup : {}, photo : {}, eo: {}, others : {}, transport : {}, location : {}",
+          date, venue, catering, decoration, makeup, photo, eo, others, transport, location);
 
       FilterDto filter;
       if (list.size() > 0) {
@@ -445,6 +456,7 @@ public class ActController {
       model.addAttribute("items", result);
       model.addAttribute("eventDate", date);
       model.addAttribute("imageRoot", imagePath);
+      model.addAttribute("customLocation", dto.getLocation());
 
 
     } catch (final Exception exception) {
@@ -469,11 +481,12 @@ public class ActController {
       final String eventEo = formData.getFirst("eventEo");
       final String eventOthers = formData.getFirst("eventOthers");
       final String eventTransport = formData.getFirst("eventTransport");
+      final String eventLocation = formData.getFirst("eventLocation");
 
       log.debug(
-          "  --> date : {}, venue: {}, catering : {}, decoration : {}, makeup :{}, photo : {}, eo: {}, others : {},trasport : {}",
+          " date : {}, venue: {}, catering : {}, decoration : {}, makeup :{}, photo : {}, eo: {}, others : {},trasport : {}, event location : {}",
           eventDate, eventVenue, eventCatering, eventDecoration, eventMakeUp, eventPhoto, eventEo,
-          eventOthers, eventTransport);
+          eventOthers, eventTransport, eventLocation);
 
       int totalPrice = 0;
       int minimumPrice = 0;
@@ -539,19 +552,27 @@ public class ActController {
         listOfPackages = listOfPackages.append(dto.getId()).append(SEPARATOR);
       }
 
+
+      final Calendar calendar = Calendar.getInstance();
+      final Calendar calendarMaxPayment = Calendar.getInstance();
+
       if (venue != null) {
         totalPrice += venue.getPrice();
         minimumPrice += venue.getPrice();
+
+        calendar.setTime(pattern.parse(eventDate));
+        calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(venue.getRentDuration()));
+
+        calendarMaxPayment.setTime(pattern.parse(eventDate));
+        calendarMaxPayment.add(Calendar.DATE, -30);
+
       }
 
-      final Calendar calendar = Calendar.getInstance();
-      calendar.setTime(pattern.parse(eventDate));
-      calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(venue.getRentDuration()));
-
-      final Calendar calendarMaxPayment = Calendar.getInstance();
-      calendarMaxPayment.setTime(pattern.parse(eventDate));
-      calendarMaxPayment.add(Calendar.DATE, -30);
-
+      if (eventLocation == null || eventLocation.equals("")) {
+        model.addAttribute("eventLocation", "");
+      } else {
+        model.addAttribute("eventLocation", eventLocation);
+      }
       model.addAttribute("imageRoot", imagePath);
       model.addAttribute("eventDate", calendar.getTime());
       model.addAttribute("eventEndTime", calendar.getTime());
@@ -588,6 +609,7 @@ public class ActController {
       final String eventDate = formData.getFirst("planned_event_date");
       final char method = formData.getFirst("plan_payment_method").charAt(0);
       final String amount = formData.getFirst("plan_payment_amount");
+      final String eventLocation = formData.getFirst("plan_event_location");
 
       log.debug("packages : {}, venue : {}, date : {}", packages, venue, eventDate);
 
@@ -611,6 +633,16 @@ public class ActController {
 
         final Vendor vendor = null;
 
+        final String groupTransaction =
+            sequenceService.generateSequence(SequenceUtil.GROUP_TRANSACTION_ID_SEQ);
+
+        final FilterDto venueFilter = new FilterDto();
+        venueFilter.setId(venue);
+        final ItemListDto venueEntity =
+            listingService.findAllList(request, null, venueFilter).get(0);
+
+
+
         for (int i = 0; i < packagesArr.length; i++) {
 
 
@@ -624,11 +656,11 @@ public class ActController {
 
           final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
 
-          log.debug("item to string : {}", item.toString());
+          // log.debug("item to string : {}", item.toString());
 
 
           final BookingTransactionDto dto = new BookingTransactionDto();
-          dto.setDateBooking(new SimpleDateFormat("dd/MM/yy").format(bookingTime));
+          dto.setDateBooking(new SimpleDateFormat("yyyyMMdd").format(bookingTime));
           dto.setTimeBooking(new SimpleDateFormat("HH:mm").format(bookingTime));
           dto.setEventId(packagesArr[i]);
           dto.setMethodPayment(method);
@@ -636,11 +668,17 @@ public class ActController {
           dto.setPricePayment(item.getMinimumPayment());
           dto.setStatuspayment('0');
           dto.setStatusTransaction('0');
-          dto.setTransactionDate(new SimpleDateFormat("dd/MM/yy").format(new Date()));
+          dto.setTransactionDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
           dto.setTransactionTime(new SimpleDateFormat("HH:mm").format(new Date()));
           dto.setUser(user);
           dto.setVendor(vendorService.findBySingleId(item.getVendorId()));
           dto.setTransactionId(sequenceId);
+          dto.setGroupTransactionId(groupTransaction);
+          if (eventLocation != null && !eventLocation.equals("")) {
+            dto.setVenueAddress(eventLocation);
+          } else {
+            dto.setVenueAddress(venueEntity.getLocation());
+          }
 
           final BookingTransaction transaction = new BookingTransaction();
 
@@ -653,7 +691,7 @@ public class ActController {
         final Iterable<BookingTransaction> iterable = bookingTransactions;
 
 
-        log.debug("iterable : {}", iterable.toString());
+        // log.debug("iterable : {}", iterable.toString());
 
         bookingService.saveBookingBatch(iterable);
 
@@ -667,5 +705,7 @@ public class ActController {
 
     return "outer/help";
   }
+
+
 
 }

@@ -28,6 +28,7 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
 
   private static final String NOT_FOUND_PAGE = "unexpected/not-found";
 
+
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
       ModelAndView modelAndView) throws Exception {

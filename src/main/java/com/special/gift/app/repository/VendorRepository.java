@@ -22,4 +22,7 @@ public interface VendorRepository extends CrudRepository<Vendor, VendorId> {
   @Query(value = "select * from vendor where vendor_id=?1 limit 1", nativeQuery = true)
   Vendor findSingleVendorById(String id);
 
+  @Query(value = "select * from vendor where vendor_id_venue=?1 ", nativeQuery = true)
+  Vendor findVendorsUsingVenue(String venue);
+
 }

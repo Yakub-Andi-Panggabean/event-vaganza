@@ -9,7 +9,10 @@ import com.special.gift.app.domain.GlobalSequence;
 
 public interface GlobalSequenceRepository extends CrudRepository<GlobalSequence, BigInteger> {
 
-  @Query(value = "SELECT LPAD(f_get_seq(?1),15,'0') SEQUENCE_ID", nativeQuery = true)
+  @Query(value = "SELECT LPAD(f_get_seq(?1),10,'0') SEQUENCE_ID", nativeQuery = true)
   String generateSequence(String sequenceId);
+
+  @Query(value = "SELECT LPAD(f_get_seq(?1),15,'0') SEQUENCE_ID", nativeQuery = true)
+  String generateTransactionSequence(String sequenceId);
 
 }

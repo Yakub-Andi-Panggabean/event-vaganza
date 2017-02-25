@@ -41,10 +41,21 @@
 						th:value="${customPackage.others}"> <input type="hidden"
 						name="eventTransport" id="eventTransport"
 						th:value="${customPackage.transport}">
+						<input type="hidden"
+						name="eventLocation" id="eventLocation"
+						th:value="${customLocation}">
 					<button type="submit" class="btn btn-warning">Confirm</button>
 				</form>
+			</div>
+		</div>
 
-
+		<div class="row" th:remove="${customLocation.equals('')}?'all':'none'">
+			<div class="col-sm-6">
+				<label>Event Location</label>
+				<div class="form-group">
+					<textarea class="form-control" rows="5" id="custom-event-location"
+						th:inline="text" disabled="disabled">[[${customLocation}]]</textarea>
+				</div>
 			</div>
 		</div>
 

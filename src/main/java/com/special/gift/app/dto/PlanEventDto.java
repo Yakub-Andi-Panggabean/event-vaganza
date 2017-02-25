@@ -16,6 +16,7 @@ public class PlanEventDto implements Serializable {
   private String eo;
   private String others;
   private String transport;
+  private String location;
 
   public String getDate() {
     return date;
@@ -89,11 +90,20 @@ public class PlanEventDto implements Serializable {
     this.catering = catering;
   }
 
+  public String getLocation() {
+    return location;
+  }
+
+  public void setLocation(String location) {
+    this.location = location;
+  }
+
   @Override
   public String toString() {
     return "PlanEventDto [date=" + date + ", venue=" + venue + ", catering=" + catering
         + ", decoration=" + decoration + ", makeUp=" + makeUp + ", photography=" + photography
-        + ", eo=" + eo + ", others=" + others + ", transport=" + transport + "]";
+        + ", eo=" + eo + ", others=" + others + ", transport=" + transport + ", location="
+        + location + "]";
   }
 
 

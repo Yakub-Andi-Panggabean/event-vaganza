@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -17,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.crypto.codec.Base64;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
@@ -31,22 +32,22 @@ public class AuthenticationFilter implements Filter {
 
   private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 
-  @Inject
   private UserService userService;
 
-  @Inject
   private VendorService vendorService;
 
-
-  @Inject
   private ShaPasswordEncoder passwordEncoder;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
     log.debug("initialize filter");
-    while (filterConfig.getInitParameterNames().hasMoreElements()) {
-      log.debug("init parameter name :{}", filterConfig.getInitParameterNames().nextElement());
-    }
+    final ApplicationContext context = WebApplicationContextUtils
+        .getRequiredWebApplicationContext(filterConfig.getServletContext());
+
+    userService = context.getBean(UserService.class);
+    vendorService = context.getBean(VendorService.class);
+    passwordEncoder = context.getBean(ShaPasswordEncoder.class);
+
   }
 
   @Override
@@ -67,6 +68,14 @@ public class AuthenticationFilter implements Filter {
         final String principal = auth[0];
         final String credential = auth[1];
         // check is user is exist or not by username
+
+        if (userService == null) {
+          log.debug("service null");
+        }
+
+        log.debug("principal : {}", principal);
+        log.debug("credential : {}", credential);
+
         if (userService.checkUserByPrincipal(principal)) {
 
           final User user = userService.findUserByPrincipal(principal);

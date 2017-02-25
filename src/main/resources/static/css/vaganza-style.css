@@ -255,6 +255,16 @@ body {
 		cursor: pointer;
 	}
 }
+.element-top {
+	position: absolute;
+	right: 0px;
+	z-index: -100;
+}
+.element-bottom {
+	position: absolute;
+	bottom: 0px;
+	z-index: -100;
+}
 
 /* content */
 .content {
@@ -735,6 +745,71 @@ a.radio-img {
 	width: 100%;
 	color: #fff;
 	background-color: #000;
+}
+/*------------detail--------------------*/
+.big-button-trigger {
+	background-color: #f7c21d;;
+	color: white;
+	padding-bottom: 1%;
+	transition: all .5s ease-in;
+}
+
+.big-button-trigger:hover {
+	box-shadow: 1px 0px 5px 8px #DEDEDE;
+	transform: scale(1.1, 1.1);
+	cursor: pointer;
+}
+
+.img-zoom {
+	transition: all .3s ease-in;
+}
+
+.img-zoom:hover {
+	z-index: 9999 !important;;
+	transform: scale(1.5, 1.5);
+	position: relative;
+}
+
+.error_message {
+	font-size: 80%;
+	color: #d13127;
+	position: relative;
+}
+
+body .well {
+	background-color: #fff;
+}
+
+.detail-package .panel-heading {
+	color: #A5A044;
+	background-color: #fff;
+}
+
+.line-through {
+	border-top: 1px solid #ddd;
+	margin: 20px 0;
+	position: relative;
+	text-align: center;
+}
+
+.line-through p {
+	position: absolute;
+	text-align: center;
+	top: -13px;
+	width: 100%;
+}
+
+.line-through span {
+	background: #fff;
+	padding: 0 10px;
+}
+
+.main-item-list .item {
+	color: #f7c321;
+}
+
+.main-item-list li {
+	border: none;
 }
 /*------------detail--------------------*/
 .big-button-trigger {

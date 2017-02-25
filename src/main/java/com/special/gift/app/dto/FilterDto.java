@@ -16,6 +16,7 @@ public class FilterDto implements Serializable {
   private String packageType;
   private String category;
   private String parent;
+  private String venue;
 
   public String getKeyword() {
     return keyword;
@@ -97,11 +98,21 @@ public class FilterDto implements Serializable {
     this.parent = parent;
   }
 
+
+  public String getVenue() {
+    return venue;
+  }
+
+  public void setVenue(String venue) {
+    this.venue = venue;
+  }
+
   @Override
   public String toString() {
     return "FilterDto [id=" + id + ", keyword=" + keyword + ", minPrice=" + minPrice + ", maxPrice="
         + maxPrice + ", sorting=" + sorting + ", capacity=" + capacity + ", city=" + city
-        + ", packageType=" + packageType + ", category=" + category + ", parent=" + parent + "]";
+        + ", packageType=" + packageType + ", category=" + category + ", parent=" + parent
+        + ", venue=" + venue + "]";
   }
 
 

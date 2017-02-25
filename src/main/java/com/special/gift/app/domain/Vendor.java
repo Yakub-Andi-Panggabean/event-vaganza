@@ -126,6 +126,13 @@ public class Vendor {
     this.venueVendor = venueVendor;
   }
 
+  @Override
+  public String toString() {
+    return "Vendor [vendorId=" + vendorId + ", name=" + name + ", desc=" + desc + ", address="
+        + address + ", handphone=" + handphone + ", phone=" + phone + ", pic=" + pic + ", email="
+        + email + ", venueVendor=" + venueVendor + ", user=" + user + "]";
+  }
+
 
 
 }

@@ -75,9 +75,11 @@ public class VendorDescServiceBean implements VendorDescService {
       if (vendorDesc.getVendorType().length() > 2
           && vendorDesc.getVendorType().substring(0, 2).equals(parent.substring(0, 2))) {
 
-        log.debug("compare parent : {}, afters substring {}", parent, parent.substring(0, 2));
-        log.debug("compare child : {}, afters substring {}", vendorDesc.getVendorType(),
-            vendorDesc.getVendorType().substring(0, 2));
+        // log.debug("compare parent : {}, afters substring {}", parent, parent.substring(0, 2));
+        // log.debug("compare child : {}, afters substring {}", vendorDesc.getVendorType(),
+        // vendorDesc.getVendorType().substring(0, 2));
+
+        log.debug("parent : {}, child : {}", parent, vendorDesc.getVendorType());
 
         vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
 

@@ -125,7 +125,7 @@ public class ListingServiceBean implements ListingService {
         for (final ItemListDto itemListDto : items) {
           // if parent it will also contains all it's child
           if ((category.endsWith("0")
-              && itemListDto.getCategory().substring(1, 2).equals(category.substring(1, 2)))
+              && itemListDto.getCategory().substring(0, 2).equals(category.substring(0, 2)))
               || (itemListDto.getCategory().equals(category))) {
             dtos.add(itemListDto);
           }
@@ -155,9 +155,10 @@ public class ListingServiceBean implements ListingService {
     final List<ItemListDto> filteredList = new ArrayList<>();
     try {
 
-      log.debug("filter : {}", filter.toString());
+      // log.debug("filter : {}", filter.toString());
 
-      if ((filter.getParent() == null || filter.getParent().isEmpty())
+      if ((filter.getVenue() == null || filter.getVenue().isEmpty())
+          && (filter.getParent() == null || filter.getParent().isEmpty())
           && (filter.getCategory() == null || filter.getCategory().isEmpty()
               || filter.getCategory().equals(""))
           && (filter.getCapacity() == null || filter.getCapacity() == 0)
@@ -177,10 +178,20 @@ public class ListingServiceBean implements ListingService {
 
         for (final ItemListDto item : list) {
 
-          boolean isItemValid = false;
+          boolean isParentValid = true;
+          boolean isIdValid = true;
+          boolean isCapacityValid = true;
+          boolean isCityValid = true;
+          boolean isKeywordValid = true;
+          boolean isBetweenPrice = true;
+          boolean isMaxPriceValid = true;
+          boolean isMinPriceValid = true;
+          boolean isPackageTypeValid = true;
+          boolean isCategoryValid = true;
+          boolean isVenueValid = true;
 
           if (filter.getParent() != null) {
-            isItemValid = filter.getParent().length() > 2
+            isParentValid = filter.getParent().length() > 2
                 && (filter.getParent().substring(0, 2).equals(item.getCategory().substring(0, 2)));
           }
 
@@ -189,33 +200,34 @@ public class ListingServiceBean implements ListingService {
             // log.debug("filtering id : {}", filter.getId());
             // log.debug("item filtered : {}", item.toString());
             // filteredList.add(item);
-            isItemValid = filter.getId().equalsIgnoreCase(item.getId());
+            isIdValid = filter.getId().equalsIgnoreCase(item.getId());
           }
 
           // filter capacity
           if (filter.getCapacity() != null && filter.getCapacity() > 0) {
             // log.debug("filtering capacity : {}", filter.getCapacity());
-            isItemValid = item.getCapacity() == filter.getCapacity();
+            isCapacityValid = item.getCapacity() == filter.getCapacity();
           }
 
           // filter city
           if (filter.getCity() != null && !filter.getCity().isEmpty() && item.getLocation() != null
               && !item.getLocation().isEmpty()) {
             // log.debug("filtering city : {}", filter.getCity());
-            isItemValid = (item.getLocation().equalsIgnoreCase(filter.getCity())
+            isCityValid = (item.getLocation().equalsIgnoreCase(filter.getCity())
                 || item.getLocation().toLowerCase().contains(filter.getCity().toLowerCase()));
           }
 
           if (filter.getKeyword() != null && !filter.getKeyword().isEmpty()) {
             // log.debug("filtering keyword : {}", filter.getKeyword());
-            isItemValid = item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase());
+            isKeywordValid =
+                item.getName().toLowerCase().contains(filter.getKeyword().toLowerCase());
           }
 
           if ((filter.getMaxPrice() != null && filter.getMaxPrice() > 0
               && filter.getMinPrice() != null && filter.getMinPrice() > 0)) {
             // log.debug("filtering min price : {} and max price : {}", filter.getMinPrice(),
             // filter.getMaxPrice());
-            isItemValid = (item.getPrice() <= filter.getMaxPrice()
+            isBetweenPrice = (item.getPrice() <= filter.getMaxPrice()
                 && item.getPrice() >= filter.getMinPrice());
           }
 
@@ -224,13 +236,13 @@ public class ListingServiceBean implements ListingService {
               && filter.getMinPrice() == 0) {
             // log.debug("filtering max price : {}", filter.getMaxPrice());
             // log.debug("item price : {}", item.getPrice());
-            isItemValid = item.getPrice() <= filter.getMaxPrice();
+            isMaxPriceValid = item.getPrice() <= filter.getMaxPrice();
           }
 
           if (filter.getMinPrice() != null && filter.getMinPrice() > 0
               && filter.getMaxPrice() == 0) {
             // log.debug("filtering min price : {}", filter.getMinPrice());
-            isItemValid = item.getPrice() >= filter.getMinPrice();
+            isMinPriceValid = item.getPrice() >= filter.getMinPrice();
           }
 
           if (filter.getPackageType() != null && !filter.getPackageType().isEmpty()
@@ -238,7 +250,7 @@ public class ListingServiceBean implements ListingService {
             // log.debug("filtering package type : {},item type:{}", filter.getPackageType(),
             // item.getPackageType());
 
-            isItemValid = filter.getPackageType().equalsIgnoreCase(item.getPackageType());
+            isPackageTypeValid = filter.getPackageType().equalsIgnoreCase(item.getPackageType());
           }
 
           if (filter.getCategory() != null && !filter.getCategory().isEmpty()) {
@@ -250,16 +262,34 @@ public class ListingServiceBean implements ListingService {
             final boolean parent = filter.getCategory().substring(0, 2)
                 .equalsIgnoreCase(item.getCategory().substring(0, 2));
 
-            isItemValid = detailedChild || parent;
+            // isItemValid = detailedChild || parent;
 
             if (filter.getCategory().length() > 2
                 && String.valueOf(filter.getCategory().charAt(2)).equals("0")) {
-              isItemValid = parent;
+              isCategoryValid = parent;
             } else {
-              isItemValid = detailedChild;
+              isCategoryValid = detailedChild;
             }
 
           }
+
+          // filter package based on vendor venue
+          if (filter.getVenue() != null && !filter.getVenue().isEmpty()
+              && item.getPackageType().equals(PACKAGE_VENDOR)) {
+
+            final Vendor vendor = vendorRepository.findSingleVendorById(item.getVendorId());
+
+            log.debug("venue venodr : ------> {},filter venue :-----> {}", vendor.getVenueVendor(),
+                filter.getVenue());
+
+            isVenueValid = vendor.getVenueVendor().equals(filter.getVenue());
+
+          }
+
+
+          final boolean isItemValid = isParentValid && isIdValid && isCapacityValid && isCityValid
+              && isKeywordValid && isBetweenPrice && isMaxPriceValid && isMinPriceValid
+              && isPackageTypeValid && isCategoryValid && isVenueValid;
 
           if (isItemValid) {
             filteredList.add(item);

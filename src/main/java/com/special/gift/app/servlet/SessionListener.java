@@ -19,7 +19,7 @@ public class SessionListener implements HttpSessionListener {
 
   @Override
   public void sessionDestroyed(HttpSessionEvent se) {
-    log.debug("session destroyed");
+    log.debug("session destroyed : {}", se.getSession().getServletContext().getContextPath());
   }
 
 }

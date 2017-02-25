@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.special.gift.app.domain.BookingTransaction;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
@@ -28,5 +29,7 @@ public interface VendorService {
   Vendor findById(VendorId id);
 
   Vendor findBySingleId(String id);
+
+  List<BookingTransaction> getVendorConfirmations(String vendorId);
 
 }

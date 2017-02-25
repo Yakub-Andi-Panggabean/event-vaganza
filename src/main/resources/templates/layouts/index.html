@@ -23,7 +23,8 @@
 <!-- <link th:href="@{/css/jquery-ui.min.css}" rel="stylesheet"></link> -->
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link type="text/css" th:href="@{/css/jquery-ui-timepicker-addon.css}" rel="stylesheet"></link>
+<link type="text/css" th:href="@{/css/jquery-ui-timepicker-addon.css}"
+	rel="stylesheet"></link>
 
 <!-- <link rel="stylesheet" -->
 <!-- 	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
@@ -33,11 +34,26 @@
 		<p>This is default header area for default layout</p>
 	</header>
 	<div class="block"></div>
+
+	<div class="element-top"
+		th:remove="${view.equals('/fragments/main')}?'none':'all'">
+		<img th:src="@{/image/element-1.png}"
+			style="width: 100%; max-width: 480px; height: auto"></img>
+	</div>
+
 	<div class="wrapper">
 		<div class="content">
 			<div class="container" th:include="${view} :: content"></div>
 		</div>
 	</div>
+
+	<div class="element-bottom"
+		th:remove="${view.equals('/fragments/main')}?'none':'all'">
+		<img th:src="@{/image/element-2.png}"
+			style="width: 100%; height: auto"></img>
+	</div>
+
+
 	<footer th:replace="${footer} :: footer">
 		<p>This is default footer area for default layout</p>
 	</footer>

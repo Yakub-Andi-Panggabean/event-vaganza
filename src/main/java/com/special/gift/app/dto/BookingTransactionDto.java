@@ -18,16 +18,19 @@ public class BookingTransactionDto {
   private int pricePayment;
   private User user;
   private Vendor vendor;
+  private String groupTransactionId;
+  private String venueAddress;
 
   public BookingTransactionDto() {
     super();
   }
 
 
+
   public BookingTransactionDto(String transactionId, String transactionDate, String transactionTime,
       String eventId, String dateBooking, String timeBooking, char statusTransaction,
       char statuspayment, int priceAll, char methodPayment, int pricePayment, User user,
-      Vendor vendor) {
+      Vendor vendor, String groupTransactionId, String venueAddress) {
     super();
     this.transactionId = transactionId;
     this.transactionDate = transactionDate;
@@ -42,7 +45,10 @@ public class BookingTransactionDto {
     this.pricePayment = pricePayment;
     this.user = user;
     this.vendor = vendor;
+    this.groupTransactionId = groupTransactionId;
+    this.venueAddress = venueAddress;
   }
+
 
 
   public String getTransactionId() {
@@ -175,6 +181,21 @@ public class BookingTransactionDto {
   }
 
 
+  public String getGroupTransactionId() {
+    return groupTransactionId;
+  }
+
+  public void setGroupTransactionId(String groupTransactionId) {
+    this.groupTransactionId = groupTransactionId;
+  }
+
+  public String getVenueAddress() {
+    return venueAddress;
+  }
+
+  public void setVenueAddress(String venueAddress) {
+    this.venueAddress = venueAddress;
+  }
 
   @Override
   public String toString() {
@@ -183,7 +204,8 @@ public class BookingTransactionDto {
         + ", dateBooking=" + dateBooking + ", timeBooking=" + timeBooking + ", statusTransaction="
         + statusTransaction + ", statuspayment=" + statuspayment + ", priceAll=" + priceAll
         + ", methodPayment=" + methodPayment + ", pricePayment=" + pricePayment + ", user=" + user
-        + ", vendor=" + vendor + "]";
+        + ", vendor=" + vendor + ", groupTransactionId=" + groupTransactionId + ", venueAddress="
+        + venueAddress + "]";
   }
 
 

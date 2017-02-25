@@ -1,5 +1,6 @@
 package com.special.gift.app.service.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,10 +12,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.special.gift.app.domain.BookingTransaction;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
 import com.special.gift.app.dto.VendorDto;
+import com.special.gift.app.repository.BookingTransactionRepository;
+import com.special.gift.app.repository.TransactionConfirmationRepository;
 import com.special.gift.app.repository.VendorRepository;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorService;
@@ -30,6 +34,12 @@ public class VendorServiceBean implements VendorService {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private BookingTransactionRepository transactionRepository;
+
+  @Autowired
+  private TransactionConfirmationRepository confirmationRepository;
 
   @Override
   @Transactional(readOnly = false)
@@ -115,6 +125,26 @@ public class VendorServiceBean implements VendorService {
   @Override
   public Vendor findBySingleId(String id) {
     return repository.findSingleVendorById(id);
+  }
+
+  @Override
+  public List<BookingTransaction> getVendorConfirmations(String vendorId) {
+    // TODO Auto-generated method stub
+    // final List<BookingTransaction> BookingTransaction =
+    // transactionRepository.findByVendorId(vendorId);
+
+    final List<BookingTransaction> unconfirmedTransaction = new ArrayList<>();
+    //
+    // for (final BookingTransaction trans : BookingTransaction) {
+    // for (final TransactionConfirmation confirm : confirmationRepository.findAll()) {
+    // if (confirm.getStatus() == '0'
+    // && confirm.getTransactionId().equals(trans.getTransactionId())) {
+    // unconfirmedTransaction.add(trans);
+    // }
+    // }
+    //
+    // }
+    return unconfirmedTransaction;
   }
 
 

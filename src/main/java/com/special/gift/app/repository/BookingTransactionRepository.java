@@ -10,4 +10,6 @@ public interface BookingTransactionRepository extends CrudRepository<BookingTran
 
   Page<BookingTransaction> findAll(Pageable pageable);
 
+  // List<BookingTransaction> findByVendorId(String vendorId);
+
 }

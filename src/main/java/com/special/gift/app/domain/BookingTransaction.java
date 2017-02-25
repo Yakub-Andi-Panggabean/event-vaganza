@@ -1,6 +1,5 @@
 package com.special.gift.app.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,6 +17,9 @@ public class BookingTransaction {
   @Id
   @Column(name = "transaction_id", nullable = false, length = 20)
   private String transactionId;
+
+  @Column(name = "group_transaction_id", nullable = false, length = 20)
+  private String groupTransactionId;
 
   @Column(name = "transaction_date", nullable = false, length = 6)
   private String transactionDate;
@@ -49,6 +51,10 @@ public class BookingTransaction {
   @Column(name = "price_payment", nullable = false)
   private int pricePayment;
 
+  @Column(name = "venue_address", nullable = false)
+  private String venueAddress;
+
+
   @OneToOne
   @JoinColumn(name = "user_id")
   private User user;
@@ -57,10 +63,6 @@ public class BookingTransaction {
   @JoinColumns({@JoinColumn(name = "vendor_type", columnDefinition = "CHAR(3)"),
       @JoinColumn(name = "vendor_id")})
   private Vendor vendor;
-
-  @OneToOne(targetEntity = TransactionConfirmation.class, cascade = CascadeType.ALL,
-      mappedBy = "transaction")
-  private TransactionConfirmation transactionConfirmation;
 
   public String getTransactionId() {
     return transactionId;
@@ -166,22 +168,31 @@ public class BookingTransaction {
     this.vendor = vendor;
   }
 
-  public TransactionConfirmation getTransactionConfirmation() {
-    return transactionConfirmation;
+  public String getGroupTransactionId() {
+    return groupTransactionId;
   }
 
-  public void setTransactionConfirmation(TransactionConfirmation transactionConfirmation) {
-    this.transactionConfirmation = transactionConfirmation;
+  public void setGroupTransactionId(String groupTransactionId) {
+    this.groupTransactionId = groupTransactionId;
+  }
+
+  public String getVenueAddress() {
+    return venueAddress;
+  }
+
+  public void setVenueAddress(String venueAddress) {
+    this.venueAddress = venueAddress;
   }
 
   @Override
   public String toString() {
-    return "BookingTransaction [transactionId=" + transactionId + ", transactionDate="
-        + transactionDate + ", transactionTime=" + transactionTime + ", eventId=" + eventId
-        + ", dateBooking=" + dateBooking + ", timeBooking=" + timeBooking + ", statusTransaction="
-        + statusTransaction + ", statuspayment=" + statuspayment + ", priceAll=" + priceAll
-        + ", methodPayment=" + methodPayment + ", pricePayment=" + pricePayment + ", user=" + user
-        + ", vendor=" + vendor + ", transactionConfirmation=" + transactionConfirmation + "]";
+    return "BookingTransaction [transactionId=" + transactionId + ", groupTransactionId="
+        + groupTransactionId + ", transactionDate=" + transactionDate + ", transactionTime="
+        + transactionTime + ", eventId=" + eventId + ", dateBooking=" + dateBooking
+        + ", timeBooking=" + timeBooking + ", statusTransaction=" + statusTransaction
+        + ", statuspayment=" + statuspayment + ", priceAll=" + priceAll + ", methodPayment="
+        + methodPayment + ", pricePayment=" + pricePayment + ", venueAddress=" + venueAddress
+        + ", user=" + user + ", vendor=" + vendor + "]";
   }
 
 

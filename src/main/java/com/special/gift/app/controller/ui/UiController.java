@@ -27,6 +27,7 @@ import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.dto.VendorDto;
+import com.special.gift.app.service.BookingTransactionService;
 import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
@@ -82,6 +83,9 @@ public class UiController {
 
   @Inject
   private VenueService venueService;
+
+  @Inject
+  private BookingTransactionService bookingService;
 
   @Value("${image.path.location}")
   private String imagePath;
@@ -287,7 +291,7 @@ public class UiController {
     log.debug("fetch flash attribute : {}", model.asMap().get("existValue"));
 
     if (model.asMap().get("existKey") == null || model.asMap().get("existValue") == null) {
-      return "redirect:/";
+      // return "redirect:/";
     }
 
     return "/outer/notification";
@@ -418,6 +422,8 @@ public class UiController {
 
       model.addAttribute("existingVendor", vendorDto);
       model.addAttribute("vendorTypes", vendorTypes);
+      // model.addAttribute("",
+      // vendorService.getVendorConfirmations(data.get(0).getVendorId().getVendorId()));
 
       session.setAttribute("vendorData", vendorDto);
       session.setAttribute("vendorTypes", vendorTypes);
@@ -445,15 +451,21 @@ public class UiController {
 
 
   @RequestMapping(value = PLAN_MY_EVENT, method = RequestMethod.GET)
-  public String renderPlanPage(Model model) {
+  public String renderPlanPage(Model model, HttpSession session, HttpServletRequest request) {
 
-    model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
-    model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
-    model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
+    if (session.getAttribute("user") == null) {
+      return "redirect:/";
+    } else {
 
-    model.addAttribute("imageRoot", imagePath);
+      model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
+      model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
+      model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
 
-    return "contents/plan-event";
+      model.addAttribute("imageRoot", imagePath);
+
+      return "contents/plan-event";
+
+    }
   }
 
 

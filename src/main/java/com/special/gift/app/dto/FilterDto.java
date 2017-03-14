@@ -7,6 +7,7 @@ public class FilterDto implements Serializable {
   private static final long serialVersionUID = -5784151640004523843L;
 
   private String id;
+  private String vendorId;
   private String keyword;
   private Integer minPrice;
   private Integer maxPrice;
@@ -107,12 +108,20 @@ public class FilterDto implements Serializable {
     this.venue = venue;
   }
 
+  public String getVendorId() {
+    return vendorId;
+  }
+
+  public void setVendorId(String vendorId) {
+    this.vendorId = vendorId;
+  }
+
   @Override
   public String toString() {
-    return "FilterDto [id=" + id + ", keyword=" + keyword + ", minPrice=" + minPrice + ", maxPrice="
-        + maxPrice + ", sorting=" + sorting + ", capacity=" + capacity + ", city=" + city
-        + ", packageType=" + packageType + ", category=" + category + ", parent=" + parent
-        + ", venue=" + venue + "]";
+    return "FilterDto [id=" + id + ", vendorId=" + vendorId + ", keyword=" + keyword + ", minPrice="
+        + minPrice + ", maxPrice=" + maxPrice + ", sorting=" + sorting + ", capacity=" + capacity
+        + ", city=" + city + ", packageType=" + packageType + ", category=" + category + ", parent="
+        + parent + ", venue=" + venue + "]";
   }
 
 

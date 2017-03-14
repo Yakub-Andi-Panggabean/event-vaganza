@@ -12,9 +12,14 @@ function resetStep() {
 }
 
 function findPackage(type) {
+	var loading = $('#spinner-progress').html();
+	var progress = $('#wizard_content').html(loading);
+
 	$('#wizard-skip-button').prop('disabled', false);
 
 	var venue = $('#wizard-event-venue').val();
+
+	$('#wizard-process-button-prev').prop('disabled', true);
 
 	console.log('venue : ' + venue);
 	console.log('type : ' + type);
@@ -26,9 +31,11 @@ function findPackage(type) {
 			success : function(data) {
 				console.log('using venue');
 				$('#wizard_content').html(data);
+				$('#wizard-process-button-prev').prop('disabled', false);
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(errorThrown);
+				$('#wizard-process-button-prev').prop('disabled', false);
 			}
 		});
 
@@ -39,9 +46,11 @@ function findPackage(type) {
 			success : function(data) {
 				console.log('without venue');
 				$('#wizard_content').html(data);
+				$('#wizard-process-button-prev').prop('disabled', false);
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(errorThrown);
+				$('#wizard-process-button-prev').prop('disabled', false);
 			}
 		});
 
@@ -105,7 +114,10 @@ function additionalWizardStep() {
 	$('#wizard-process-button-next').click(submitAllPlanWithLocation);
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(eightWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-transport').val("");
+		eightWizardStep();
+	});
 }
 
 // transport
@@ -150,7 +162,10 @@ function eightWizardStep() {
 	}
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(seventhWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-others').val("");
+		seventhWizardStep();
+	});
 }
 
 // others
@@ -177,7 +192,10 @@ function seventhWizardStep() {
 	$('#wizard-skip-button').click(eightWizardStep);
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(sixthWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-eo').val("");
+		sixthWizardStep();
+	});
 }
 
 // e.o
@@ -204,7 +222,10 @@ function sixthWizardStep() {
 	$('#wizard-skip-button').click(seventhWizardStep);
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(fifthWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-photo').val("");
+		fifthWizardStep();
+	});
 }
 
 // photo
@@ -231,7 +252,10 @@ function fifthWizardStep() {
 	$('#wizard-skip-button').click(sixthWizardStep);
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(fourthWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-makeup').val("");
+		fourthWizardStep();
+	});
 }
 
 // make up
@@ -258,7 +282,10 @@ function fourthWizardStep() {
 	$('#wizard-skip-button').click(fifthWizardStep);
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(thirdWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-decoration').val("");
+		thirdWizardStep();
+	});
 }
 
 // decoration
@@ -285,7 +312,10 @@ function thirdWizardStep() {
 	$('#wizard-skip-button').click(fourthWizardStep);
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(secondWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-catering').val("");
+		secondWizardStep();
+	});
 }
 
 // catering
@@ -313,7 +343,10 @@ function secondWizardStep() {
 	$('#wizard-skip-button').click(thirdWizardStep);
 
 	$('#wizard-process-button-prev').unbind('click');
-	$('#wizard-process-button-prev').click(firstWizardStep);
+	$('#wizard-process-button-prev').click(function() {
+		$('#wizard-event-venue').val("");
+		firstWizardStep();
+	});
 }
 
 // venue -------
@@ -339,7 +372,10 @@ function firstWizardStep() {
 	resetStep();
 
 	// activate step 2 header
-	$('#package_plan_venue').addClass("active");
+	$('#plan-quote-info').text("Please select your event venue");
+	$('#package_plan_date').removeClass("onprogress");
+	$('#package_plan_date').addClass("completed");
+	$('#package_plan_venue').addClass("onprogress");
 	$('#wizard-process-button-prev').show();
 	$('#wizard-process-button-next').show();
 	$('#wizard-skip-button').show();

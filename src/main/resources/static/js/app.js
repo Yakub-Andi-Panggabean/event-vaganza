@@ -5,7 +5,7 @@ var pagingPageSize = 12;
 // visible pagination number
 var pagingNumber = 5;
 
-var imagePathLocation = 'http://139.59.241.223:8080/kado-cms/image/'
+var imagePathLocation = "http://139.59.241.223:8080/kado-cms/image/";
 // var imagePathLocation='http://localhost:8080/kado-web/image/'
 
 /**
@@ -26,7 +26,6 @@ function init() {
 	validateRegisterForm();
 	validateVendorRegistrationForm();
 	validateBookingRequest();
-	validatePlanEvent();
 	fetchAllAvailableCategory();
 	fetchItemList(0, pagingPageSize, 1);
 	filteringKeyword();
@@ -41,6 +40,7 @@ function init() {
 	loadVenueList();
 	loadVenueListInfo();
 
+	$('#spinner-progress').hide();
 	$('#wizard-process-button-prev').hide();
 	$('#wizard-process-button-next').hide();
 	$('#text-plan-item').hide();
@@ -220,6 +220,8 @@ function fetchItemList(start, limit) {
 	var fType = getUrlVars()["c"];
 
 	console.log('type : ' + fType);
+	var loading = $('#spinner-progress').html();
+	$('#item_list').html(loading);
 
 	// update display record
 	$
@@ -417,6 +419,8 @@ function fetchItemsSelectionList(start, limit, destroy) {
 	}
 
 	filterData.sorting = filterSorting;
+	
+	var loading = $('#spinner-progress').html();
 
 	$
 			.ajax({
@@ -487,6 +491,7 @@ function fetchItemsSelectionList(start, limit, destroy) {
 								.concat(pages[i]);
 					}
 
+					
 					$('#item_list').html(result);
 
 					if (destroy == true) {
@@ -619,6 +624,9 @@ function advanceSearch() {
 	}
 
 	var service = 'advance-search';
+	
+	var loading = $('#spinner-progress').html();
+	$('#search-result').html(loading);
 
 	$("#search-result").load(
 			service + " #search-item",
@@ -756,5 +764,4 @@ function createPlanBookingTransaction() {
 	$('#plan_payment_method').val(paymentMethod);
 
 	$('#booking_planned_transaction_form').submit();
-
 }

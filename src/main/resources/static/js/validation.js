@@ -934,7 +934,7 @@ function validateBookingRequest() {
  * 
  * @returns
  */
-function authenticatePlanEvent() {
+function authenticatePlanEvent(category) {
 	var username = $('#z-user').val();
 	var password = $('#z-password').val();
 
@@ -947,7 +947,8 @@ function authenticatePlanEvent() {
 			'isigunyaziso' : enc
 		},
 		success : function(data) {
-			window.location.replace('/' + servletContext + '/plan-event');
+			window.location.replace('/' + servletContext + '/plan-forwarder/'
+					+ category);
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			var error = JSON.parse(jqXHR.responseText);
@@ -956,48 +957,53 @@ function authenticatePlanEvent() {
 	});
 }
 
-function validatePlanEvent() {
-	$('#start-plan-event')
-			.click(
-					function() {
+function validatePlanEvent(category) {
 
-						$
-								.ajax({
-									url : '/' + servletContext
-											+ '/api/auth/status',
-									method : 'POST',
-									success : function(data) {
-										console.log(data.content);
-										if (data.content == '0') {
-											$('#z-exception')
-													.html(
-															'<label>You have to login in order to be able  plan event</label>');
+	console.log('category >-------> ' + category);
 
-											$('#login_modal').modal();
+	$
+			.ajax({
+				url : '/' + servletContext + '/api/auth/status',
+				method : 'POST',
+				success : function(data) {
+					if (data.content == '0') {
+						$('#z-exception')
+								.html(
+										'<label>You have to login in order to be able  plan event</label>');
 
-											$('#z-auth').unbind('click');
-											$('#z-auth').click(
-													authenticatePlanEvent);
+						$('#login_modal').modal();
 
-											$('#z-user').unbind('keypress');
-											$('#z-user').keypress(
-													authenticatePlanEvent);
+						$('#z-auth').unbind('click');
+						$('#z-auth').click(function(){
+							authenticatePlanEvent(category);
+						});
 
-											$('#z-password').unbind('keypress');
-											$('#z-password').keypress(
-													authenticatePlanEvent);
+						$('#z-user').unbind('keypress');
+						$('#z-user').keypress(function(e) {
+							if (e.which == 13) {
+								authenticatePlanEvent(category);
+							}
+						});
 
-										} else {
-											window.location.replace('/'
-													+ servletContext
-													+ '/plan-event');
-										}
+						$('#z-password').unbind('keypress');
+						$('#z-password').keypress(function(e) {
+							if (e.which == 13) {
+								authenticatePlanEvent(category);
+							}
+						});
 
-									},
-									error : function(jqXHR, textStatus,
-											errorThrown) {
-									}
-								});
+					} else {
 
-					});
+						console.log('/' + servletContext + '/plan-forwarder/'
+								+ category);
+
+						window.location.replace('/' + servletContext
+								+ '/plan-forwarder/' + category);
+					}
+
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+				}
+			});
+
 }

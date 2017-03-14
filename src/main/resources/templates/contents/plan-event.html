@@ -14,80 +14,92 @@
 	<div class="content" th:fragment="content">
 		<div class="container">
 			<div class="row">
-				<h3 class="headline">PLAN MY EVENT</h3>
-				<hr class="headline-line">
+				<div class="head-title">Plan My Event</div>
 			</div>
 
 			<div class="row">
 				<div id="wizard" style="text-align: center">
-					<ol id="wizard-steps" class="wizard-steps">
-						<li id="package_plan_date" class="active child">Date</li>
-						<li id="package_plan_venue" class="child">Venue</li>
-						<li id="package_plan_catering" class="child">Catering</li>
-						<li id="package_plan_decoration" class="child">Decoration</li>
-						<li id="package_plan_makeup" class="child">Make Up</li>
-						<li id="package_plan_photo" class="child">Photography</li>
-						<li id="package_plan_eo" class="child">EO</li>
-						<li id="package_plan_others" class="child">Others</li>
-						<li id="package_plan_transport" class="child">Cars</li>
-					</ol>
+					<ul class="progress-indicator custom-complex">
+						<li id="package_plan_date" class="onprogress"><span
+							class="bubble"></span>DATE & TIME</li>
+						<li id="package_plan_venue"><span class="bubble"></span>VENUE</li>
+						<li id="package_plan_catering"><span class="bubble"></span>CATERING</li>
+						<li id="package_plan_decoration"><span class="bubble"></span>DECORATION</li>
+						<li id="package_plan_makeup"><span class="bubble"></span>MAKE
+							UP</li>
+						<li id="package_plan_photo"><span class="bubble"></span>PHOTOGRAPHY</li>
+						<li id="package_plan_eo"><span class="bubble"></span>ORGANIZER</li>
+						<li id="package_plan_others"><span class="bubble"></span>CARS</li>
+						<li id="package_plan_transport"><span class="bubble"></span>OTHERS</li>
+					</ul>
 				</div>
 
-				<div class="wizard-wrap">
-					<div class="row">
-						<div class="col-sm-11" id="text-plan-item"
-							style="line-height: 20px; font-size: 18px; margin-top: 18px;">SELECT
-							YOUR EVENT DATE</div>
-						<div class="col-sm-1">
-							<button class="btn btn-warning" id="wizard-skip-button">Skip</button>
-						</div>
-					</div>
-					<hr>
-					<div id="wizard_content" class="row" align="center">
-
-						<div class="col-sm-4 col-sm-offset-4">
-							<div class="form-group">
-								<input id="wizard-date" name="plan-event-date" type="text"
-									class="form-control" placeholder="Select Event Date" value="">
-								<span class="input-icon pe-7s-date"></span>
+				<div class="row">
+					<div class="col-sm-9">
+						<div class="row">
+							<div class="quote-info">
+								<label id="plan-quote-info">Please define your event
+									date and time</label>
 							</div>
 						</div>
-
+						<div id="wizard_content">
+							<div class="col-sm-8 col-sm-offset-2">
+								<label>EVENT DATE & TIME</label>
+								<div class="form-group">
+									<input id="wizard-date" name="plan-event-date" type="text"
+										class="form-control" placeholder="Select Event Date" value="">
+									<span class="input-icon pe-7s-date"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-2 col-sm-offset-3">
+								<button id="wizard-process-button-prev" class="btn btn-prev">PREVIOUS</button>
+							</div>
+							<div class="col-sm-4">
+								<button id="wizard-process-button-next" class="btn btn-next">NEXT</button>
+							</div>
+							<div class="col-sm-4 col-sm-offset-4">
+								<button id="wizard-process-button" class="btn btn-next"
+									onclick="firstWizardStep()">NEXT</button>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="mseva-plan">
+							<img th:src="@{/image/mseva-welcome.png}"></img>
+						</div>
 					</div>
 				</div>
-				<div class="row">
-					<input type="hidden" id="wizard-event-status">
-					<form name="plan_event_form" id="plan_event_form" method="POST"
-						th:action="@{/plan-package}">
-						<input type="hidden" id="wizard-event-date"
-							name="wizard-event-date"> <input type="hidden"
-							id="wizard-event-venue" name="wizard-event-venue"> <input
-							type="hidden" id="wizard-event-catering"
-							name="wizard-event-catering"> <input type="hidden"
-							id="wizard-event-decoration" name="wizard-event-decoration">
-						<input type="hidden" id="wizard-event-makeup"
-							name="wizard-event-makeup"> <input type="hidden"
-							id="wizard-event-photo" name="wizard-event-photo"> <input
-							type="hidden" id="wizard-event-eo" name="wizard-event-eo">
-						<input type="hidden" id="wizard-event-others"
-							name="wizard-event-others"><input type="hidden"
-							id="wizard-event-transport" name="wizard-event-transport">
-						<input type="hidden" id="wizard-event-location"
-							name="wizard-event-location">
-					</form>
-					<div class="col-sm-2 col-sm-offset-5">
-						<button id="wizard-process-button" class="btn btn-next"
-							onclick="firstWizardStep()">NEXT</button>
-					</div>
-					<div class="col-sm-2 col-sm-offset-4 col-xs-6">
-						<button id="wizard-process-button-prev" class="btn btn-warning">PREVIOUS</button>
-					</div>
-					<div class="col-sm-2 col-xs-6">
-						<button style="width: 70%;" id="wizard-process-button-next"
-							class="btn btn-warning" disabled="disabled">NEXT</button>
-					</div>
+			</div>
+			
+			
+			
+			
+			<div id="plan-data-container">
 
-				</div>
+				<input type="hidden" id="wizard-venue-categories"
+					th:value="${venueCategory}"> <input type="hidden"
+					id="wizard-event-status">
+				<form name="plan_event_form" id="plan_event_form" method="POST"
+					th:action="@{/plan-package}">
+					<input type="hidden" id="wizard-event-date"
+						name="wizard-event-date"> <input type="hidden"
+						id="wizard-event-venue" name="wizard-event-venue"> <input
+						type="hidden" id="wizard-event-catering"
+						name="wizard-event-catering"> <input type="hidden"
+						id="wizard-event-decoration" name="wizard-event-decoration">
+					<input type="hidden" id="wizard-event-makeup"
+						name="wizard-event-makeup"> <input type="hidden"
+						id="wizard-event-photo" name="wizard-event-photo"> <input
+						type="hidden" id="wizard-event-eo" name="wizard-event-eo">
+					<input type="hidden" id="wizard-event-others"
+						name="wizard-event-others"><input type="hidden"
+						id="wizard-event-transport" name="wizard-event-transport">
+					<input type="hidden" id="wizard-event-location"
+						name="wizard-event-location">
+				</form>
+
 			</div>
 		</div>
 	</div>

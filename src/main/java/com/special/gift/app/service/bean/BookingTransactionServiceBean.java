@@ -3,6 +3,8 @@ package com.special.gift.app.service.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,8 @@ import com.special.gift.app.service.BookingTransactionService;
 @Transactional(readOnly = true)
 public class BookingTransactionServiceBean implements BookingTransactionService {
 
+  private static final Logger log = LoggerFactory.getLogger(BookingTransactionServiceBean.class);
+
   @Autowired
   private BookingTransactionRepository repository;
 
@@ -32,6 +36,7 @@ public class BookingTransactionServiceBean implements BookingTransactionService 
     final TransactionConfirmation confirmation = new TransactionConfirmation();
     confirmation.setStatus('0');
     confirmation.setTransactionId(transaction.getTransactionId());
+    confirmation.setGroupTransactionId(transaction.getGroupTransactionId());
     repository.save(transaction);
     confirmationRepository.save(confirmation);
   }
@@ -64,15 +69,17 @@ public class BookingTransactionServiceBean implements BookingTransactionService 
   @Transactional(readOnly = false)
   @Override
   public void saveBookingBatch(Iterable<BookingTransaction> bookingTransactions) throws Exception {
-    repository.save(bookingTransactions);
     final List<TransactionConfirmation> confirmations = new ArrayList<>();
     TransactionConfirmation confirm = null;
     for (final BookingTransaction transaction : bookingTransactions) {
       confirm = new TransactionConfirmation();
       confirm.setStatus('0');
       confirm.setTransactionId(transaction.getTransactionId());
+      confirm.setGroupTransactionId(transaction.getGroupTransactionId());
       confirmations.add(confirm);
     }
+
+    repository.save(bookingTransactions);
     confirmationRepository.save(confirmations);
   }
 

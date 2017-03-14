@@ -41,5 +41,14 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     return new ShaPasswordEncoder(256);
   }
 
+  // @Bean
+  // JasperReportsViewResolver initJasperReportViewResolver() {
+  // final JasperReportsViewResolver resolver = new JasperReportsViewResolver();
+  // resolver.setSuffix(".jrxml");
+  // resolver.setViewNames("event-reporting");
+  // resolver.setViewClass(JasperReportsViewResolver.class);
+  // resolver.setOrder(0);
+  // return resolver;
+  // }
 
 }

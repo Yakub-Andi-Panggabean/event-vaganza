@@ -1,6 +1,6 @@
 <div id="ajax-content">
 	<div th:each="item, row: ${itemList}"
-		th:with="numList=${ {5,4,3,2,1,0} }"
+		th:with="numList=${ {3,2,1,0} }"
 		th:if="${row.count % 6 == 0 or row.last}" class="row">
 		<!-- Show all rows except the leftovers -->
 

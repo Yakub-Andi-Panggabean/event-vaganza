@@ -15,6 +15,9 @@ public class TransactionConfirmation {
   @Column(name = "transaction_id", nullable = false, length = 10)
   private String transactionId;
 
+  @Column(name = "group_transaction_id", nullable = false)
+  private String groupTransactionId;
+
   @Column(name = "status", nullable = false)
   private char status;
 
@@ -32,6 +35,14 @@ public class TransactionConfirmation {
 
   public void setTransactionId(String transactionId) {
     this.transactionId = transactionId;
+  }
+
+  public String getGroupTransactionId() {
+    return groupTransactionId;
+  }
+
+  public void setGroupTransactionId(String groupTransactionId) {
+    this.groupTransactionId = groupTransactionId;
   }
 
 

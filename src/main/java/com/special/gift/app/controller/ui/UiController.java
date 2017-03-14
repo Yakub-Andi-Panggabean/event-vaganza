@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.special.gift.app.domain.PackageVenue;
 import com.special.gift.app.domain.User;
@@ -66,6 +67,8 @@ public class UiController {
 
 
   public static final String QUICK_BOOKING = "quick-booking";
+  public static final String PLAN_EVENT_CATEGORIES = "event-categories";
+  public static final String PLAN_FORWARDER = "plan-forwarder/{venue_category}";
   public static final String PLAN_MY_EVENT = "plan-event";
 
 
@@ -125,7 +128,9 @@ public class UiController {
       final UserDto dto = new UserDto();
       user.setVendor(null);
       BeanUtils.copyProperties(user, dto);
+
       log.debug("user dto : {}", dto.toString());
+
       model.addAttribute("userData", new UserDto());
       model.addAttribute("existingData", dto);
     } catch (final Exception e) {
@@ -184,12 +189,8 @@ public class UiController {
         model.addAttribute("category_name", name.replace("-", " "));
         model.addAttribute("category_description", vendorDesc.getVendorDescription());
 
-        model.addAttribute("children1",
-            vendorDescService.findAllChildren(vendorDesc.getVendorType(), 0, 6));
-        model.addAttribute("children2",
-            vendorDescService.findAllChildren(vendorDesc.getVendorType(), 6, 13));
-        model.addAttribute("children3",
-            vendorDescService.findAllChildren(vendorDesc.getVendorType(), 13, 19));
+        model.addAttribute("children",
+            vendorDescService.findAllChildren(vendorDesc.getVendorType()));
 
         log.debug("vendor desc : {}", vendorDesc.toString());
 
@@ -248,12 +249,8 @@ public class UiController {
           model.addAttribute("parentName", parent.getVendorTypeName());
 
 
-          model.addAttribute("children1",
-              vendorDescService.findAllChildren(vendorDesc.getVendorType(), 0, 6));
-          model.addAttribute("children2",
-              vendorDescService.findAllChildren(vendorDesc.getVendorType(), 6, 13));
-          model.addAttribute("children3",
-              vendorDescService.findAllChildren(vendorDesc.getVendorType(), 13, 19));
+          model.addAttribute("children",
+              vendorDescService.findAllChildren(vendorDesc.getVendorType()));
 
           log.debug("vendor desc : {}", vendorDesc.toString());
 
@@ -346,17 +343,20 @@ public class UiController {
 
       final PackageVenue venue = venueService.findVenue(vendor.getVenueVendor());
 
-      log.debug("venue data : {}", venue.toString());
+      if (venue != null) {
+        log.debug("venue data : {}", venue.toString());
+        model.addAttribute("venueData", venue);
+      } else {
+        model.addAttribute("venueData", null);
+      }
 
       model.addAttribute("vendor", new VendorDto());
       model.addAttribute("vendorData", vendor);
-      model.addAttribute("venueData", venue);
       model.addAttribute("vendorTypes", session.getAttribute("vendorTypes"));
       model.addAttribute("availableVendorTypes", parents);
 
 
     } catch (final Exception ex) {
-      ex.printStackTrace();
       return "redirect:/";
     }
 
@@ -402,6 +402,10 @@ public class UiController {
   @RequestMapping(value = VENDOR_VIEW, method = RequestMethod.GET)
   public String renderVendorViewPage(Model model, HttpSession session) {
     try {
+
+      if (session.getAttribute("user") == null) {
+        return "redirect:/";
+      }
       model.addAttribute("user", session.getAttribute("user"));
       final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
       final List<Vendor> data = vendorService.findByUser(user);
@@ -422,8 +426,8 @@ public class UiController {
 
       model.addAttribute("existingVendor", vendorDto);
       model.addAttribute("vendorTypes", vendorTypes);
-      // model.addAttribute("",
-      // vendorService.getVendorConfirmations(data.get(0).getVendorId().getVendorId()));
+      model.addAttribute("vendorConfirmations",
+          vendorService.getVendorConfirmations(data.get(0).getVendorId().getVendorId()));
 
       session.setAttribute("vendorData", vendorDto);
       session.setAttribute("vendorTypes", vendorTypes);
@@ -440,9 +444,7 @@ public class UiController {
   public String renderQuickBookingPage(Model model) {
 
 
-    model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
-    model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
-    model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
+    model.addAttribute("categories", vendorDescService.findAllParents());
 
     model.addAttribute("imageRoot", imagePath);
 
@@ -454,18 +456,39 @@ public class UiController {
   public String renderPlanPage(Model model, HttpSession session, HttpServletRequest request) {
 
     if (session.getAttribute("user") == null) {
+
       return "redirect:/";
+
     } else {
 
-      model.addAttribute("categories1", vendorDescService.findAllParents(0, 4));
-      model.addAttribute("categories2", vendorDescService.findAllParents(4, 8));
-      model.addAttribute("categories3", vendorDescService.findAllParents(8, 12));
+      final String venueCategories = (String) model.asMap().get("venueCategory");
 
       model.addAttribute("imageRoot", imagePath);
+
+      if (venueCategories != null) {
+        model.addAttribute("venueCategory", venueCategories);
+      }
 
       return "contents/plan-event";
 
     }
+  }
+
+
+  @RequestMapping(value = PLAN_EVENT_CATEGORIES, method = RequestMethod.GET)
+  public String renderEventCategories() {
+
+    return "contents/plan-event-categories";
+  }
+
+  @RequestMapping(value = PLAN_FORWARDER, method = RequestMethod.GET)
+  public String eventForwarder(RedirectAttributes attributes,
+      @PathVariable(value = "venue_category") String venueCategories) {
+
+
+    attributes.addFlashAttribute("venueCategory", venueCategories);
+
+    return "redirect:/plan-event";
   }
 
 

@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.special.gift.app.controller.ui.UiController;
 import com.special.gift.app.domain.BookingTransaction;
+import com.special.gift.app.domain.PackageVenue;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
@@ -43,6 +44,7 @@ import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.SequenceService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorService;
+import com.special.gift.app.service.VenueService;
 import com.special.gift.app.util.SequenceUtil;
 import com.special.gift.app.util.exception.DataAlreadyExistException;
 
@@ -59,6 +61,7 @@ public class ActController {
 
   private static final String VENDOR_ACT_PATH = "vendor";
   private static final String VENDOR_UPDATE_ACT_PATH = "vendor-update";
+  private static final String VENDOR_CONFIRMATION = "vendor-confirmation";
 
   // booking
   public static final String BOOKING_REQUEST = "booking/request";
@@ -78,6 +81,9 @@ public class ActController {
   private VendorService vendorService;
 
   @Inject
+  private VenueService venueService;
+
+  @Inject
   private SequenceService sequenceService;
 
   @Inject
@@ -86,7 +92,7 @@ public class ActController {
   @Inject
   private BookingTransactionService bookingService;
 
-  @Autowired
+  @Inject
   private SequenceService sequence;
 
   @Value("${image.path.location}")
@@ -339,6 +345,9 @@ public class ActController {
 
       final Date bookingTime = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(bookingDate);
 
+      final Vendor vendor =
+          vendorService.findById(new VendorId(item.getVendorId(), item.getCategory()));
+
       dto.setDateBooking(new SimpleDateFormat("yyyyMMdd").format(bookingTime));
       dto.setTimeBooking(new SimpleDateFormat("HH:mm").format(bookingTime));
       dto.setEventId(packageId);
@@ -350,7 +359,7 @@ public class ActController {
       dto.setTransactionDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
       dto.setTransactionTime(new SimpleDateFormat("HH:mm").format(new Date()));
       dto.setUser(user);
-      dto.setVendor(vendorService.findById(new VendorId(item.getVendorId(), item.getCategory())));
+      dto.setVendor(vendor != null ? vendor : vendorService.findBySingleId(item.getVendorId()));
       dto.setTransactionId(sequence.generateSequence(SequenceUtil.TRANSACTION_ID_SEQ));
       dto.setVenueAddress(user.getUserAddress());
       dto.setGroupTransactionId(sequence.generateSequence(SequenceUtil.GROUP_TRANSACTION_ID_SEQ));
@@ -408,9 +417,7 @@ public class ActController {
       final List<String> list = new ArrayList<>();
       final List<ItemListDto> result = new ArrayList<>();
 
-      if (venue != null && !venue.equals("")) {
-        list.add(venue);
-      }
+
       if (catering != null && !catering.equals("")) {
         list.add(catering);
       }
@@ -433,10 +440,13 @@ public class ActController {
         list.add(transport);
       }
 
+      final List<ItemListDto> contents = new ArrayList<>();
 
       log.debug(
           " date : {}, venue : {}, catering: {},decoration : {}, makeup : {}, photo : {}, eo: {}, others : {}, transport : {}, location : {}",
           date, venue, catering, decoration, makeup, photo, eo, others, transport, location);
+
+
 
       FilterDto filter;
       if (list.size() > 0) {
@@ -444,21 +454,59 @@ public class ActController {
 
           filter = new FilterDto();
           filter.setId(key);
-          result.add(listingService.findAllList(request, null, filter).get(0));
+
+          final List<ItemListDto> items = listingService.findAllList(request, null, filter);
+
+          if (items.size() > 0) {
+            result.add(items.get(0));
+          }
+        }
+
+        contents.addAll(result);
+      }
+
+
+      if (venue != null && !venue.equals("")) {
+
+        final PackageVenue packageVenue = venueService.findByVendorId(venue);
+
+        if (packageVenue != null) {
+          final ItemListDto item = new ItemListDto();
+          item.setCapacity(Integer.parseInt(packageVenue.getRoomCapacity()));
+          item.setCategory(packageVenue.getVendorDesc().getVendorType());
+          item.setDescription(packageVenue.getVenuePackage());
+          item.setDiscountRate(packageVenue.getDiscountRate());
+          item.setId(packageVenue.getVenueId());
+          item.setImage(packageVenue.getVenuePortofolio());
+          item.setLocation(new StringBuilder(packageVenue.getVenueAddress()).append(",")
+              .append(packageVenue.getCity()).toString());
+          item.setMinimumPayment(packageVenue.getMinimumPayment());
+          item.setName(packageVenue.getVenueName());
+          item.setPackageType("venue");
+          item.setPaxPrice(packageVenue.getPaxPrice());
+          item.setPrice(packageVenue.getRentalPrice());
+          item.setRentDuration(packageVenue.getTimeRent());
+          item.setRoom(packageVenue.getVenueRoom());
+          item.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
+              .append("venue").append("/").append(packageVenue.getVenueId()).toString());
+          item.setVendorId(packageVenue.getVendor());
+          item.setVendorStyle("");
+          contents.add(item);
         }
       }
 
 
 
-      log.debug("res : {}", result.toString());
+      // log.debug("res : {}", result.toString());
 
       model.addAttribute("customPackage", dto);
-      model.addAttribute("items", result);
+      model.addAttribute("items", contents);
       model.addAttribute("eventDate", date);
       model.addAttribute("imageRoot", imagePath);
       model.addAttribute("customLocation", dto.getLocation());
 
 
+      log.debug("contents ----> {}", contents.toString());
     } catch (final Exception exception) {
       exception.printStackTrace();
     }
@@ -499,10 +547,33 @@ public class ActController {
       ItemListDto venue = null;
 
       if (eventVenue != null && !eventVenue.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventVenue);
-        venue = listingService.findAllList(request, null, filter).get(0);
+
+        final PackageVenue packageVenue = venueService.findByVendorId(eventVenue);
+
+        if (packageVenue != null) {
+          venue = new ItemListDto();
+          venue.setCapacity(Integer.parseInt(packageVenue.getRoomCapacity()));
+          venue.setCategory(packageVenue.getVendorDesc().getVendorType());
+          venue.setDescription(packageVenue.getVenuePackage());
+          venue.setDiscountRate(packageVenue.getDiscountRate());
+          venue.setId(packageVenue.getVenueId());
+          venue.setImage(packageVenue.getVenuePortofolio());
+          venue.setLocation(new StringBuilder(packageVenue.getVenueAddress()).append(",")
+              .append(packageVenue.getCity()).toString());
+          venue.setMinimumPayment(packageVenue.getMinimumPayment());
+          venue.setName(packageVenue.getVenueName());
+          venue.setPackageType("venue");
+          venue.setPaxPrice(packageVenue.getPaxPrice());
+          venue.setPrice(packageVenue.getRentalPrice());
+          venue.setRentDuration(packageVenue.getTimeRent());
+          venue.setRoom(packageVenue.getVenueRoom());
+          venue.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
+              .append("venue").append("/").append(packageVenue.getVenueId()).toString());
+          venue.setVendorId(packageVenue.getVendor());
+          venue.setVendorStyle("");
+        }
       }
+
 
       if (eventCatering != null && !eventCatering.equals("")) {
         filter = new FilterDto();
@@ -629,9 +700,6 @@ public class ActController {
 
         final List<BookingTransaction> bookingTransactions = new ArrayList<>();
 
-        String sequenceId = null;
-
-        final Vendor vendor = null;
 
         final String groupTransaction =
             sequenceService.generateSequence(SequenceUtil.GROUP_TRANSACTION_ID_SEQ);
@@ -643,48 +711,52 @@ public class ActController {
 
 
 
+        // log.debug("group transaction id ---> {}", groupTransaction);
         for (int i = 0; i < packagesArr.length; i++) {
 
-
-          sequenceId = sequence.generateSequence(SequenceUtil.TRANSACTION_ID_SEQ);
-
-
-          filter.setId(packagesArr[i]);
-
-          log.debug("package id : {}, booking date : {}, methode : {}", packagesArr[i], eventDate,
-              method);
-
-          final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
-
-          // log.debug("item to string : {}", item.toString());
+          if (groupTransaction != null) {
 
 
-          final BookingTransactionDto dto = new BookingTransactionDto();
-          dto.setDateBooking(new SimpleDateFormat("yyyyMMdd").format(bookingTime));
-          dto.setTimeBooking(new SimpleDateFormat("HH:mm").format(bookingTime));
-          dto.setEventId(packagesArr[i]);
-          dto.setMethodPayment(method);
-          dto.setPriceAll(item.getPrice());
-          dto.setPricePayment(item.getMinimumPayment());
-          dto.setStatuspayment('0');
-          dto.setStatusTransaction('0');
-          dto.setTransactionDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-          dto.setTransactionTime(new SimpleDateFormat("HH:mm").format(new Date()));
-          dto.setUser(user);
-          dto.setVendor(vendorService.findBySingleId(item.getVendorId()));
-          dto.setTransactionId(sequenceId);
-          dto.setGroupTransactionId(groupTransaction);
-          if (eventLocation != null && !eventLocation.equals("")) {
-            dto.setVenueAddress(eventLocation);
-          } else {
-            dto.setVenueAddress(venueEntity.getLocation());
+            final String sequenceId = sequence.generateSequence(SequenceUtil.TRANSACTION_ID_SEQ);
+
+
+            filter.setId(packagesArr[i]);
+
+            log.debug("package id : {}, booking date : {}, methode : {}", packagesArr[i], eventDate,
+                method);
+
+            final ItemListDto item = listingService.findAllList(request, null, filter).get(0);
+
+            // log.debug("item to string : {}", item.toString());
+            final BookingTransactionDto dto = new BookingTransactionDto();
+            dto.setDateBooking(new SimpleDateFormat("yyyyMMdd").format(bookingTime));
+            dto.setTimeBooking(new SimpleDateFormat("HH:mm").format(bookingTime));
+            dto.setEventId(packagesArr[i]);
+            dto.setMethodPayment(method);
+            dto.setPriceAll(item.getPrice());
+            dto.setPricePayment(item.getMinimumPayment());
+            dto.setStatuspayment('0');
+            dto.setStatusTransaction('0');
+            dto.setTransactionDate(new SimpleDateFormat("yyyyMMdd").format(new Date()));
+            dto.setTransactionTime(new SimpleDateFormat("HH:mm").format(new Date()));
+            dto.setUser(user);
+            dto.setVendor(vendorService.findBySingleId(item.getVendorId()));
+            dto.setTransactionId(sequenceId);
+            dto.setGroupTransactionId(groupTransaction);
+            if (eventLocation != null && !eventLocation.equals("")) {
+              dto.setVenueAddress(eventLocation);
+            } else {
+              dto.setVenueAddress(venueEntity.getLocation());
+            }
+
+            final BookingTransaction transaction = new BookingTransaction();
+
+            BeanUtils.copyProperties(dto, transaction);
+
+            bookingTransactions.add(transaction);
+
+
           }
-
-          final BookingTransaction transaction = new BookingTransaction();
-
-          BeanUtils.copyProperties(dto, transaction);
-
-          bookingTransactions.add(transaction);
 
         }
 
@@ -704,6 +776,40 @@ public class ActController {
     }
 
     return "outer/help";
+  }
+
+
+  @PostMapping(value = VENDOR_CONFIRMATION)
+  public String vendorConfirmation(Model model, @RequestBody MultiValueMap<String, String> formData,
+      HttpServletRequest request) {
+
+    log.debug("form data to string : {}", formData.toString());
+
+    final List<String> confirmedTransaction = new ArrayList<>();
+
+    try {
+      final Set<String> keys = formData.keySet();
+
+      for (final String key : keys) {
+        log.debug("keys : {}", key);
+
+        if (formData.getFirst(key).equals("a")) {
+          confirmedTransaction.add(key);
+        }
+      }
+
+
+      if (confirmedTransaction.size() > 0) {
+        for (final String confirmed : confirmedTransaction) {
+          vendorService.confirmBooking(confirmed);
+        }
+      }
+
+
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
+    return "redirect:/vendor-view";
   }
 
 

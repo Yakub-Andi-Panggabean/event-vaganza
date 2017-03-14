@@ -114,28 +114,36 @@
 							style="font-size: 18px; font-weight: 700; line-height: 20px; color: #ccc; margin: 10px 0px">REQUIRED
 							CONFIRMATION</p>
 					</div>
-					<div class="row">
-						<div class="col-sm-6">
-							<p>
-								<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
-									height="auto"></img>14 Februari 2017
-							</p>
-							<p>
-								<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
-									height="auto"></img>19.00 - 22.00 WIB
-							</p>
+					<form th:action="@{/vendor-confirmation}"
+						name="form_vendor_confirmation" method="POST">
+						<div th:each="confirmation,iter:${vendorConfirmations}">
+							<div class="row">
+								<div class="col-sm-6">
+									<h5 th:text="${confirmation.venueAddress}">Jln jaj</h5>
+									<p th:inline="text">
+										<img th:src="@{/image/icon-date-orange_16x16.png}"
+											width="16px" height="auto"></img>[[${confirmation.dateBooking}]]
+									</p>
+									<p th:inline="text">
+										<img th:src="@{/image/icon-time-orange_16x16.png}"
+											width="16px" height="auto"></img>[[${confirmation.timeBooking}]]
+										WIB
+									</p>
+								</div>
+								<div class="col-sm-3" style="padding: 5px">
+									<label class="radio"><input type="radio" value="a"
+										th:name="${confirmation.transactionId}" data-toggle="radio"
+										checked />ACCEPT</label> <label class="radio"><input
+										th:name="${confirmation.transactionId}" type="radio" value="d"
+										data-toggle="radio" />DECLINE</label>
+								</div>
+							</div>
+							<hr>
 						</div>
-						<div class="col-sm-3" style="padding: 5px">
-							<label class="radio"><input type="radio" value="a"
-								name="confirm1" data-toggle="radio" checked />ACCEPT</label> <label
-								class="radio"><input type="radio" value="d"
-								name="confirm1" data-toggle="radio" />DECLINE</label>
+						<div class="row">
+							<button class="btn btn-action">SUBMIT</button>
 						</div>
-					</div>
-					<hr>
-					<div class="row">
-						<button class="btn btn-action">SUBMIT</button>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>

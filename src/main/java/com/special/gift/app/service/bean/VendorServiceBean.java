@@ -1,5 +1,6 @@
 package com.special.gift.app.service.bean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.special.gift.app.domain.BookingTransaction;
+import com.special.gift.app.domain.TransactionConfirmation;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
@@ -40,6 +42,9 @@ public class VendorServiceBean implements VendorService {
 
   @Autowired
   private TransactionConfirmationRepository confirmationRepository;
+
+  SimpleDateFormat formatFrom = new SimpleDateFormat("yyyyMMdd");
+  SimpleDateFormat formatTo = new SimpleDateFormat("dd MMMM yyyy");
 
   @Override
   @Transactional(readOnly = false)
@@ -128,23 +133,40 @@ public class VendorServiceBean implements VendorService {
   }
 
   @Override
-  public List<BookingTransaction> getVendorConfirmations(String vendorId) {
-    // TODO Auto-generated method stub
-    // final List<BookingTransaction> BookingTransaction =
-    // transactionRepository.findByVendorId(vendorId);
+  public List<BookingTransaction> getVendorConfirmations(String vendorId) throws Exception {
+    final List<BookingTransaction> BookingTransaction =
+        transactionRepository.findVendorTransactions(vendorId);
 
     final List<BookingTransaction> unconfirmedTransaction = new ArrayList<>();
-    //
-    // for (final BookingTransaction trans : BookingTransaction) {
-    // for (final TransactionConfirmation confirm : confirmationRepository.findAll()) {
-    // if (confirm.getStatus() == '0'
-    // && confirm.getTransactionId().equals(trans.getTransactionId())) {
-    // unconfirmedTransaction.add(trans);
-    // }
-    // }
-    //
-    // }
+
+    for (final BookingTransaction trans : BookingTransaction) {
+      for (final TransactionConfirmation confirm : confirmationRepository.findAll()) {
+        if (confirm.getStatus() == '0'
+            && confirm.getTransactionId().equals(trans.getTransactionId())) {
+          trans.setDateBooking(formatTo.format(formatFrom.parse(trans.getTransactionDate())));
+          unconfirmedTransaction.add(trans);
+        }
+      }
+
+    }
+
+    log.debug("booked : {}", unconfirmedTransaction.toString());
     return unconfirmedTransaction;
+  }
+
+  @Override
+  @Transactional(readOnly = false)
+  public void confirmBooking(String transactionId) {
+
+    if (confirmationRepository.exists(transactionId)) {
+      final TransactionConfirmation tx = confirmationRepository.findOne(transactionId);
+      tx.setStatus('1');
+      confirmationRepository.save(tx);
+    } else {
+      log.debug("no record found for transaction id : {}", transactionId);
+    }
+
+
   }
 
 

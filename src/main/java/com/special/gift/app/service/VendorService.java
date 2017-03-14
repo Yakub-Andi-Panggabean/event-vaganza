@@ -30,6 +30,8 @@ public interface VendorService {
 
   Vendor findBySingleId(String id);
 
-  List<BookingTransaction> getVendorConfirmations(String vendorId);
+  List<BookingTransaction> getVendorConfirmations(String vendorId) throws Exception;
+
+  void confirmBooking(String transactionId);
 
 }

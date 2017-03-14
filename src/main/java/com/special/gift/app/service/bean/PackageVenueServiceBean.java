@@ -33,8 +33,13 @@ public class PackageVenueServiceBean implements VenueService {
 
   @Override
   public PackageVenue findVenue(String venueId) {
-    // TODO Auto-generated method stub
     return repository.findOne(venueId);
   }
+
+  @Override
+  public PackageVenue findByVendorId(String id) {
+    return repository.findVenueUsingVendorId(id);
+  }
+
 
 }

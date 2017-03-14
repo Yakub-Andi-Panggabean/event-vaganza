@@ -21,38 +21,41 @@
 					</div>
 
 					<div class="col col-md-8">
-						<div class="row">
-							<div class="col col-md-4 main-item-list">
-								<ul class="list-group">
-									<li class="list-group-item"
-										th:each="child,rowStat : ${children1}"><a class="item"
-										th:inline="text"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}">
-											<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(child.vendorTypeName)}]]
-									</a></li>
-								</ul>
+
+						<div th:each="item, row: ${children}"
+							th:with="numList=${ {2,1,0} }"
+							th:if="${row.count % 3 == 0 or row.last}" class="row"
+							style="margin-bottom: 10px;">
+
+
+							<div class="col col-md-4 main-item-list"
+								th:each="num : ${numList}"
+								th:with="dataIndex=(${row.index} - ${num})"
+								th:if="${row.count % 3 == 0}">
+
+
+								<a class="item" th:inline="text"
+									th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(children[dataIndex].vendorTypeName,' ','-')},c=${children[dataIndex].vendorType})}">
+									<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(children[dataIndex].vendorTypeName)}]]
+								</a>
+
 							</div>
-							<div class="col col-md-4 main-item-list">
-								<ul class="list-group">
-									<li class="list-group-item"
-										th:each="child,rowStat : ${children2}"><a class="item"
-										th:inline="text"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}">
-											<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(child.vendorTypeName)}]]
-									</a></li>
-								</ul>
+
+							<div class="col col-md-4 main-item-list"
+								th:each="num : ${numList}"
+								th:with="dataIndex=(${row.index} - ${num})"
+								th:if="${row.last} and ${row.count % 3 != 0} and ${num &lt; row.count % 3}">
+
+								<a class="item" th:inline="text"
+									th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(children[dataIndex].vendorTypeName,' ','-')},c=${children[dataIndex].vendorType})}">
+									<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(children[dataIndex].vendorTypeName)}]]
+								</a>
 							</div>
-							<div class="col col-md-4 main-item-list">
-								<ul class="list-group">
-									<li class="list-group-item"
-										th:each="child,rowStat : ${children3}"><a class="item"
-										th:inline="text"
-										th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(child.vendorTypeName,' ','-')},c=${child.vendorType})}">
-											<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(child.vendorTypeName)}]]
-									</a></li>
-								</ul>
-							</div>
+
+
 						</div>
+
+
 					</div>
 				</div>
 			</div>
@@ -67,12 +70,13 @@
 		<div class="col col-md-12">
 			<ol class="breadcrumb" style="background-color: #fff;">
 				<li><a style="color: #f7c62b" th:href="@{/}">Home</a></li>
-				<li><a style="color: #f7c62b" th:href="@{/categories}">Categories</a></li>
+				<li><a style="color: #f7c62b" th:href="@{/quick-booking}">Categories</a></li>
 				<li><a style="color: #f7c62b"
 					th:text="*{parentName != null}? *{parentName} : ''"
 					th:href="@{/categories/{category}(category=${parent},c=${root_type})}"></a></li>
 			</ol>
 		</div>
+
 		<!-- end of breadcumb -->
 
 		<div class="col col-md-12">

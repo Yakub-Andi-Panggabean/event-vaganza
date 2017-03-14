@@ -9,4 +9,6 @@ import com.special.gift.app.domain.TransactionConfirmation;
 public interface TransactionConfirmationRepository
     extends CrudRepository<TransactionConfirmation, String> {
 
+
+
 }

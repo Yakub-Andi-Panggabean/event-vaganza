@@ -6,79 +6,55 @@
 </head>
 <body>
 	<div th:fragment="content">
-		<div class="container-package-detail">
-			<div class="row">
-				<h3 class="headline">Pilih kategori</h3>
-				<hr class="headline-line">
-			</div>
+		<div class="row">
+			<div class="head-title">Quick Event Booking</div>
+		</div>
 
-			<!-- carousel -->
-			<br />
-			<div class="row category-container">
-				<!-- end of category header -->
-				<div class="col-md-12 main-item-list">
-					<div class="col-md-4">
+		<!-- carousel -->
+		<br />
+		<div class="row">
+			<div class="col-sm-9">
+				<div class="row">
+					<div class="quote-info">Select by category</div>
+				</div>
 
-						<div class="col-md-12" th:each="category,rowStat : ${categories1}"
-							th:id="${category.vendorType}" style="text-align: center">
+				<div class="row" style="margin-bottom: 20px"
+					th:each="item, row: ${categories}"
+					th:with="numList=${ {5,4,3,2,1,0} }"
+					th:if="${row.count % 6 == 0 or row.last}">
 
-							<label class="radio-thumb"> <input type="radio"
-								value="wd" name="event-type" /> <a
-								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
-								class="radio-img"> <img
-									th:src="${#strings.append(imageRoot,category.image)}"></img>
-									<div class="radio-img-desc" th:inline="text">
-										[[${#strings.capitalize(category.vendorTypeName)}]]</div>
-							</a>
-							</label>
-
-						</div>
-
-
-					</div>
-					<div class="col-md-4">
-
-						<div class="col-md-12" th:each="category,rowStat : ${categories2}"
-							th:id="${category.vendorType}" style="text-align: center">
-
-							<label class="radio-thumb"> <input type="radio"
-								value="wd" name="event-type" /> <a
-								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
-								class="radio-img"> <img
-									th:src="${#strings.append(imageRoot,category.image)}"></img>
-									<div class="radio-img-desc" th:inline="text">
-										[[${#strings.capitalize(category.vendorTypeName)}]]</div>
-							</a>
-							</label>
-
-						</div>
-
-
+					<div class="col-md-2 col-sm-3 col-xs-4" th:each="num : ${numList}"
+						th:with="dataIndex=(${row.index} - ${num})"
+						th:if="${row.count % 6 == 0}">
+						<a
+							th:href="@{/categories/{category}(category=${#strings.replace(categories[dataIndex].vendorTypeName,' ','-')},c=${categories[dataIndex].vendorType})}"
+							class="menu-icon"> <img
+							th:src="${#strings.append(imageRoot,categories[dataIndex].image)}"
+							width="100%" height="auto" style="max-width: 48px" />
+							<p class="menu-text" th:inline="text">[[${#strings.capitalize(categories[dataIndex].vendorTypeName)}]]</p>
+						</a>
 					</div>
 
-					<div class="col-md-4">
-
-						<div class="col-md-12" th:each="category,rowStat : ${categories3}"
-							th:id="${category.vendorType}" style="text-align: center">
-
-							<label class="radio-thumb"> <input type="radio"
-								value="wd" name="event-type" /> <a
-								th:href="@{/categories/{category}(category=${#strings.replace(category.vendorTypeName,' ','-')},c=${category.vendorType})}"
-								class="radio-img"> <img
-									th:src="${#strings.append(imageRoot,category.image)}"></img>
-									<div class="radio-img-desc" th:inline="text">
-										[[${#strings.capitalize(category.vendorTypeName)}]]</div>
-							</a>
-							</label>
-
-						</div>
-
-
+					<div class="col-md-2 col-sm-3 col-xs-4" th:each="num : ${numList}"
+						th:with="dataIndex=(${row.index} - ${num})"
+						th:if="${row.last} and ${row.count % 6 != 0} and ${num &lt; row.count % 6}">
+						<a
+							th:href="@{/categories/{category}(category=${#strings.replace(categories[dataIndex].vendorTypeName,' ','-')},c=${categories[dataIndex].vendorType})}"
+							class="menu-icon"> <img
+							th:src="${#strings.append(imageRoot,categories[dataIndex].image)}"
+							width="100%" height="auto" style="max-width: 48px" />
+							<p class="menu-text" th:inline="text">[[${#strings.capitalize(categories[dataIndex].vendorTypeName)}]]</p>
+						</a>
 					</div>
 				</div>
 			</div>
-
+			<div class="col-sm-3">
+				<div class="mseva-plan">
+					<img th:src="@{/image/mseva-welcome.png}"></img>
+				</div>
+			</div>
 		</div>
+
 	</div>
 </body>
 </html>

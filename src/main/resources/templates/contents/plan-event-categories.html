@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+	name="viewport" />
+</head>
+
+<body>
+	<div th:fragment="content">
+		<div class="row">
+			<div class="head-title">Plan My Event</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-9">
+				<div class="row">
+					<div class="quote-info">Select your event type</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<a class="select-event">
+							<div class="img-button-event">
+								<img th:src="@{/image/button-icon-wedding.png}"></img>
+							</div>
+							<div onclick="validatePlanEvent('002')" class="button-wedding">WEDDING</div>
+						</a>
+					</div>
+					<div class="col-sm-4">
+						<a class="select-event">
+							<div class="img-button-event">
+								<img th:src="@{/image/button-icon-birthday.png}"></img>
+							</div>
+							<div onclick="validatePlanEvent('004')" class="button-birthday">BIRTHDAY</div>
+						</a>
+					</div>
+					<div class="col-sm-4">
+						<a class="select-event">
+							<div class="img-button-event">
+								<img th:src="@{/image/button-icon-corporate.png}"></img>
+							</div>
+							<div onclick="validatePlanEvent('001');" class="button-corporate">CORPORATE</div>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="mseva-plan">
+					<img th:src="@{/image/mseva-welcome.png}"></img>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

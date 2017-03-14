@@ -91,10 +91,10 @@
 						</div>
 
 						<div class="row total">
-							<div class="col-xs-7">
+							<div class="col-xs-4">
 								<p class="box-label">TOTAL</p>
 							</div>
-							<div class="col-xs-5">
+							<div class="col-xs-8">
 								<p class="box-info"
 									th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.
 									000.000</p>
@@ -111,7 +111,7 @@
 					<div class="row">
 						<label class="radio"> <input type="radio" value="dp"
 							name="pay-amount" data-toggle="radio" checked />I will Pay
-							Booking Fee only (10%)
+							Booking Fee only
 						</label> <label class="radio"> <input type="radio" value="fp"
 							name="pay-amount" data-toggle="radio" />I will Pay Full (100%)
 						</label>
@@ -145,7 +145,7 @@
 						<p>
 							<strong>SELECT YOUR PAYMENT METHOD</strong>
 						</p>
-						<label class="radio"> <input type="radio" value="P"
+						<label class="radio"> <input type="radio" value="C"
 							name="pay-method" data-toggle="radio" checked /> Credit Card <img
 							th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
 							<img th:src="@{/image/logo-mastercard.png}" width="48px"

@@ -1,78 +1,84 @@
-<div id="ajax-content" align="center">
-	<div th:each="item, row: ${itemList}"
-		th:with="numList=${ {5,4,3,2,1,0} }"
-		th:if="${row.count % 6 == 0 or row.last}" class="row">
-		<!-- Show all rows except the leftovers -->
+<!-- <div id="ajax-content" align="center"> -->
+<div th:each="item, row: ${itemList}" th:with="numList=${ {3,2,1,0} }"
+	th:if="${row.count % 4 == 0 or row.last}" class="row"
+	style="margin-bottom: 20px">
+	<!-- Show all rows except the leftovers -->
 
-		<div
-			th:onclick="'Javascript:selectItem(\''+${itemList[dataIndex].name}+'\',\''+${itemList[dataIndex].id}+'\')'"
-			class="col-sm-2 item-list" th:each="num : ${numList}"
-			th:with="dataIndex=(${row.index} - ${num})"
-			th:if="${row.count % 6 == 0}" align="left"
-			style="margin-bottom: 20px; cursor: pointer;">
+	<div
+		th:onclick="'Javascript:selectItem(\''+${itemList[dataIndex].name}+'\',\''+${itemList[dataIndex].id}+'\')'"
+		th:each="num : ${numList}" th:with="dataIndex=(${row.index} - ${num})"
+		th:if="${row.count % 4 == 0}" class="col-sm-4 col-xs-6" align="left"
+		style="padding: 0px">
 
-			<img
-				th:src=" ${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}"
-				width="100%" height="250px" style="max-width: 180px;"></img>
-
-			<h6 th:inline="text">[[${itemList[dataIndex].name}]]</h6>
-			<br />
-			<p th:inline="text">[[${itemList[dataIndex].room!=null
+		<div class="item-thumbnail">
+			<div class="item-name" th:inline="text">[[${itemList[dataIndex].name}]]</div>
+			<div class="item-image">
+				<img
+					th:src=" ${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}" />
+			</div>
+			<div class="item-desc" th:inline="text">[[${itemList[dataIndex].room!=null
 				&&!itemList[dataIndex].room.equals('')}?${#strings.append(#strings.toUpperCase(itemList[dataIndex].room),'-')}:'']]
-				Capacity [[${itemList[dataIndex].capacity}]] Person</p>
-
-			<p th:inline="text">[[${itemList[dataIndex].location}]]</p>
-
-			<p th:inline="text">[[${not
+				Capacity [[${itemList[dataIndex].capacity}]] Person</div>
+			<div class="item-price" th:inline="text">[[${not
 				itemList[dataIndex].vendorStyle.equals('')}?${#strings.append(#strings.capitalize(itemList[dataIndex].vendorStyle),'
 				style')}: ${#strings.append(#strings.append('Start from
 				Rp.',#numbers.formatDecimal(itemList[dataIndex].paxPrice,3,'POINT',2,'COMMA')),'
-				/pax')} ]]</p>
-
-			<p th:inline="text">Only For [[${#strings.append('Rp.
-				',#numbers.formatDecimal(itemList[dataIndex].price,3,'POINT',2,'COMMA'))}]]</p>
-
-			<p th:inline="text">
-				Book now only for <br /> [[${#strings.append('Rp.
-				',#numbers.formatDecimal(itemList[dataIndex].minimumPayment,3,'POINT',2,'COMMA'))}]]
-			</p>
-
+				/pax')} ]]</div>
+			<a><div class="item-detail">See More Detail</div></a>
 		</div>
 
-		<!-- Show the remainders (eg, if there are 9 items, the last row will have one item in it) -->
+	</div>
 
-		<div
-			th:onclick="'Javascript:selectItem(\''+${itemList[dataIndex].name}+'\',\''+${itemList[dataIndex].id}+'\')'"
-			class="col-sm-2 item-list" th:each="num : ${numList}"
-			th:with="dataIndex=(${row.index} - ${num})"
-			th:if="${row.last} and ${row.count % 6 != 0} and ${num &lt; row.count % 6}"
-			align="left" style="margin-bottom: 20px; cursor: pointer;">
+	<!-- Show the remainders (eg, if there are 9 items, the last row will have one item in it) -->
 
-			<img
-				th:src="${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}"
-				width="100%" height="250px" style="max-width: 180px;"></img>
+	<div
+		th:onclick="'Javascript:selectItem(\''+${itemList[dataIndex].name}+'\',\''+${itemList[dataIndex].packageType.equals('venue')?itemList[dataIndex].vendorId:itemList[dataIndex].id}+'\')'"
+		th:each="num : ${numList}" th:with="dataIndex=(${row.index} - ${num})"
+		th:if="${row.last} and ${row.count % 4 != 0} and ${num &lt; row.count % 4}"
+		class="col-sm-4 col-xs-6" align="left" style="padding: 0px">
 
-			<h6 th:inline="text">[[${itemList[dataIndex].name}]]</h6>
-			<br />
-			<p th:inline="text">[[${itemList[dataIndex].room!=null
+		<div class="item-thumbnail">
+			<div class="item-name" th:inline="text">[[${itemList[dataIndex].name}]]</div>
+			<div class="item-image">
+				<img
+					th:src=" ${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}" />
+			</div>
+			<div class="item-desc" th:inline="text">[[${itemList[dataIndex].room!=null
 				&&!itemList[dataIndex].room.equals('')}?${#strings.append(#strings.toUpperCase(itemList[dataIndex].room),'-')}:'']]
-				Capacity [[${itemList[dataIndex].capacity}]] Person</p>
-
-			<p th:inline="text">[[${itemList[dataIndex].location}]]</p>
-
-			<p th:inline="text">[[${not
+				Capacity [[${itemList[dataIndex].capacity}]] Person</div>
+			<div class="item-price" th:inline="text">[[${not
 				itemList[dataIndex].vendorStyle.equals('')}?${#strings.append(#strings.capitalize(itemList[dataIndex].vendorStyle),'
 				style')}: ${#strings.append(#strings.append('Start from
 				Rp.',#numbers.formatDecimal(itemList[dataIndex].paxPrice,3,'POINT',2,'COMMA')),'
-				/pax')} ]]</p>
-
-			<p th:inline="text">Only For [[${#strings.append('Rp.
-				',#numbers.formatDecimal(itemList[dataIndex].price,3,'POINT',2,'COMMA'))}]]</p>
-
-			<p th:inline="text">
-				Book now only for <br /> [[${#strings.append('Rp.
-				',#numbers.formatDecimal(itemList[dataIndex].minimumPayment,3,'POINT',2,'COMMA'))}]]
-			</p>
+				/pax')} ]]</div>
+			<div class="item-unit">/ Pax</div>
+			<a><div class="item-detail">See More Detail</div></a>
 		</div>
+		<!-- 		<img -->
+		<!-- 			th:src="${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}" -->
+		<!-- 			width="100%" height="250px" style="max-width: 180px;"></img> -->
+
+		<!-- 		<h6 th:inline="text">[[${itemList[dataIndex].name}]]</h6> -->
+		<!-- 		<br /> -->
+		<!-- 		<p th:inline="text">[[${itemList[dataIndex].room!=null -->
+		<!-- 			&&!itemList[dataIndex].room.equals('')}?${#strings.append(#strings.toUpperCase(itemList[dataIndex].room),'-')}:'']] -->
+		<!-- 			Capacity [[${itemList[dataIndex].capacity}]] Person</p> -->
+
+		<!-- 		<p th:inline="text">[[${itemList[dataIndex].location}]]</p> -->
+
+		<!-- 		<p th:inline="text">[[${not -->
+		<!-- 			itemList[dataIndex].vendorStyle.equals('')}?${#strings.append(#strings.capitalize(itemList[dataIndex].vendorStyle),' -->
+		<!-- 			style')}: ${#strings.append(#strings.append('Start from -->
+		<!-- 			Rp.',#numbers.formatDecimal(itemList[dataIndex].paxPrice,3,'POINT',2,'COMMA')),' -->
+		<!-- 			/pax')} ]]</p> -->
+
+		<!-- 		<p th:inline="text">Only For [[${#strings.append('Rp. -->
+		<!-- 			',#numbers.formatDecimal(itemList[dataIndex].price,3,'POINT',2,'COMMA'))}]]</p> -->
+
+		<!-- 		<p th:inline="text"> -->
+		<!-- 			Book now only for <br /> [[${#strings.append('Rp. -->
+		<!-- 			',#numbers.formatDecimal(itemList[dataIndex].minimumPayment,3,'POINT',2,'COMMA'))}]] -->
+		<!-- 		</p> -->
 	</div>
 </div>
+<!-- </div> -->

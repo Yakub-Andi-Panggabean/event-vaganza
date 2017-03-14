@@ -18,7 +18,7 @@ public class BookingTransaction {
   @Column(name = "transaction_id", nullable = false, length = 20)
   private String transactionId;
 
-  @Column(name = "group_transaction_id", nullable = false, length = 20)
+  @Column(name = "group_transaction_id", length = 20)
   private String groupTransactionId;
 
   @Column(name = "transaction_date", nullable = false, length = 6)

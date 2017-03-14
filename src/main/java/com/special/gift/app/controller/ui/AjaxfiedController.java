@@ -111,7 +111,8 @@ public class AjaxfiedController {
       final FilterDto filter = new FilterDto();
       if (!type.equalsIgnoreCase("venue")) {
 
-        filter.setVenue(venue);
+        // filter.setVenue(venue);
+        filter.setVendorId(venue);
         filter.setParent(type);
 
         log.debug("venue > : {}, type > : {} ", venue, type);
@@ -155,6 +156,12 @@ public class AjaxfiedController {
       produces = MediaType.TEXT_HTML_VALUE)
   public String renderEventLocation() {
     return "partial/custom-location-section";
+  }
+
+
+
+  public String renderVenueUsingType() {
+    return "partial/package-section";
   }
 
 

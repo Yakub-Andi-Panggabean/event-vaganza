@@ -10,4 +10,6 @@ public interface VenueService {
 
   PackageVenue findVenue(String venueId);
 
+  PackageVenue findByVendorId(String id);
+
 }

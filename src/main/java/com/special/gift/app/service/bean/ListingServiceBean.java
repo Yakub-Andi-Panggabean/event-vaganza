@@ -69,7 +69,7 @@ public class ListingServiceBean implements ListingService {
         dto.setId(packages.getPackageId());
         dto.setImage(packages.getPackageImg().substring(0,
             (packages.getPackageImg().length() > 0 ? packages.getPackageImg().length() - 1 : 0)));
-        dto.setLocation(vendor.getAddress());
+        dto.setLocation(vendor != null ? vendor.getAddress() : "");
         dto.setMinimumPayment(packages.getMinimumPayment());
         dto.setName(packages.getPackageName());
         dto.setPackageType(PACKAGE_VENDOR);
@@ -157,7 +157,8 @@ public class ListingServiceBean implements ListingService {
 
       // log.debug("filter : {}", filter.toString());
 
-      if ((filter.getVenue() == null || filter.getVenue().isEmpty())
+      if ((filter.getVendorId() == null || filter.getVendorId().isEmpty())
+          && (filter.getVenue() == null || filter.getVenue().isEmpty())
           && (filter.getParent() == null || filter.getParent().isEmpty())
           && (filter.getCategory() == null || filter.getCategory().isEmpty()
               || filter.getCategory().equals(""))
@@ -189,6 +190,7 @@ public class ListingServiceBean implements ListingService {
           boolean isPackageTypeValid = true;
           boolean isCategoryValid = true;
           boolean isVenueValid = true;
+          boolean isVendorValid = true;
 
           if (filter.getParent() != null) {
             isParentValid = filter.getParent().length() > 2
@@ -273,23 +275,37 @@ public class ListingServiceBean implements ListingService {
 
           }
 
-          // filter package based on vendor venue
+          // filter package based on vendor venue (unsused)
           if (filter.getVenue() != null && !filter.getVenue().isEmpty()
               && item.getPackageType().equals(PACKAGE_VENDOR)) {
 
             final Vendor vendor = vendorRepository.findSingleVendorById(item.getVendorId());
 
-            log.debug("venue venodr : ------> {},filter venue :-----> {}", vendor.getVenueVendor(),
-                filter.getVenue());
+            // log.debug("venue venodr : ------> {},filter venue :-----> {}",
+            // vendor.getVenueVendor(),
+            // filter.getVenue());
 
-            isVenueValid = vendor.getVenueVendor().equals(filter.getVenue());
+            isVenueValid = vendor != null && vendor.getVenueVendor().equals(filter.getVenue());
 
+          }
+
+
+          // filter package based on vendor venue
+          if (filter.getVendorId() != null && !filter.getVendorId().isEmpty()) {
+
+            // log.debug("filtering vendor id : {},item vendor id:{}", filter.getVendorId(),
+            // item.getVendorId());
+
+            final Vendor vendor = vendorRepository.findSingleVendorById(item.getVendorId());
+
+            isVendorValid = filter.getVendorId().equalsIgnoreCase(vendor.getVenueVendor())
+                || filter.getVendorId().equals(item.getVendorId());
           }
 
 
           final boolean isItemValid = isParentValid && isIdValid && isCapacityValid && isCityValid
               && isKeywordValid && isBetweenPrice && isMaxPriceValid && isMinPriceValid
-              && isPackageTypeValid && isCategoryValid && isVenueValid;
+              && isPackageTypeValid && isCategoryValid && isVenueValid && isVendorValid;
 
           if (isItemValid) {
             filteredList.add(item);

@@ -28,7 +28,7 @@
 							<label>NAME</label>
 						</div>
 						<div class="col-sm-7">
-							<label id="vendor_venue_name" th:text="${venueData.venueName}"></label>
+							<label id="vendor_venue_name" th:text="${venueData!=null?venueData.venueName:'no venue found'}"></label>
 						</div>
 					</div>
 					<div class="row">
@@ -36,7 +36,7 @@
 							<label>City</label>
 						</div>
 						<div class="col-sm-7">
-							<label id="vendor_venue_city" th:text="${venueData.city}"></label>
+							<label id="vendor_venue_city" th:text="${venueData!=null?venueData.city:''}"></label>
 						</div>
 					</div>
 					<div class="row">
@@ -45,7 +45,7 @@
 						</div>
 						<div class="col-sm-7">
 							<label id="vendor_venue_address"
-								th:text="${venueData.venueAddress}"></label>
+								th:text="${venueData!=null?venueData.venueAddress:''}"></label>
 						</div>
 					</div>
 					<div class="col-sm-12">

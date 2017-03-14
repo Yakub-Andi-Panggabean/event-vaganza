@@ -25,42 +25,31 @@ public class VendorDescServiceBean implements VendorDescService {
 
 
   @Override
-  public Page<VendorDesc> findAllParents(long start, long limit) {
+  public List<VendorDesc> findAllParents() {
     final Iterable<VendorDesc> categories = repository.findAll();
 
-    List<VendorDesc> contents = new ArrayList<>();
+    final List<VendorDesc> contents = new ArrayList<>();
 
     for (final VendorDesc vendorDesc : categories) {
       if (vendorDesc.getVendorType().length() > 2
           && String.valueOf(vendorDesc.getVendorType().charAt(2)).equals("0")) {
         vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
+
+        if (vendorDesc.getImage().contains(":")) {
+          final String image =
+              vendorDesc.getImage().substring(0, vendorDesc.getImage().length() - 1);
+          vendorDesc.setImage(image);
+        }
+
         contents.add(vendorDesc);
       }
     }
 
     log.debug("parent categories size : {}", contents.size());
 
-    if (contents.size() > 0) {
+    // final Page<VendorDesc> results = new PageImpl<VendorDesc>(contents);
 
-      if (limit > (contents.size() - 1)) {
-        limit = contents.size();
-      }
-
-      if (start > (contents.size() - 1)) {
-        start = contents.size();
-      }
-
-      log.debug("start : {}, limit : {}", start, limit);
-
-      contents = contents.subList((int) start, (int) limit);
-
-    }
-
-
-
-    final Page<VendorDesc> results = new PageImpl<VendorDesc>(contents);
-
-    return results;
+    return contents;
   }
 
   @Override
@@ -86,6 +75,7 @@ public class VendorDescServiceBean implements VendorDescService {
         if (!parent.equals(vendorDesc.getVendorType()) && !String
             .valueOf(vendorDesc.getVendorType().charAt(vendorDesc.getVendorType().length() - 1))
             .equals("0")) {
+
 
           contents.add(vendorDesc);
 
@@ -124,6 +114,46 @@ public class VendorDescServiceBean implements VendorDescService {
   @Override
   public Page<VendorDesc> findAll() {
     return repository.findAll(new PageRequest(0, (int) repository.count()));
+  }
+
+  @Override
+  public List<VendorDesc> findAllChildren(String parent) {
+
+    log.debug("parents : {}", parent);
+
+    final Iterable<VendorDesc> categories = repository.findAll();
+
+    final List<VendorDesc> contents = new ArrayList<>();
+
+    for (final VendorDesc vendorDesc : categories) {
+
+      // check if the first two digits character is equal
+      if (vendorDesc.getVendorType().length() > 2
+          && vendorDesc.getVendorType().substring(0, 2).equals(parent.substring(0, 2))) {
+
+        // log.debug("compare parent : {}, afters substring {}", parent, parent.substring(0, 2));
+        // log.debug("compare child : {}, afters substring {}", vendorDesc.getVendorType(),
+        // vendorDesc.getVendorType().substring(0, 2));
+
+        log.debug("parent : {}, child : {}", parent, vendorDesc.getVendorType());
+
+        vendorDesc.setVendorTypeName(vendorDesc.getVendorTypeName().toLowerCase());
+
+        if (!parent.equals(vendorDesc.getVendorType()) && !String
+            .valueOf(vendorDesc.getVendorType().charAt(vendorDesc.getVendorType().length() - 1))
+            .equals("0")) {
+
+
+          contents.add(vendorDesc);
+
+        }
+      }
+    }
+
+    log.debug("children of {} category size : {}", parent, contents.size());
+    log.debug("contents : >>>>> {}", contents.toString());
+
+    return contents;
   }
 
 

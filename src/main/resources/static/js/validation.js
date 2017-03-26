@@ -850,6 +850,9 @@ function authenticateBooking() {
 	var password = $('#z-password').val();
 
 	var enc = window.btoa(username + ":" + password);
+	
+	var loadingAuth = $('#bar-progress').html();
+	$('#z-exception').html(loadingAuth);
 
 	$.ajax({
 		url : '/' + servletContext + '/login',
@@ -945,6 +948,9 @@ function authenticatePlanEvent(category) {
 	var password = $('#z-password').val();
 
 	var enc = window.btoa(username + ":" + password);
+	
+	var loadingAuth = $('#bar-progress').html();
+	$('#z-exception').html(loadingAuth);
 
 	$.ajax({
 		url : '/' + servletContext + '/login',

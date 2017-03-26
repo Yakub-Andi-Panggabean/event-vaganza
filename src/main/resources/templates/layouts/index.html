@@ -22,6 +22,7 @@
 <link type="text/css" th:href="@{/css/jquery-ui-timepicker-addon.css}"
 	rel="stylesheet"></link>
 <link th:href="@{/css/progress.css}" rel="stylesheet"></link>
+<link th:href="@{/css/progress-bar.css}" rel="stylesheet"></link>
 <link th:href="@{/css/sweetalert2.min.css}" rel="stylesheet"></link>
 <body>
 
@@ -195,6 +196,19 @@
 		</div>
 	</div>
 
+
+	<div id="bar-progress">
+		<div class="progress-container">
+			<div class="progress">
+				<div class="progress-bar">
+					<div class="progress-shadow"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
 	<input type="hidden" id="server_image_path"
 		th:value="${serverImagePath}">
 
@@ -220,8 +234,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script th:src="@{/js/jquery-ui-timepicker-addon.js}"
 	type="text/javascript"></script>
-<script th:src="@{/js/sweetalert2.min.js}"
-	type="text/javascript"></script>
+<script th:src="@{/js/sweetalert2.min.js}" type="text/javascript"></script>
 
 <script>
 	$('span').click(

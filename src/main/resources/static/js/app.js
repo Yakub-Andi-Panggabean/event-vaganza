@@ -41,6 +41,7 @@ function init() {
 	loadVenueListInfo();
 
 	$('#spinner-progress').hide();
+	$('#bar-progress').hide();
 	$('#wizard-process-button-prev').hide();
 	$('#wizard-process-button-next').hide();
 	$('#text-plan-item').hide();
@@ -157,6 +158,9 @@ function authenticate() {
 	var password = $('#z-password').val();
 
 	var enc = window.btoa(username + ":" + password);
+	
+	var loadingAuth = $('#bar-progress').html();
+	$('#z-exception').html(loadingAuth);
 
 	$.ajax({
 		url : '/' + servletContext + '/login',

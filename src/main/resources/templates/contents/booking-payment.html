@@ -22,7 +22,8 @@
 					<div class="row">
 						<div class="col-xs-3" style="padding: 0px">
 							<img
-								th:src="${#strings.append(imageRoot,#strings.arraySplit(package.image, ':')[0])}"
+								th:src="${package.image!=null&&!package.image.equals('')}?
+								${#strings.append(imageRoot,#strings.arraySplit(package.image, ':')[0])}:@{/image/no_image.png}"
 								width="100%" height="auto"></img>
 						</div>
 						<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
@@ -45,7 +46,7 @@
 							</p>
 						</div>
 					</div>
-					<div class="book-request-box">
+					<div class="book-info-box">
 						<div class="row">
 							<div class="col-xs-4">
 								<p class="box-label">BOOK BY</p>
@@ -71,68 +72,96 @@
 							</div>
 						</div>
 					</div>
-					<div class="cost-estimate-box">
-						<div class="row cost-title">
+					<div class="cost-estimate-detail">
+						<div class="cost-estimate-title">
 							<p>
 								<img th:src="@{/image/icon-cost-orange_16x16.png}" width="16px"
 									height="auto" style="margin-right: 10px"></img>FINAL COST
 							</p>
 						</div>
-						<hr>
-						<div class="row cost-list">
-							<div class="col-xs-7">
-								<p th:inline="text">Venue Rental for
-									[[${package.rentDuration}]] Hours</p>
-							</div>
-							<div class="col-xs-5">
-								<p
-									th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.000</p>
+						<hr class="cost-estimate-line">
+						<div class="cost-estimate-content">
+							<div class="row">
+
+								<div class="col-xs-6">
+
+									<div class="cost-price" th:inline="text">Venue Rental for
+										[[${package.rentDuration}]] Hours</div>
+
+								</div>
+								<div class="col-xs-6">
+
+									<div class="cost-price">
+										<p
+											th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.000</p>
+									</div>
+
+								</div>
+
 							</div>
 						</div>
+					</div>
 
-						<div class="row total">
+					<div class="cost-estimate-total">
+						<div class="row">
 							<div class="col-xs-4">
-								<p class="box-label">TOTAL</p>
+								<p class="cost-total">TOTAL</p>
 							</div>
 							<div class="col-xs-8">
-								<p class="box-info"
+								<p class="cost-total-price"
 									th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.
 									000.000</p>
 							</div>
 						</div>
-
 					</div>
+
 				</div>
 
 				<div class="col-sm-6">
+					
 					<div class="row">
 						<p>Please confirm your booking :</p>
 					</div>
+					
 					<div class="row">
-						<label class="radio"> <input type="radio" value="dp"
-							name="pay-amount" data-toggle="radio" checked />I will Pay
-							Booking Fee only
-						</label> <label class="radio"> <input type="radio" value="fp"
-							name="pay-amount" data-toggle="radio" />I will Pay Full (100%)
-						</label>
+						<label class="radio"><input type="radio" value="fee"
+							name="booking-pay-amount" id="booking-fee-amount"
+							data-toggle="radio" checked />I will Pay Booking Fee only</label> <label
+							class="radio"><input type="radio" value="full"
+							name="booking-pay-amount" id="booking-full-amount"
+							data-toggle="radio" />I will Pay Full</label>
 					</div>
-					<br>
+
 					<div class="row">
-						<p>
-							<strong>PAY BOOKING FEE ONLY</strong>
-						</p>
-						<p>Booking Cost</p>
-						<div style="font-size: 18px; color: #f7c21d; font-weight: 700"
-							th:inline="text">Rp.
-							[[${#numbers.formatDecimal(package.minimumPayment,3,'POINT',2,'COMMA')}]]</div>
-						<br>
+						<div class="payment-type" id="booking-fee">
+							<p>
+								<strong>PAY BOOKING FEE ONLY</strong>
+							</p>
+							<p>Booking Fee Amount</p>
+							<div class="payment-amount" th:inline="text">Rp.
+								[[${#numbers.formatDecimal(package.minimumPayment,3,'POINT',2,'COMMA')}]]</div>
+						</div>
+						<div class="payment-type" id="booking-full">
+							<p>
+								<strong>FULL PAYMENT</strong>
+							</p>
+							<p>Full Payment Amount</p>
+							<div class="payment-amount" th:inline="text">Rp.
+								[[${#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA')}]]</div>
+						</div>
+					</div>
+
+					<br />
+
+					<div class="row">
+
 						<p th:inline="text">Full payment should be transferred before
 							[[${#dates.format(maxPaymentDate, 'yyyy - MM -dd')}]] (D-30 of
 							the event date) to Event Vaganza account</p>
 						<p th:inline="text">
 							<img th:src="@{/image/logo-bca.png}" width="40px" height="auto"
-								style="margin-right: 10px"></img>Account Number : [[${norek1}]] |
-							Account Name : [[${acc1}]]
+								style="margin-right: 10px"></img>Account Number : [[${norek1}]]
+							| Account Name : [[${acc1}]]
 						</p>
 						<p th:inline="text">
 							<img th:src="@{/image/logo-mandiri.png}" width="40px"

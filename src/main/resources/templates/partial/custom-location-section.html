@@ -1,10 +1,34 @@
+<div class="row">
+	<div class="quote-info">
+		<label id="plan-quote-info" th:inline="text">Please tell us
+			your desired location</label>
+	</div>
+</div>
+
 <div class="col-sm-6 col-sm-offset-3">
 	<div class="row">
 		<div class="col-sm-12">
 			<label>Event Location</label>
-			<div class="form-group">
-				<textarea class="form-control" rows="5" id="custom-event-location"></textarea>
-			</div>
+			<form th:action="@{/}" method="POST" >
+
+				<div class="form-group">
+					<input type="hidden" th:value="${transactionId}">
+					<textarea class="form-control" rows="5" id="custom-event-location"></textarea>
+				</div>
+
+			</form>
 		</div>
 	</div>
+</div>
+
+<div class="row">
+
+	<div class="col-sm-2 col-sm-offset-4">
+		<button class="btn btn-prev">PREVIOUS</button>
+	</div>
+
+	<div class="col-sm-4">
+		<button id="button_plan_event_next" class="btn btn-next" th:onclick="'Javascript:defineCustomLocation('+${transactionId}+')'">Create</button>
+	</div>
+
 </div>

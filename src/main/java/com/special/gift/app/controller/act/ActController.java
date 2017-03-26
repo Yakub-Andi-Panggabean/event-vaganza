@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,8 @@ import com.special.gift.app.domain.PackageVenue;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.domain.VendorId;
+import com.special.gift.app.domain.WizardStepMaster;
+import com.special.gift.app.domain.WizardValue;
 import com.special.gift.app.dto.BookingTransactionDto;
 import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
@@ -45,6 +48,7 @@ import com.special.gift.app.service.SequenceService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorService;
 import com.special.gift.app.service.VenueService;
+import com.special.gift.app.service.WizardService;
 import com.special.gift.app.util.SequenceUtil;
 import com.special.gift.app.util.exception.DataAlreadyExistException;
 
@@ -91,6 +95,9 @@ public class ActController {
 
   @Inject
   private BookingTransactionService bookingService;
+
+  @Inject
+  private WizardService wizardService;
 
   @Inject
   private SequenceService sequence;
@@ -518,144 +525,92 @@ public class ActController {
   public String planPayment(Model model, @RequestBody MultiValueMap<String, String> formData,
       HttpServletRequest request, HttpSession session) {
 
+    FilterDto filterDto = null;
+    final Map<String, Integer> itemList = new HashMap<>();
+
+    final SimpleDateFormat pattern = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+    final Calendar calendar = Calendar.getInstance();
+
+
     try {
 
-      final String eventDate = formData.getFirst("eventDate");
-      final String eventVenue = formData.getFirst("eventVenue");
-      final String eventCatering = formData.getFirst("eventCatering");
-      final String eventDecoration = formData.getFirst("eventDecoration");
-      final String eventMakeUp = formData.getFirst("eventMakeup");
-      final String eventPhoto = formData.getFirst("eventPhoto");
-      final String eventEo = formData.getFirst("eventEo");
-      final String eventOthers = formData.getFirst("eventOthers");
-      final String eventTransport = formData.getFirst("eventTransport");
-      final String eventLocation = formData.getFirst("eventLocation");
+      final String transactionId = formData.getFirst("plan_event_transaction_id");
 
-      log.debug(
-          " date : {}, venue: {}, catering : {}, decoration : {}, makeup :{}, photo : {}, eo: {}, others : {},trasport : {}, event location : {}",
-          eventDate, eventVenue, eventCatering, eventDecoration, eventMakeUp, eventPhoto, eventEo,
-          eventOthers, eventTransport, eventLocation);
-
-      int totalPrice = 0;
-      int minimumPrice = 0;
-      StringBuilder listOfPackages = new StringBuilder();
+      log.debug("transactionid : {}", transactionId);
 
       final User user = userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
-      final List<ItemListDto> list = new ArrayList<>();
-      FilterDto filter;
 
-      ItemListDto venue = null;
+      final WizardValue wizardValue = wizardService.findWizardValue(transactionId);
 
-      if (eventVenue != null && !eventVenue.equals("")) {
+      final String stepValues[] = wizardValue.getContent().split(",");
 
-        final PackageVenue packageVenue = venueService.findByVendorId(eventVenue);
+      int totalPrice = 0;
+      int totalMinimumPayment = 0;
+      ItemListDto choosenVenue = null;
+      String date = "";
+      final StringBuilder listOfPackages = new StringBuilder();
 
-        if (packageVenue != null) {
-          venue = new ItemListDto();
-          venue.setCapacity(Integer.parseInt(packageVenue.getRoomCapacity()));
-          venue.setCategory(packageVenue.getVendorDesc().getVendorType());
-          venue.setDescription(packageVenue.getVenuePackage());
-          venue.setDiscountRate(packageVenue.getDiscountRate());
-          venue.setId(packageVenue.getVenueId());
-          venue.setImage(packageVenue.getVenuePortofolio());
-          venue.setLocation(new StringBuilder(packageVenue.getVenueAddress()).append(",")
-              .append(packageVenue.getCity()).toString());
-          venue.setMinimumPayment(packageVenue.getMinimumPayment());
-          venue.setName(packageVenue.getVenueName());
-          venue.setPackageType("venue");
-          venue.setPaxPrice(packageVenue.getPaxPrice());
-          venue.setPrice(packageVenue.getRentalPrice());
-          venue.setRentDuration(packageVenue.getTimeRent());
-          venue.setRoom(packageVenue.getVenueRoom());
-          venue.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
-              .append("venue").append("/").append(packageVenue.getVenueId()).toString());
-          venue.setVendorId(packageVenue.getVendor());
-          venue.setVendorStyle("");
+      for (int i = 0; i < stepValues.length; i++) {
+
+        final WizardStepMaster stepMaster =
+            wizardService.findStepById(Integer.parseInt(stepValues[i].split("=")[0]));
+
+        if (!stepMaster.getPackageCategory().equals("---")) {
+
+
+          filterDto = new FilterDto();
+          filterDto.setId(stepValues[i].split("=")[1]);
+          final List<ItemListDto> dtos = listingService.findAllList(request, null, filterDto);
+          if (!dtos.isEmpty()) {
+
+            if (stepMaster.getPackageCategory().equals("000")) {
+              choosenVenue = dtos.get(0);
+            } else {
+              listOfPackages.append(dtos.get(0).getId()).append(":");
+            }
+
+            itemList.put(stepMaster.getStepName(), dtos.get(0).getPrice());
+            totalPrice = totalPrice + dtos.get(0).getPrice();
+            totalMinimumPayment = totalMinimumPayment + dtos.get(0).getMinimumPayment();
+
+
+          }
+        } else {
+          date = stepValues[i].split("=")[1];
         }
+
       }
 
 
-      if (eventCatering != null && !eventCatering.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventCatering);
-        list.add(listingService.findAllList(request, null, filter).get(0));
-      }
 
-      if (eventDecoration != null && !eventDecoration.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventDecoration);
-        list.add(listingService.findAllList(request, null, filter).get(0));
-      }
-
-      if (eventMakeUp != null && !eventMakeUp.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventMakeUp);
-        list.add(listingService.findAllList(request, null, filter).get(0));
-      }
-
-      if (eventPhoto != null && !eventPhoto.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventPhoto);
-        list.add(listingService.findAllList(request, null, filter).get(0));
-      }
-
-      if (eventEo != null && !eventEo.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventEo);
-        list.add(listingService.findAllList(request, null, filter).get(0));
-      }
-
-      if (eventOthers != null && !eventOthers.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventOthers);
-        list.add(listingService.findAllList(request, null, filter).get(0));
-      }
-
-      if (eventTransport != null && !eventTransport.equals("")) {
-        filter = new FilterDto();
-        filter.setId(eventTransport);
-        list.add(listingService.findAllList(request, null, filter).get(0));
-      }
-
-      for (final ItemListDto dto : list) {
-        totalPrice += dto.getPrice();
-        minimumPrice += dto.getMinimumPayment();
-        listOfPackages = listOfPackages.append(dto.getId()).append(SEPARATOR);
-      }
-
-
-      final Calendar calendar = Calendar.getInstance();
       final Calendar calendarMaxPayment = Calendar.getInstance();
+      calendarMaxPayment.setTime(pattern.parse(date));
+      calendarMaxPayment.add(Calendar.DATE, -30);
 
-      if (venue != null) {
-        totalPrice += venue.getPrice();
-        minimumPrice += venue.getPrice();
-
-        calendar.setTime(pattern.parse(eventDate));
-        calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(venue.getRentDuration()));
-
-        calendarMaxPayment.setTime(pattern.parse(eventDate));
-        calendarMaxPayment.add(Calendar.DATE, -30);
-
+      calendar.setTime(pattern.parse(date));
+      if (choosenVenue != null) {
+        calendar.add(Calendar.HOUR_OF_DAY, Integer.parseInt(choosenVenue.getRentDuration()));
       }
 
-      if (eventLocation == null || eventLocation.equals("")) {
-        model.addAttribute("eventLocation", "");
-      } else {
-        model.addAttribute("eventLocation", eventLocation);
-      }
-      model.addAttribute("imageRoot", imagePath);
-      model.addAttribute("eventDate", calendar.getTime());
-      model.addAttribute("eventEndTime", calendar.getTime());
-      model.addAttribute("eventVenue", venue);
-      model.addAttribute("packages", list);
-      model.addAttribute("minimumPrice", minimumPrice);
-      model.addAttribute("totalPrice", totalPrice);
-      model.addAttribute("requester", user);
-      model.addAttribute("maxPaymentDate", calendarMaxPayment.getTime());
+
+      log.debug("items : {}", itemList.toString());
+
+
+
       model.addAttribute("listOfPackages",
           listOfPackages.toString().substring(0, listOfPackages.length() - 1));
-
+      model.addAttribute("eventDate", calendar.getTime());
+      model.addAttribute("listOfPackages",
+          listOfPackages.toString().substring(0, listOfPackages.length() - 1));
+      model.addAttribute("imageRoot", imagePath);
+      model.addAttribute("packageStartime", pattern.parse(date));
+      model.addAttribute("packageEndTime", calendar.getTime());
+      model.addAttribute("maxPaymentDate", calendarMaxPayment.getTime());
+      model.addAttribute("venue", choosenVenue);
+      model.addAttribute("items", itemList);
+      model.addAttribute("user", user);
+      model.addAttribute("totalPrice", totalPrice);
+      model.addAttribute("totalMinimumPayment", totalMinimumPayment);
       model.addAttribute("acc1", accountName1);
       model.addAttribute("acc2", accountName2);
       model.addAttribute("norek1", norek1);
@@ -665,7 +620,7 @@ public class ActController {
       exception.printStackTrace();
     }
 
-    return "/contents/plan-payment";
+    return "contents/plan-payment";
   }
 
   @PostMapping(value = PLAN_BOOKING_TRANSACTION)

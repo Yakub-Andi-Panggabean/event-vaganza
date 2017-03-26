@@ -1,0 +1,84 @@
+<div class="row">
+	<div class="quote-info">
+		<label id="plan-quote-info" th:inline="text">Congratulations,
+			this is your package</label>
+	</div>
+</div>
+
+<div class="row">
+	<blockquote>
+		<p th:inline="text" style="font-size: 15px; font-weight: 900;">Event
+			Date : [[${eventDate}]]</p>
+	</blockquote>
+</div>
+
+<div class="row"
+	th:remove="${not customLocation.equals('')}?'none':'all'">
+	<blockquote>
+		<p th:inline="text" style="font-size: 15px; font-weight: 900;">Event
+			Location : [[${customLocation}]]</p>
+	</blockquote>
+</div>
+
+
+
+<div class="row">
+	<div class="panel-group" id="accordion" role="tablist"
+		aria-multiselectable="true">
+
+		<div class="panel panel-default" th:each="item,row:${items}">
+
+			<div th:each="element:${item}">
+
+
+				<div class="panel-heading" role="tab" id="headingOne"
+					style="background-color: #f9c41f; color: #fff;">
+
+
+					<h4 class="panel-title">
+						<a role="button" data-toggle="collapse" data-parent="#accordion"
+							th:href="${#strings.append('#',element.value.id)}"
+							aria-expanded="true" aria-controls="collapseOne" th:inline="text">
+							[[${element.key}]] </a>
+					</h4>
+
+				</div>
+
+				<div th:id="${element.value.id}"
+					th:class="${row.index >0?'panel-collapse collapse':'panel-collapse collapse in'}"
+					role="tabpanel" aria-labelledby="headingOne">
+					<div class="panel-body">
+
+						<div class="col-sm-4 col-xs-6" style="padding: 0px">
+							<div class="item-thumbnail">
+								<div class="item-name" th:inline="text">[[${element.value.name}]]</div>
+								<div class="item-image">
+									<img
+										th:src="${#strings.arraySplit(element.value.image,':').length>0}?${#strings.append(imageRoot,#strings.arraySplit(element.value.image,':')[0])}:''" />
+								</div>
+								<div class="item-desc" th:inline="text">[[${element.value.description}]]</div>
+								<div class="item-price" th:inline="text">[[${#strings.append('Rp.
+									',#numbers.formatDecimal(element.value.minimumPayment,3,'POINT',2,'COMMA'))}]]</div>
+								<div class="item-unit" th:inline="text">/ Pax</div>
+								<a><div class="item-detail" data-toggle="modal"
+										data-target="#item-detail">See More Detail</div></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<form id="plan_event_transaction_form"
+		th:action="@{/plan/booking/payment}" method="POST">
+		<input name="plan_event_transaction_id" type="hidden"
+			th:value="${transactionId}">
+	</form>
+
+	<input id="preview_approval_button" type="button"
+		class="btn btn-action" value="CONFIRM REQUEST" th:onclick="'Javascript:finalizeWizardStep('+${transactionId}+')'">
+</div>

@@ -5,18 +5,11 @@
 				th:text="${#strings.append(#strings.toUpperCase(package_type),' DESCRIPTION')}"></h3>
 			<hr class="headline-line">
 		</div>
-		<div class="row">
+		
+		
+		<div class="row" th:remove="${packageDetail.image == null||packageDetail.image.equals('')}?'all':'none'">
 			<div id="image-slide" class="carousel slide" data-ride="carousel">
-				<!-- Indicators -->
-				<ol class="carousel-indicators">
-					<li
-						th:each="img,status : ${#strings.arraySplit(packageDetail.image, ':')}"
-						th:classappend="${status.index==0}?'active':''"
-						data-target="#image-slide" th:attr="data-slide-to=${status.index}"></li>
-				</ol>
-
-				<!-- Wrapper for slides -->
-
+			
 				<!-- Wrapper for slides -->
 				<div th:unless="${packageDetail.image == null}"
 					class="carousel-inner" role="listbox">
@@ -28,22 +21,30 @@
 							style="height: 350px;">
 					</div>
 				</div>
+				
 
 				<!-- Left and right controls -->
-				<a class="left carousel-control" href="#image-slide" role="button"
-					data-slide="prev"> <span
-					class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-					<span class="sr-only">Previous</span>
-				</a> <a class="right carousel-control" href="#image-slide" role="button"
-					data-slide="next"> <span
-					class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-					<span class="sr-only">Next</span>
-				</a>
+				<div class="carousel-control">
+						<img th:src="@{/image/icon-slide-prev.png}" href="#image-slide" data-slide="prev" style="float:left;cursor:pointer"></img>
+						<img th:src="@{/image/icon-slide-next.png}" href="#image-slide" data-slide="next" style="float:right;cursor:pointer"></img>
+				</div>
+				
+				<!-- Indicators -->
+				<div class="carousel-indicators">
+					<li
+						th:each="img,status : ${#strings.arraySplit(packageDetail.image, ':')}"
+						th:classappend="${status.index==0}?'active':''"
+						data-target="#image-slide" th:attr="data-slide-to=${status.index}"></li>
+				</div>
+				
 			</div>
+			
 			<div class="carousel-description" th:inline="text">
 				[[${#strings.toUpperCase(packageDetail.name)}]] <small>[[${#strings.capitalize(packageDetail.room)}]]
 			</div>
+			
 		</div>
+		
 		<div class="row">
 			<div class="col-sm-4" style="padding: 0px">
 				<div class="row">
@@ -79,8 +80,8 @@
 				<div class="row">
 					<div class="item-description-title" th:inline="text">[[${#strings.toUpperCase(packageDetail.name)}]],
 						[[${#strings.toUpperCase(packageDetail.location)}]]</div>
-					<div class="item-description" th:inline="text">
-						[[${#strings.capitalize(packageDetail.description)}]]</div>
+					<div class="item-description" th:utext="${#strings.capitalize(#strings.replace(packageDetail.description,'&#10;','&lt;br&gt;'))}">
+						</div>												
 				</div>
 			</div>
 		</div>

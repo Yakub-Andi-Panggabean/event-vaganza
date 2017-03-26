@@ -53,7 +53,10 @@ function init() {
 
 	$('#wizard-date').datetimepicker({
 		dateFormat : 'yy/mm/dd',
-		timeFormat : "HH:mm"
+		timeFormat : "HH:mm",
+		onSelect : function(data) {
+			$("#plan_value_container").val(data);
+		}
 	});
 
 	$('#button_pick_update_vendor_type').click(
@@ -254,18 +257,20 @@ function fetchItemList(start, limit) {
 										result = result
 												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
 														+ imagePathLocation
-																.concat(value.image
-																		.split(':')[0])
+																.concat(value.image != null
+																		&& value.image !== "" ? value.image
+																		.split(':')[0]
+																		: "no_image.png")
 														+ "\" alt=\"Responsive image\">");
 										result = result.concat("</a>");
 										result = result.concat("</div>");
 										result = result
 												.concat("<div class=\"caption\">");
-										result = result.concat("<h4>"
-												+ value.name + "</h4>");
-										result = result.concat("<p> Rp. "
+										result = result.concat("<h6>"
+												+ value.name + "</h6>");
+										result = result.concat("<h6> Rp. "
 												+ value.price.format(2)
-												+ ".</p>");
+												+ ".</h6>");
 										result = result.concat("</div>");
 										result = result.concat("</div>");
 									});
@@ -419,7 +424,7 @@ function fetchItemsSelectionList(start, limit, destroy) {
 	}
 
 	filterData.sorting = filterSorting;
-	
+
 	var loading = $('#spinner-progress').html();
 
 	$
@@ -452,21 +457,25 @@ function fetchItemsSelectionList(start, limit, destroy) {
 												+ value.url + ">");
 										result = result
 												.concat("<div style=\"box-shadow: -1px 7px 19px rgb(193, 193, 193);\">");
+
 										result = result
 												.concat("<img style=\"width: 100%;height: 250px;\" class=\"img-fluid\" src=\""
 														+ imagePathLocation
-																.concat(value.image
-																		.split(':')[0])
+																.concat(value.image != null
+																		&& value.image !== "" ? value.image
+																		.split(':')[0]
+																		: "no_image.png")
 														+ "\" alt=\"Responsive image\">");
+
 										result = result.concat("</a>");
 										result = result.concat("</div>");
 										result = result
 												.concat("<div class=\"caption\">");
-										result = result.concat("<h4>"
-												+ value.name + "</h4>");
-										result = result.concat("<p> Rp."
+										result = result.concat("<h6>"
+												+ value.name + "</h6>");
+										result = result.concat("<h6> Rp."
 												+ value.price.format(2)
-												+ ".</p>");
+												+ ".</h6>");
 										result = result.concat("</div>");
 										result = result.concat("</div>");
 									});
@@ -491,7 +500,6 @@ function fetchItemsSelectionList(start, limit, destroy) {
 								.concat(pages[i]);
 					}
 
-					
 					$('#item_list').html(result);
 
 					if (destroy == true) {
@@ -624,7 +632,7 @@ function advanceSearch() {
 	}
 
 	var service = 'advance-search';
-	
+
 	var loading = $('#spinner-progress').html();
 	$('#search-result').html(loading);
 

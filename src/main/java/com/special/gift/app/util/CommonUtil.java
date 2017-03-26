@@ -13,6 +13,9 @@ public class CommonUtil {
   public static final String AUTH_HEADER = "isigunyaziso";
   public static final String SALT = "y4ku8s4n9pujan994";
   public static final int PAGING_NUMBER = 5;
+  public static final String PACKAGE_VENUE = "venue";
+  public static final String PACKAGE_VENDOR = "vendor";
+  public static final String VENUE_WIZARD_PACKAGE_CATEGORY = "000";
 
   private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
       + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";

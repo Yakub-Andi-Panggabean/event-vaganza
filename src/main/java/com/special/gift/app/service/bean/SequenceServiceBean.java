@@ -16,8 +16,11 @@ public class SequenceServiceBean implements SequenceService {
 
   @Override
   public String generateSequence(String sequenceId) {
-    if (sequenceId.equals(SequenceUtil.TRANSACTION_ID_SEQ)
-        || sequenceId.equals(SequenceUtil.GROUP_TRANSACTION_ID_SEQ)) {
+
+    final boolean transaction = sequenceId.equals(SequenceUtil.TRANSACTION_ID_SEQ)
+        || sequenceId.equals(SequenceUtil.GROUP_TRANSACTION_ID_SEQ)
+        || sequenceId.equals(SequenceUtil.WIZARD_TRANSACTION_ID);
+    if (transaction) {
       return repository.generateTransactionSequence(sequenceId);
     } else {
       return repository.generateSequence(sequenceId);

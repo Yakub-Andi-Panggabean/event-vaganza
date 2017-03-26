@@ -1084,14 +1084,14 @@ body > .navbar-collapse[data-color="purple"]:after {
 /*      Checkbox and radio         */
 .checkbox,
 .radio {
-  margin-bottom: 12px;
-  padding-left: 32px;
+  margin-bottom: 16px;
+  padding-left: 24px;
   position: relative;
   -webkit-transition: color 0.25s linear;
   transition: color 0.25s linear;
   font-size: 14px;
-  font-weight: bold;
-  line-height: 1.5;
+  font-weight: 700;
+  line-height: 14px;
   color: #ccc;
 }
 
@@ -1103,16 +1103,16 @@ body > .navbar-collapse[data-color="purple"]:after {
 
 .checkbox .icons,
 .radio .icons {
-  color: #DDDDDD;
+  color: #ccc;
   display: block;
-  height: 20px;
+  height: 16px;
   left: 0;
   position: absolute;
   top: 0;
-  width: 20px;
+  width: 16px;
   text-align: center;
-  line-height: 21px;
-  font-size: 20px;
+  line-height: 16px;
+  font-size: 16px;
   cursor: pointer;
   -webkit-transition: color 0.2s linear;
   transition: color 0.2s linear;

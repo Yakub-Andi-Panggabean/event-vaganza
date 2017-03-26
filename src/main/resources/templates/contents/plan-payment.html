@@ -8,194 +8,215 @@
 	<div class="content" th:fragment="content">
 
 		<div class="row">
-			<h3 class="headline">BOOKING PAYMENT</h3>
-			<hr class="headline-line">
+			<div class="head-title">Booking Payment</div>
 		</div>
-
-		<div class="row" style="margin-bottom: 30px">
-			<div class="book-payment-label">YOUR BOOKING AS DESCRIBE BELOW</div>
-		</div>
-
+		<hr class="headline-line" />
 		<div class="row">
-			<div class="col-sm-6">
-				<div class="row" th:remove="${eventVenue==null}?all:none">
-					<div class="col-xs-3" style="padding: 0px">
-						<img
-							th:src="${eventVenue==null||eventVenue.image==null?'No Image':#strings.append(imageRoot,#strings.arraySplit(eventVenue.image,':')[0])}"
-							width="100%" height="auto"></img>
-					</div>
-					<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
-						<h6 style="margin-top: 0px"
-							th:text="${eventVenue!=null?eventVenue.name:'no venue'}"></h6>
-						<p th:inline="text">[[${eventVenue!=null&&eventVenue.room!=null
-							&& !eventVenue.room.equals('')?#strings.append(eventVenue.room,'
-							- '):''}]] Capacity
-							[[${eventVenue!=null?eventVenue.capacity:''}]] Person</p>
-						<br>
-						<p th:inline="text">
-							<img th:src="@{/image/icon-date-orange_16x16.png}" width="16px"
-								height="auto"></img>[[${eventDate!=null?#dates.format(eventDate,
-							'dd &nbsp; MMMM &nbsp; yyyy'):''}]]
-						</p>
-						<p th:inline="text">
-							<img th:src="@{/image/icon-time-orange_16x16.png}" width="16px"
-								height="auto"></img>&nbsp;[[${eventDate!=null?#dates.format(eventDate,
-							'HH.mm'):''}]] &nbsp;-
-							&nbsp;[[${eventDate!=null?#dates.format(eventEndTime,
-							'HH.mm'):''}]] &nbsp;WIB
-						</p>
-					</div>
-				</div>
-				<div class="book-request-box">
-					<div class="row">
-						<div class="col-xs-4">
-							<p class="box-label">BOOK BY</p>
-						</div>
-						<div class="col-xs-8">
-							<p class="box-info" th:inline="text">[[${requester.username}]]</p>
-						</div>
+			<div class="col-sm-9" style="padding: 0px">
+				<div class="book-request">
+					<div class="row" style="margin-bottom: 20px">
+						<img th:src="@{/image/booking-request_24x32.png}"
+							style="width: 24px; height: 32px; margin: 0px 10px; float: right"></img>
+						<div class="book-request-label">YOUR BOOKING AS DESCRIBE
+							BELOW</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-4">
-							<p class="box-label">ADDRESS</p>
-						</div>
-						<div class="col-xs-8">
-							<p class="box-info" th:inline="text">[[${requester.userAddress}]]</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-4">
-							<p class="box-label">MOBILE</p>
-						</div>
-						<div class="col-xs-8">
-							<p class="box-info" th:inline="text">[[${requester.handphone}]]</p>
-						</div>
-					</div>
-				</div>
-				<div class="cost-estimate-box">
-					<div class="row cost-title">
-						<p>
-							<img th:src="@{/image/icon-cost-orange_16x16.png}" width="16px"
-								height="auto" style="margin-right: 10px"></img>FINAL COST
-						</p>
-					</div>
-					<hr>
+						<div class="col-sm-6">
+							<div class="row" th:remove="${venue!=null}?'none':'all'">
+								<div class="book-item-thumb">
+									<img
+										th:src="${venue.image!=null&&!venue.image.equals('')}?${#strings.append(imageRoot,#strings.arraySplit(venue.image, ':')[0])}:''" />
+								</div>
+								<div class="book-item-title" th:inline="text">[[${venue.name}]]</div>
+								<div class="book-item-subtitle" th:inline="text">[[${venue.room}]]
+									- Capacity [[${venue.capacity}]] Person</div>
+								<div class="book-item-datetime" th:inline="text">
+									<img th:src="@{/image/icon-date-grey.png}" />&nbsp;[[${#dates.format(packageStartime,
+									'dd &nbsp; MMMM &nbsp; yyyy')}]]
+								</div>
+								<div class="book-item-datetime" th:inline="text">
+									<img th:src="@{/image/icon-time-grey.png}" />&nbsp;[[${#dates.format(packageStartime,
+									'HH.mm')}]] &nbsp;- &nbsp;[[${#dates.format(packageEndTime,
+									'HH.mm')}]] &nbsp;WIB
+								</div>
+							</div>
+							<div class="book-info-box">
+								<div class="row">
+									<div class="col-xs-4">
+										<div class="box-label">BOOK BY</div>
+									</div>
+									<div class="col-xs-8">
+										<div class="box-info" th:inline="text">[[${user.username}]]</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-4">
+										<div class="box-label">ADDRESS</div>
+									</div>
+									<div class="col-xs-8">
+										<div class="box-info" th:inline="text">[[${user.userAddress}]]</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-4">
+										<div class="box-label">MOBILE</div>
+									</div>
+									<div class="col-xs-8">
+										<div class="box-info" th:inline="text">[[${user.handphone}]]</div>
+									</div>
+								</div>
+							</div>
+							<div class="cost-estimate-detail">
+								<div class="cost-estimate-title">
+									<img th:src="@{/image/icon-cost-orange_16x16.png}" />FINAL
+									COST
+								</div>
+								<hr class="cost-estimate-line">
+								<div class="cost-estimate-content">
 
-					<div class="row cost-list">
-						<div class="col-xs-7">
-							<p
-								th:text="${eventVenue!=null&&eventVenue.name!=null?eventVenue.name:''}"></p>
-						</div>
-						<div class="col-xs-5">
-							<p
-								th:text="${eventVenue!=null?#strings.append('Rp. ',#numbers.formatDecimal(eventVenue.price,3,'POINT',2,'COMMA')):''}">Rp.
-								330.000.000</p>
-						</div>
-					</div>
-					<div class="row cost-list" th:each="item,row:${packages}">
-						<div class="col-xs-7">
-							<p th:text="${item.name}">Venue Rental for 4 Hours</p>
-						</div>
-						<div class="col-xs-5">
-							<p
-								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(item.price,3,'POINT',2,'COMMA'))}">Rp.
-								30.000.000</p>
-						</div>
-					</div>
+									<div th:each="item,row:${items}" class="row">
+										<div class="col-xs-6">
+											<div class="cost-item" th:inline="text">[[${item.key}]]</div>
+										</div>
+										<div class="col-xs-6">
+											<div class="cost-price" th:inline="text">[[${#strings.append('Rp.
+												',#numbers.formatDecimal(item.value,3,'POINT',2,'COMMA'))}]]</div>
+										</div>
+									</div>
 
-					<div class="row total">
-						<div class="col-xs-5">
-							<p class="box-label">TOTAL</p>
+								</div>
+							</div>
+							<div class="cost-estimate-total">
+								<div class="row">
+									<div class="col-xs-6">
+										<div class="cost-total">TOTAL</div>
+									</div>
+									<div class="col-xs-6">
+										<div class="cost-total-price" th:inline="text">[[${#strings.append('Rp.
+											',#numbers.formatDecimal(totalPrice,3,'POINT',2,'COMMA'))}]]</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="col-xs-7">
-							<p class="box-info"
-								th:text="${#strings.append('Rp. ',#numbers.formatDecimal(totalPrice,3,'POINT',2,'COMMA'))}">Rp.
-								330.000.000</p>
+						<div class="col-sm-6">
+							<div class="row">
+								<p>Please confirm your booking payment :</p>
+							</div>
+							<div class="row">
+								<label class="radio"><input type="radio" value="fee"
+									name="plan-pay-amount" id="fee-amount" data-toggle="radio"
+									checked />I will Pay Booking Fee only</label> <label class="radio"><input
+									type="radio" value="full" name="plan-pay-amount"
+									id="full-amount" data-toggle="radio" />I will Pay Full</label>
+							</div>
+							<div class="row">
+								<div class="payment-type" id="fee">
+									<p>
+										<strong>PAY BOOKING FEE ONLY</strong>
+									</p>
+									<p>Booking Fee Amount</p>
+									<div class="payment-amount" th:inline="text">[[${#strings.append('Rp.
+										',#numbers.formatDecimal(totalMinimumPayment,3,'POINT',2,'COMMA'))}]]</div>
+								</div>
+								<div class="payment-type" id="full">
+									<p>
+										<strong>FULL PAYMENT</strong>
+									</p>
+									<p>Full Payment Amount</p>
+									<div class="payment-amount" th:inline="text">[[${#strings.append('Rp.
+										',#numbers.formatDecimal(totalPrice,3,'POINT',2,'COMMA'))}]]</div>
+								</div>
+							</div>
+							<hr>
+							<div class="row">
+								<p>Select Your Payment Method :</p>
+								<label class="radio"><input type="radio" value="credit"
+									name="plan-pay-method" id="credit-method" data-toggle="radio"
+									checked />Credit Card <img th:src="@{/image/logo-visa.png}"
+									width="auto" height="16px"></img> <img
+									th:src="@{/image/logo-mastercard.png}" width="auto"
+									height="16px"></img> </label> <label class="radio"><input
+									type="radio" value="transfer" name="plan-pay-method"
+									id="transfer-method" data-toggle="radio" checked />Bank
+									Transfer <img th:src="@{/image/logo-bank-transfer.png}"
+									style="width: auto; height: 14px; margin-bottom: 3px"></img> </label>
+							</div>
+							<div class="pay-credit" id="credit">
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="form-group">
+											<input type="text" class="form-control"
+												placeholder="Card Number" value="">
+										</div>
+									</div>
+									<div class="col-sm-8">
+										<div class="form-group">
+											<input type="text" class="form-control"
+												placeholder="Expiry Date" value="">
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<input type="text" class="form-control" placeholder="CVV"
+												value="">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<button class="btn btn-action">PAY NOW</button>
+									</div>
+								</div>
+							</div>
+							<div class="pay-transfer" id="transfer">
+								<div class="row">
+									<p>Full payment should be transferred before DD-MM-YYYY
+										(D-30 of the event date) to one of Event Vaganza account below</p>
+									<img th:src="@{/image/logo-bca.png}"
+										style="width: 40px; height: auto; margin: 10px 10px 5px 0px"></img>
+									<p th:inline="text">Account Number : [[${norek1}]]</p>
+									<p th:inline="text">Account Name : [[${acc1}]]</p>
+									<img th:src="@{/image/logo-mandiri.png}"
+										style="width: 40px; height: auto; margin: 10px 10px 5px 0px"></img>
+									<p th:inline="text">Account Number : [[${norek2}]]</p>
+									<p th:inline="text">Account Name : [[${acc2}]]</p>
+								</div>
+								<div class="row">
+									<form name="booking_planned_transaction_form"
+										id="booking_planned_transaction_form"
+										th:action="@{/plan/booking/transaction}" method="POST">
+										<input type="hidden" name="planned_packages_id"
+											th:value="${listOfPackages}"> <input type="hidden"
+											name="planned_event_date"
+											th:value="${#dates.format(eventDate,'yyyy/MM/dd HH:mm')}">
+										<input id="planned_venue" type="hidden" name="planned_venue"
+											th:value="${venue!=null?venue.id:''}"> <input
+											id="plan_payment_amount" type="hidden"
+											name="plan_payment_amount"> <input
+											id="plan_payment_method" type="hidden"
+											name="plan_payment_method"> <input
+											id="plan_event_location" type="hidden"
+											name="plan_event_location" th:value="${eventLocation}">
+									</form>
+								</div>
+								<div class="row">
+									<button onclick="createPlanBookingTransaction()" type="button"
+										class="btn btn-action">BOOKING PAYMENT</button>
+								</div>
+							</div>
 						</div>
 					</div>
-
 				</div>
 			</div>
-
-			<div class="col-sm-6">
-				<div class="row">
-					<p>Please confirm your booking :</p>
+			<div class="col-sm-3" style="padding: 0px">
+				<div class="mseva-book">
+					<img th:src="@{/image/mseva-book.png}"></img>
 				</div>
-				<div class="row">
-					<label class="radio"> <input type="radio" value="dp"
-						name="plan-pay-amount" data-toggle="radio" checked />I will Pay
-						Booking Fee only
-					</label> <label class="radio"> <input type="radio" value="fp"
-						name="plan-pay-amount" data-toggle="radio" />I will Pay Full
-						(100%)
-					</label>
-				</div>
-				<br>
-				<div class="row">
-					<p>
-						<strong>PAY BOOKING FEE ONLY</strong>
-					</p>
-					<p>Booking Cost</p>
-					<div style="font-size: 18px; color: #f7c21d; font-weight: 700"
-						th:inline="text">[[${eventVenue!=null?#strings.append('Rp.
-						',#numbers.formatDecimal(eventVenue.price,3,'POINT',2,'COMMA')):''}]]
-					</div>
-					<br>
-					<p th:inline="text">Full payment should be transferred before
-						[[${maxPaymentDate!=null?#dates.format(maxPaymentDate, 'yyyy - MM
-						-dd'):''}]] (D-30 of the event date) to Event Vaganza account</p>
-					<p th:inline="text">
-						<img th:src="@{/image/logo-bca.png}" width="40px" height="auto"
-							style="margin-right: 10px"></img>Account Number : [[${norek1}]] |
-						Account Name : [[${acc1}]]
-					</p>
-					<p th:inline="text">
-						<img th:src="@{/image/logo-mandiri.png}" width="40px"
-							height="auto" style="margin-right: 10px"></img>Account Number :
-						[[${norek2}]] | Account Name : [[${acc2}]]
-					</p>
-				</div>
-				<br>
-				<div class="row">
-					<p>
-						<strong>SELECT YOUR PAYMENT METHOD</strong>
-					</p>
-					<label class="radio"> <input type="radio" value="C"
-						name="plan-pay-method" data-toggle="radio" checked />Credit Card
-						<img th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
-						<img th:src="@{/image/logo-mastercard.png}" width="48px"
-						height="auto"></img>
-					</label> <label class="radio"> <input type="radio" value="T"
-						name="plan-pay-method" data-toggle="radio" checked />Bank
-						Transfer <img th:src="@{/image/logo-bank-transfer.png}"
-						width="24px" height="auto"></img>
-					</label>
-				</div>
-				<div class="row">
-
-					<form name="booking_planned_transaction_form"
-						id="booking_planned_transaction_form"
-						th:action="@{/plan/booking/transaction}" method="POST">
-						<input type="hidden" name="planned_packages_id"
-							th:value="${listOfPackages}"> <input type="hidden"
-							name="planned_event_date"
-							th:value="${#dates.format(eventDate,'yyyy/MM/dd HH:mm')}">
-						<input id="planned_venue" type="hidden" name="planned_venue"
-							th:value="${eventVenue!=null?eventVenue.id:''}"> <input
-							id="plan_payment_amount" type="hidden" name="plan_payment_amount">
-						<input id="plan_payment_method" type="hidden"
-							name="plan_payment_method"> <input
-							id="plan_event_location" type="hidden" name="plan_event_location" th:value="${eventLocation}">
-					</form>
-				</div>
-				<div class="row">
-					<button onclick="createPlanBookingTransaction()" type="button"
-						class="btn btn-action">PAY NOW</button>
-				</div>
-
 			</div>
 		</div>
+
 	</div>
+
 
 </body>
 </html>

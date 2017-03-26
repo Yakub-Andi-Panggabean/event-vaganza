@@ -21,6 +21,7 @@ import com.special.gift.app.repository.PackageVendorRepository;
 import com.special.gift.app.repository.PackageVenueRepository;
 import com.special.gift.app.repository.VendorRepository;
 import com.special.gift.app.service.ListingService;
+import com.special.gift.app.util.CommonUtil;
 
 @Service
 public class ListingServiceBean implements ListingService {
@@ -35,9 +36,6 @@ public class ListingServiceBean implements ListingService {
 
   @Autowired
   private VendorRepository vendorRepository;
-
-  private static final String PACKAGE_VENUE = "venue";
-  private static final String PACKAGE_VENDOR = "vendor";
 
   /*
    * (non-Javadoc)
@@ -72,13 +70,14 @@ public class ListingServiceBean implements ListingService {
         dto.setLocation(vendor != null ? vendor.getAddress() : "");
         dto.setMinimumPayment(packages.getMinimumPayment());
         dto.setName(packages.getPackageName());
-        dto.setPackageType(PACKAGE_VENDOR);
+        dto.setPackageType(CommonUtil.PACKAGE_VENDOR);
         dto.setPaxPrice(0);
         dto.setPrice(packages.getPackagePrice());
         dto.setRentDuration(String.valueOf(packages.getTimePackage()));
         dto.setRoom("");
         dto.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
-            .append(PACKAGE_VENDOR).append("/").append(packages.getPackageId()).toString());
+            .append(CommonUtil.PACKAGE_VENDOR).append("/").append(packages.getPackageId())
+            .toString());
         dto.setVendorId(packages.getVendorId());
         dto.setVendorStyle(packages.getPackageStyle());
 
@@ -102,13 +101,13 @@ public class ListingServiceBean implements ListingService {
             .append(venue.getCity()).toString());
         dto.setMinimumPayment(venue.getMinimumPayment());
         dto.setName(venue.getVenueName());
-        dto.setPackageType(PACKAGE_VENUE);
+        dto.setPackageType(CommonUtil.PACKAGE_VENUE);
         dto.setPaxPrice(venue.getPaxPrice());
         dto.setPrice(venue.getRentalPrice());
         dto.setRentDuration(venue.getTimeRent());
         dto.setRoom(venue.getVenueRoom());
         dto.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
-            .append(PACKAGE_VENUE).append("/").append(venue.getVenueId()).toString());
+            .append(CommonUtil.PACKAGE_VENUE).append("/").append(venue.getVenueId()).toString());
         dto.setVendorId(venue.getVendor());
         dto.setVendorStyle("");
 
@@ -119,6 +118,7 @@ public class ListingServiceBean implements ListingService {
 
       log.debug("total item count : {}", items.size());
 
+      // filter per category
       if (category != null) {
         final List<ItemListDto> dtos = new ArrayList<>();
         dtos.clear();
@@ -277,7 +277,7 @@ public class ListingServiceBean implements ListingService {
 
           // filter package based on vendor venue (unsused)
           if (filter.getVenue() != null && !filter.getVenue().isEmpty()
-              && item.getPackageType().equals(PACKAGE_VENDOR)) {
+              && item.getPackageType().equals(CommonUtil.PACKAGE_VENDOR)) {
 
             final Vendor vendor = vendorRepository.findSingleVendorById(item.getVendorId());
 

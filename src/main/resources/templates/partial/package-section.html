@@ -14,7 +14,8 @@
 			<div class="item-name" th:inline="text">[[${itemList[dataIndex].name}]]</div>
 			<div class="item-image">
 				<img
-					th:src=" ${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}" />
+					th:src="${itemList[dataIndex].image!=null&&!itemList[dataIndex].image.equals('')}? 
+					${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}:@{/image/no_image.png}" />
 			</div>
 			<div class="item-desc" th:inline="text">[[${itemList[dataIndex].room!=null
 				&&!itemList[dataIndex].room.equals('')}?${#strings.append(#strings.toUpperCase(itemList[dataIndex].room),'-')}:'']]
@@ -41,7 +42,8 @@
 			<div class="item-name" th:inline="text">[[${itemList[dataIndex].name}]]</div>
 			<div class="item-image">
 				<img
-					th:src=" ${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}" />
+					th:src="${itemList[dataIndex].image!=null&&!itemList[dataIndex].image.equals('')}? 
+					${#strings.append(imageRoot,#strings.arraySplit(itemList[dataIndex].image, ':')[0])}:@{/image/no_image.png}" />
 			</div>
 			<div class="item-desc" th:inline="text">[[${itemList[dataIndex].room!=null
 				&&!itemList[dataIndex].room.equals('')}?${#strings.append(#strings.toUpperCase(itemList[dataIndex].room),'-')}:'']]

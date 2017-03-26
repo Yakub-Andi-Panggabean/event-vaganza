@@ -35,7 +35,7 @@
 
 
 								<a class="item" th:inline="text"
-									th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(children[dataIndex].vendorTypeName,' ','-')},c=${children[dataIndex].vendorType})}">
+									th:href="@{/categories/{parent}/{child}(parent=${#strings.replace(parent,' ','-')},child=${#strings.replace(#strings.replace(children[dataIndex].vendorTypeName,' ','-'),'/','or')},c=${children[dataIndex].vendorType})}">
 									<i class="fa fa-caret-right" aria-hidden="true"></i>&nbsp;[[${#strings.capitalize(children[dataIndex].vendorTypeName)}]]
 								</a>
 

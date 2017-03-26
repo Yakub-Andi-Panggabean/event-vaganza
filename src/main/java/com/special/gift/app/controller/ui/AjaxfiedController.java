@@ -35,7 +35,7 @@ public class AjaxfiedController {
   // plan my event wizard
   public static final String WIZARD_STEP = "/wizard-package/{type}";
   public static final String WIZARD_STEP_VENUE = "/wizard-package/{venue}/{type}";
-  public static final String WIZARD_CUSTOM_LOCATION = "/wizard-package/custom-location";
+  public static final String DYNAMIC_IMAGE_RENDERER = "/images/slider/{packageId}";
 
   @Inject
   private ListingService listingService;
@@ -152,18 +152,38 @@ public class AjaxfiedController {
     return "partial/package-section";
   }
 
-  @RequestMapping(value = WIZARD_CUSTOM_LOCATION, method = RequestMethod.GET,
+
+
+  @RequestMapping(value = DYNAMIC_IMAGE_RENDERER, method = RequestMethod.GET,
       produces = MediaType.TEXT_HTML_VALUE)
-  public String renderEventLocation() {
-    return "partial/custom-location-section";
+  public String renderSlider(Model model, @PathVariable(name = "packageId") String id,
+      HttpServletRequest request) {
+
+    final FilterDto filter = new FilterDto();
+    filter.setId(id);
+    String images = "";
+
+    try {
+
+      final List<ItemListDto> items = listingService.findAllList(request, null, filter);
+      if (items.size() > 0)
+        images = items.get(0).getImage();
+
+      final String[] imageList = images.replaceAll(":", "").split(",");
+
+      final List<String> fullImage = new ArrayList<>();
+
+      for (final String image : imageList) {
+        fullImage.add(new StringBuilder(imagePath).append(image).toString());
+      }
+
+      model.addAttribute("images", fullImage);
+
+    } catch (final Exception exception) {
+      exception.printStackTrace();
+    }
+
+    return "partial/dynamic-image-slider";
   }
-
-
-
-  public String renderVenueUsingType() {
-    return "partial/package-section";
-  }
-
-
 
 }

@@ -22,7 +22,71 @@
 <link type="text/css" th:href="@{/css/jquery-ui-timepicker-addon.css}"
 	rel="stylesheet"></link>
 <link th:href="@{/css/progress.css}" rel="stylesheet"></link>
+<link th:href="@{/css/sweetalert2.min.css}" rel="stylesheet"></link>
 <body>
+
+	<div id="modal-item-detail" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-detail-dialog">
+			<div class="modal-content modal-detail-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<div id="modal_detail_item_name"
+						class="modal-title modal-detail-title">Item Name</div>
+				</div>
+				<div class="modal-body modal-detail-body">
+					<div class="row" id="modal_detail_item_image">
+						<!-- image will be here -->
+					</div>
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1" style="padding: 0px">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="item-info-wrap">
+										<div id="modal_detail_item_title" class="item-title">RITZ
+											CARLTON</div>
+										<div id="modal_detail_item_info" class="item-info">Mega
+											Kuningan, Jakarta | Ballroom A</div>
+										<hr
+											style="border-bottom: 1px solid #ccc; margin: 10px 0px 10px 0px" />
+										<div class="info-box">
+											<div id="modal_detail_item_price" class="info-bold">Rp.
+												250K</div>
+											<div id="modal_detail_item_price_unit" class="info-light">Per
+												Pax</div>
+										</div>
+										<div class="info-box">
+											<div id="modal_detail_item_capacity" class="info-bold">1000</div>
+											<div id="modal_detail_item_capacity_unit" class="info-light">Person</div>
+										</div>
+										<div class="info-box">
+											<div id="modal_detail_item_duration" class="info-bold">3
+												Hours</div>
+											<div id="modal_detail_item_duration_unit" class="info-light">Room
+												Usage</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-8">
+									<div id="modal_detail_item_description"
+										class="item-full-description">Lorem ipsum dolor sit amet
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer modal-detail-footer">
+					<div class="row">
+						<div class="col-sm-2 col-sm-offset-5">
+							<button id="chose_item_detail_button" type="button"
+								class="btn-close" data-dismiss="modal">CHOOSE</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<header class="header" th:replace="${header} :: header">
 		<p>This is default header area for default layout</p>
@@ -35,7 +99,8 @@
 	<!-- 			style="width: 100%; max-width: 480px; height: auto"></img> -->
 	<!-- 	</div> -->
 
-	<div class="element-top">
+	<div class="element-top"
+		th:remove="${view.contains('finder')}?'all':'none'">
 		<img th:src="@{/image/element-1.png}"
 			style="width: 100%; max-width: 480px; height: auto"></img>
 	</div>
@@ -60,15 +125,15 @@
 
 	<!-- login modal -->
 	<div id="login_modal" class="modal fade " role="dialog">
-		<div class="modal-dialog modal-sm">
+		<div class="modal-dialog modal-sm ">
 
 			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-body">
 					<br />
 					<div align="center">
-						<img class="img-responsive" th:src="@{/image/login-icon.png}"
-							alt="Chania" width="100" height="150">
+						<img class="img-responsive" th:src="@{/image/mseva-login.png}"
+							alt="Chania" width="170" height="150">
 						<div>
 							<h4>Masuk ke Akun Anda</h4>
 						</div>
@@ -106,9 +171,7 @@
 		</div>
 	</div>
 	<!-- end of login modal -->
-	
-	
-	
+
 	<div id="detail_modal" class="modal fade " role="dialog">
 		<div class="modal-dialog modal-sm">
 
@@ -132,6 +195,9 @@
 		</div>
 	</div>
 
+	<input type="hidden" id="server_image_path"
+		th:value="${serverImagePath}">
+
 </body>
 <script th:src="@{/js/jquery-3.1.0.min.js}"></script>
 <script th:src="@{/js/moment.min.js}"></script>
@@ -154,6 +220,8 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script th:src="@{/js/jquery-ui-timepicker-addon.js}"
 	type="text/javascript"></script>
+<script th:src="@{/js/sweetalert2.min.js}"
+	type="text/javascript"></script>
 
 <script>
 	$('span').click(
@@ -169,6 +237,56 @@
 		else
 			e.style.display = 'block';
 	}
+
+	$(document).ready(function() {
+		radioChecked();
+		$('input[type="radio"]').change(function() {
+			radioChecked();
+		});
+		function radioChecked() {
+			if ($('#fee-amount').prop("checked") == true) {
+				$('#fee').show();
+				$('#full').hide();
+			} else {
+				$('#fee').hide();
+				$('#full').show();
+			}
+		}
+	});
+
+	$(document).ready(function() {
+		radioChecked();
+		$('input[type="radio"]').change(function() {
+			radioChecked();
+		});
+		function radioChecked() {
+			if ($('#credit-method').prop("checked") == true) {
+				$('#credit').show();
+				$('#transfer').hide();
+			} else {
+				$('#credit').hide();
+				$('#transfer').show();
+			}
+		}
+	});
+
+	$(document).ready(function() {
+		radioChecked();
+		$('input[type="radio"]').change(function() {
+			radioChecked();
+		});
+		function radioChecked() {
+			if ($('#booking-fee-amount').prop("checked") == true) {
+				$('#booking-fee').show();
+				$('#booking-full').hide();
+			} else {
+				$('#booking-fee').hide();
+				$('#booking-full').show();
+			}
+		}
+	});
 </script>
-</script>
+
+
+
 </html>

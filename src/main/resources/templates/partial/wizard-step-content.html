@@ -1,0 +1,89 @@
+<div class="row">
+	<div class="quote-info">
+		<label id="plan-quote-info" th:inline="text">Please chose
+			your [[${stepTitle}]]</label>
+	</div>
+</div>
+
+<div class="row" style="margin-bottom: 20px" th:each="item,row:${items}"
+	th:with="numList=${ {2,1,0} }"
+	th:if="${row.count % 3 == 0 or row.last}">
+
+	<div class="col-sm-4 col-xs-6" style="padding: 0px"
+		th:each="num:${numList}" th:with="dataIndex=(${row.index}-${num})"
+		th:if="${row.count % 3 == 0}">
+
+		<div class="item-thumbnail">
+			<div th:inline="text" class="item-name">[[${items[dataIndex].name}]]</div>
+			<div class="item-image">
+				<img th:src="${items[dataIndex].image!=null&&!items[dataIndex].image.equals('')}? 
+					${#strings.append(imageRoot,#strings.arraySplit(items[dataIndex].image, ':')[0])}:@{/image/no_image.png}" />
+			</div>
+			
+			<div class="item-desc" th:inline="text">[[${items[dataIndex].room!=null&&!items[dataIndex].room.equals('')}?
+			${#strings.append(#strings.toUpperCase(items[dataIndex].room),#strings.append("- Capacity ",#strings.append(items[dataIndex].capacity," Person")))}
+			:${#strings.append(#strings.toUpperCase(items[dataIndex].vendorStyle)," style ")}]]</div>
+			
+			<div class="item-price" th:inline="text">Rp. [[${items[dataIndex].paxPrice &gt; 0? 
+				#numbers.formatDecimal(items[dataIndex].paxPrice,3,'POINT',2,'COMMA'):
+				#numbers.formatDecimal(items[dataIndex].price,3,'POINT',2,'COMMA')}]]</div>
+			
+			<div class="item-unit" th:inline="text">[[${items[dataIndex].paxPrice &gt; 1?"/ Pax":"" }]]</div>
+			
+			<a><div class="item-detail" th:onclick="'Javascript:showItemDetailModal(\''+${items[dataIndex].id}+'\')'">See More Detail</div></a>
+
+		</div>
+	</div>
+
+	<div class="col-sm-4 col-xs-6" style="padding: 0px"
+		th:each="num:${numList}" th:with="dataIndex=(${row.index}-${num})"
+		th:if="${row.last} and ${row.count % 3 != 0} and ${num &lt; row.count % 3}">
+
+		<div class="item-thumbnail">
+			<div th:inline="text" class="item-name">[[${items[dataIndex].name}]]</div>
+			<div class="item-image">
+				<img th:src="${items[dataIndex].image!=null&&!items[dataIndex].image.equals('')}? 
+					${#strings.append(imageRoot,#strings.arraySplit(items[dataIndex].image, ':')[0])}:@{/image/no_image.png}" />
+			</div>
+			
+			<div class="item-desc" th:inline="text">[[${items[dataIndex].room!=null&&!items[dataIndex].room.equals('')}?
+			${#strings.append(#strings.toUpperCase(items[dataIndex].room),#strings.append("- Capacity ",#strings.append(items[dataIndex].capacity," Person")))}
+			:${#strings.append(#strings.toUpperCase(items[dataIndex].vendorStyle)," style ")}]]</div>
+			
+			<div class="item-price" th:inline="text">Rp. [[${items[dataIndex].paxPrice &gt; 1? 
+				#numbers.formatDecimal(items[dataIndex].paxPrice,3,'POINT',2,'COMMA'):
+				#numbers.formatDecimal(items[dataIndex].price,3,'POINT',2,'COMMA')}]]</div>
+			
+			<div class="item-unit" th:inline="text">[[${items[dataIndex].paxPrice &gt; 1?"/ Pax":"" }]]</div>
+			
+			<a><div class="item-detail" th:onclick="'Javascript:showItemDetailModal(\''+${items[dataIndex].id}+'\')'">See More Detail</div></a>
+		</div>
+
+
+	</div>
+
+</div>
+
+<div class="row">
+	
+	<div class="col-sm-2 col-sm-offset-2">
+		<button class="btn btn-prev"
+			th:onclick="'Javascript:processWizardTransaction('+${currentStep}+',false)'">PREVIOUS</button>
+	</div>
+	
+	<div class="col-sm-4">
+		<button id="button_plan_event_next" class="btn btn-next"
+			th:onclick="'Javascript:processWizardTransaction('+${currentStep}+',true)'" disabled="disabled">NEXT</button>
+	</div>
+	
+	<div class="col-sm-2">
+		<button th:onclick="'Javascript:skipWizardTransaction('+${currentStep}+',true)'" class="btn-skip">
+			<img th:src="@{/image/skip.png}" />SKIP
+		</button>
+	</div>
+</div>
+
+
+
+
+

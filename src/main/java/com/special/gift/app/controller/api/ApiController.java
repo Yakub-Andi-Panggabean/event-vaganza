@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +48,8 @@ public class ApiController {
   public static final String SEARCH_ITEM_API = "/search";
   public static final String AUTHENTICATE_STATUS = "/auth/status";
   public static final String VENUE_LIST_API = "/venues";
+  public static final String FIND_PACKAGE_BY_ID_PATH = "/packages/{packageId}";
+  public static final String IMAGE_DISCOVERY_PATH = "/image/path";
 
   @Inject
   private UserService userService;
@@ -59,6 +62,9 @@ public class ApiController {
 
   @Inject
   private VenueService venueService;
+
+  @Value("${image.path.location}")
+  private String imagePath;
 
   @PostMapping(value = USER_API)
   public GenericResponse addNewuser(@RequestBody UserDto dto) {
@@ -180,6 +186,35 @@ public class ApiController {
   public GenericMultipleResponse<PackageVenue> findAllVenue() {
     final Page<PackageVenue> venues = venueService.findAll();
     return new GenericMultipleResponse<>(true, "success", venues);
+  }
+
+
+
+  @GetMapping(value = FIND_PACKAGE_BY_ID_PATH)
+  public GenericSingleResponse<ItemListDto> findPackageById(
+      @PathVariable(value = "packageId") String id, HttpServletRequest request) {
+
+    ItemListDto items = null;
+
+    try {
+      final FilterDto filter = new FilterDto();
+      filter.setId(id);
+      if (listingService.findAllList(request, null, filter).size() > 0)
+        items = listingService.findAllList(request, null, filter).get(0);
+
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+      return new GenericSingleResponse<ItemListDto>(false, ex.getMessage(), null);
+
+    }
+
+    return new GenericSingleResponse<ItemListDto>(true, "success", items);
+  }
+
+
+  @GetMapping(value = IMAGE_DISCOVERY_PATH)
+  public GenericSingleResponse<String> findImagePath() {
+    return new GenericSingleResponse<String>(true, "success", imagePath);
   }
 
 

@@ -8,5 +8,6 @@ public interface SequenceUtil {
   public static final String PACKAGE_ID_SEQ = "PACKAGE_ID";
   public static final String TRANSACTION_ID_SEQ = "TRANSACTION_ID";
   public static final String GROUP_TRANSACTION_ID_SEQ = "GROUP_TRANSACTION_ID";
+  public static final String WIZARD_TRANSACTION_ID = "WIZARD_TRANSACTION_ID";
 
 }

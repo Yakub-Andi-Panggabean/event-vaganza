@@ -905,13 +905,19 @@ function validateBookingRequest() {
 														authenticateBooking);
 
 												$('#z-user').unbind('keypress');
-												$('#z-user').keypress(
-														authenticateBooking);
+												$('#z-user').keypress(function(e) {
+																	if (e.which == 13) {
+																		authenticateBooking();
+																	}
+																});
 
 												$('#z-password').unbind(
 														'keypress');
-												$('#z-password').keypress(
-														authenticateBooking);
+												$('#z-password').keypress(function(e) {
+													if (e.which == 13) {
+														authenticateBooking();
+													}
+												});
 
 											} else {
 												$('#booking-request-form')
@@ -959,8 +965,6 @@ function authenticatePlanEvent(category) {
 
 function validatePlanEvent(category) {
 
-	console.log('category >-------> ' + category);
-
 	$
 			.ajax({
 				url : '/' + servletContext + '/api/auth/status',
@@ -974,7 +978,7 @@ function validatePlanEvent(category) {
 						$('#login_modal').modal();
 
 						$('#z-auth').unbind('click');
-						$('#z-auth').click(function(){
+						$('#z-auth').click(function() {
 							authenticatePlanEvent(category);
 						});
 

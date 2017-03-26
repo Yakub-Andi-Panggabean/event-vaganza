@@ -40,9 +40,8 @@
 						name="eventOthers" id="eventOthers"
 						th:value="${customPackage.others}"> <input type="hidden"
 						name="eventTransport" id="eventTransport"
-						th:value="${customPackage.transport}">
-						<input type="hidden"
-						name="eventLocation" id="eventLocation"
+						th:value="${customPackage.transport}"> <input
+						type="hidden" name="eventLocation" id="eventLocation"
 						th:value="${customLocation}">
 					<button type="submit" class="btn btn-warning">Confirm</button>
 				</form>
@@ -62,16 +61,21 @@
 		<div class="row">
 			<div class="panel-group" id="accordion" role="tablist"
 				aria-multiselectable="true">
+
 				<div class="panel panel-default" th:each="item, row: ${items}">
+
 					<div class="panel-heading" role="tab" id="headingOne"
 						style="background-color: #f7c21d; color: #fff; font-size: 17px;">
+						
 						<h4 class="panel-title">
 							<a role="button" data-toggle="collapse" data-parent="#accordion"
 								th:href="${#strings.append('#',item.id)}" aria-expanded="true"
 								aria-controls="collapseOne" th:inline="text">
 								[[${item.name}]] </a>
 						</h4>
+						
 					</div>
+
 					<div th:id="${item.id}"
 						th:class="${row.index >0?'panel-collapse collapse':'panel-collapse collapse in'}"
 						role="tabpanel" aria-labelledby="headingOne">
@@ -83,6 +87,8 @@
 									th:src="${#strings.append(imageRoot,#strings.arraySplit(item.image,':')[0])}"
 									style="max-width: 150px;">
 							</div>
+							
+							
 							<div class="col-sm-10">
 								<div id="more-info">
 									<div class="row">
@@ -121,8 +127,12 @@
 									</div>
 								</div>
 							</div>
+							
+							
 						</div>
 					</div>
+					
+					
 				</div>
 			</div>
 		</div>

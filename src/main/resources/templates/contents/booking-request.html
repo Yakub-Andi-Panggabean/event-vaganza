@@ -22,7 +22,8 @@
 					<div class="col-sm-6">
 						<div class="row">
 							<div class="col-xs-3" style="padding: 0px">
-								<img th:src="${#strings.append(imageRoot,#strings.arraySplit(package.image, ':')[0])}"
+								<img
+									th:src="${package.image!=null&&!package.image.equals('')}?${#strings.append(imageRoot,#strings.arraySplit(package.image, ':')[0])}:@{/image/no_image.png}"
 									width="100%" height="auto"></img>
 							</div>
 							<div class="col-xs-9" style="padding: 0px 10px 0px 10px">
@@ -45,7 +46,7 @@
 							</div>
 						</div>
 
-						<div class="book-request-box">
+						<div class="book-info-box">
 							<div class="row">
 								<div class="col-xs-4">
 									<p class="box-label">BOOK BY</p>
@@ -74,34 +75,31 @@
 					</div>
 
 					<div class="col-sm-6">
-						<div class="cost-estimate-box">
+						<div class="cost-estimate-detail">
 							<div class="row cost-title">
 								<p>
 									<img th:src="@{/image/icon-cost-orange_16x16.png}" width="16px"
 										height="auto" style="margin-right: 10px"></img>COST ESTIMATION
 								</p>
 							</div>
-							<hr>
-							<div class="row cost-list">
-								<div class="col-xs-7">
-									<p th:inline="text">Rental for [[${package.rentDuration}]]
-										Hours</p>
-								</div>
-								<div class="col-xs-5">
-									<p
-										th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.000</p>
+							<hr class="cost-estimate-line">
+							<div class="cost-estimate-content">
+								<div class="row">
+									<div class="col-xs-7">
+										<p th:inline="text">Rental for [[${package.rentDuration}]]
+											Hours</p>
+									</div>
+									<div class="col-xs-5">
+										<p
+											th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.000</p>
+									</div>
 								</div>
 							</div>
-							<!-- 							<div class="row cost-list"> -->
-							<!-- 								<div class="col-xs-7"> -->
-							<!-- 									<p>Food and Beverages</p> -->
-							<!-- 								</div> -->
-							<!-- 								<div class="col-xs-5"> -->
-							<!-- 									<p>Rp. 300.000.000</p> -->
-							<!-- 								</div> -->
-							<!-- 							</div> -->
-							<br />
-							<div class="row total">
+
+						</div>
+
+						<div class="cost-estimate-total">
+							<div class="row">
 								<div class="col-xs-7">
 									<p class="box-label">TOTAL</p>
 								</div>
@@ -112,13 +110,16 @@
 								</div>
 							</div>
 						</div>
+
 						<div class="row">
 							<p>Banquet Manager will confirm the availability of the venue
 								and detail final price.</p>
 							<p>We will notify you within 24 Hours.</p>
 						</div>
+
 						<div class="row">
-							<form id="booking-request-form" th:action="@{/booking/payment}" method="POST">
+							<form id="booking-request-form" th:action="@{/booking/payment}"
+								method="POST">
 								<input name="package_id" type="hidden" th:value="${package.id}">
 								<input name="event_date" type="hidden"
 									th:value="${#dates.format(packageStartime,

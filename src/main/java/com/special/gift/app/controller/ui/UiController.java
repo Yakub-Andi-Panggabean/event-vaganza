@@ -34,6 +34,7 @@ import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
 import com.special.gift.app.service.VendorService;
 import com.special.gift.app.service.VenueService;
+import com.special.gift.app.service.WizardService;
 
 @Controller
 @SessionAttributes(value = {"menus"})
@@ -89,6 +90,9 @@ public class UiController {
 
   @Inject
   private BookingTransactionService bookingService;
+
+  @Inject
+  private WizardService wizardService;
 
   @Value("${image.path.location}")
   private String imagePath;
@@ -455,21 +459,34 @@ public class UiController {
   @RequestMapping(value = PLAN_MY_EVENT, method = RequestMethod.GET)
   public String renderPlanPage(Model model, HttpSession session, HttpServletRequest request) {
 
+
     if (session.getAttribute("user") == null) {
 
       return "redirect:/";
 
     } else {
 
-      final String venueCategories = (String) model.asMap().get("venueCategory");
+      try {
 
-      model.addAttribute("imageRoot", imagePath);
+        final User user =
+            userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
+        final String venueCategories = (String) model.asMap().get("venueCategory");
 
-      if (venueCategories != null) {
-        model.addAttribute("venueCategory", venueCategories);
+        model.addAttribute("imageRoot", imagePath);
+        model.addAttribute("steps", wizardService.findWizardSteps());
+        model.addAttribute("userId", user.getUserId());
+
+        if (venueCategories != null) {
+          model.addAttribute("venueCategory", venueCategories);
+        }
+
+        return "contents/plan-event";
+
+
+      } catch (final Exception exception) {
+        return "redirect:/";
       }
 
-      return "contents/plan-event";
 
     }
   }
@@ -483,7 +500,7 @@ public class UiController {
 
   @RequestMapping(value = PLAN_FORWARDER, method = RequestMethod.GET)
   public String eventForwarder(RedirectAttributes attributes,
-      @PathVariable(value = "venue_category") String venueCategories) {
+      @PathVariable("venue_category") String venueCategories) {
 
 
     attributes.addFlashAttribute("venueCategory", venueCategories);

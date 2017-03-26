@@ -1,0 +1,33 @@
+<div class="row">
+	<div class="quote-info">
+		<label id="plan-quote-info">Please define your event date and
+			time</label>
+	</div>
+</div>
+<div class="col-sm-8 col-sm-offset-2">
+	<label>EVENT DATE & TIME</label>
+	<div class="form-group">
+		<input id="wizard-date" name="plan-event-date" type="text"
+			class="form-control" placeholder="Select Event Date" value="">
+		<span class="input-icon pe-7s-date"></span>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-4 col-sm-offset-4">
+		<button id="wizard-process-button" class="btn btn-next"
+			onclick="processWizardTransaction(1,true)">NEXT</button>
+	</div>
+</div>
+
+
+<script>
+	$('#wizard-date').datetimepicker({
+		dateFormat : 'yy/mm/dd',
+		timeFormat : "HH:mm",
+		onSelect: function(data){
+			$("#plan_value_container").val(data);
+		}
+	});
+	
+</script>

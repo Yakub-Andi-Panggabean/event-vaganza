@@ -105,9 +105,9 @@ function validateRegisterForm() {
 					$('#handphone_error_message').show();
 					$("#form_group_handphone").addClass('has-error');
 					isHandphoneTrue = false;
-				} else if (handphone.length < 12) {
+				} else if (handphone.length < 9) {
 					$('#handphone_error_message').html(
-							"phone length has to be more than 12");
+							"phone length has to be more than 9");
 					$('#handphone_error_message').show();
 					$("#form_group_handphone").addClass('has-error');
 					isHandphoneTrue = false;
@@ -147,9 +147,9 @@ function validateRegisterForm() {
 					$('#handphone_error_message').show();
 					$("#form_group_handphone").addClass('has-error');
 					isHandphoneTrue = false;
-				} else if (handphone.length < 12) {
+				} else if (handphone.length < 9) {
 					$('#handphone_error_message').html(
-							"handphone length has to be more than 12");
+							"handphone length has to be more than 9");
 					$('#handphone_error_message').show();
 					$("#form_group_handphone").addClass('has-error');
 					isHandphoneTrue = false;
@@ -603,7 +603,7 @@ function validateVendorRegistrationForm() {
 			function() {
 				isVendorHandphoneValid = $('#vendor_handphone')
 						.validateNumberInput('vendor_handphone_error_message',
-								'form_group_vendor_handphone', 12,
+								'form_group_vendor_handphone', 9,
 								'Vendor handphone');
 
 				isVendorInputValid = isVendorEmailValid && isVendorNameValid
@@ -623,7 +623,7 @@ function validateVendorRegistrationForm() {
 			function() {
 				isVendorHandphoneValid = $('#vendor_handphone')
 						.validateNumberInput('vendor_handphone_error_message',
-								'form_group_vendor_handphone', 12,
+								'form_group_vendor_handphone', 9,
 								'Vendor handhone');
 
 				isVendorInputValid = isVendorEmailValid && isVendorNameValid

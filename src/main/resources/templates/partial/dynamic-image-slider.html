@@ -1,19 +1,34 @@
 <div class="carousel slide" id="image-slide">
+
 	<div class="carousel-inner">
+
 		<div th:each="image,row:${images}"
 			th:class="${row.count == 1}?'item active':'item'">
-			<div class="image-slide-container">
+			
+			<div th:if="${imageExist}" class="image-slide-container">
 				<img th:src="${image}"></img>
 			</div>
+			
+			<div th:if="${!imageExist}" class="image-slide-container">
+				<img th:src="@{/image/no_image.jpg}"></img>
+			</div>
+			
 		</div>
+
 	</div>
+
 	<div class="carousel-control">
 		<img th:src="@{/image/icon-slide-prev.png}" href="#image-slide"
 			data-slide="prev" style="float: left; cursor: pointer"></img> <img
 			th:src="@{/image/icon-slide-next.png}" href="#image-slide"
 			data-slide="next" style="float: right; cursor: pointer"></img>
 	</div>
+
 	<div class="carousel-indicators">
-		<li th:each="image,row:${images}" th:class="${row.count == 0}?'active'" th:attr="data-slide-to=${row.count-1}" data-target="#image-slide" class="active"></li>
+		<li th:each="image,row:${images}"
+			th:class="${row.count == 0}?'active'"
+			th:attr="data-slide-to=${row.count-1}" data-target="#image-slide"
+			class="active"></li>
 	</div>
+
 </div>

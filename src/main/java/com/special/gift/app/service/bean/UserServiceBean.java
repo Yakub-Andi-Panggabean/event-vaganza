@@ -1,10 +1,13 @@
 package com.special.gift.app.service.bean;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +15,9 @@ import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.special.gift.app.domain.PasswordReminder;
 import com.special.gift.app.domain.User;
+import com.special.gift.app.repository.PasswordReminderRepository;
 import com.special.gift.app.repository.UserRepository;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.util.CommonUtil;
@@ -26,6 +31,8 @@ public class UserServiceBean implements UserService {
 
   @Autowired
   private UserRepository repository;
+  @Autowired
+  private PasswordReminderRepository passwordReminderRepository;
 
   @Autowired
   private ShaPasswordEncoder passwordEncoder;
@@ -104,6 +111,103 @@ public class UserServiceBean implements UserService {
     return repository.findOne(id);
   }
 
+  @Override
+  @Transactional(readOnly = false)
+  public User activateUser(String token) throws Exception {
+
+    // userid||currentdatetime||uuid
+    final String decoded = CommonUtil.decodeToBase64(token);
+
+    log.info("decoded : {}", decoded);
+
+    final StringTokenizer tokenizer = new StringTokenizer(decoded, "||");
+    final String id = tokenizer.nextToken();
+
+    log.info("user id : {}", id);
+
+
+
+    if (repository.exists(id)) {
+      final User user = repository.findOne(id);
+      repository.updateUserStatus('1', id);
+      return user;
+    } else {
+      throw new RuntimeException("user not found");
+    }
+
+
+  }
+
+  @Override
+  @Transactional(readOnly = false)
+  public User findByEmail(String email) throws Exception {
+    final User user = repository.findByEmail(email);
+    if (user == null) {
+      throw new RuntimeException(
+          "There is no event vaganza account associated with email " + email);
+    } else {
+      try {
+
+        final PasswordReminder reminder = new PasswordReminder();
+        reminder.setCreatedDate(new Date());
+        reminder.setStatus(false);
+        reminder.setUserId(user.getUserId());
+        passwordReminderRepository.save(reminder);
+
+      } catch (final Exception exception) {
+        exception.printStackTrace();
+      }
+
+      return user;
+    }
+
+  }
+
+  @Override
+  @Transactional(readOnly = false)
+  public User resetPassword(String token, String newPassword) throws Exception {
+    // userid||currentdatetime||uuid
+    final String decoded = CommonUtil.decodeToBase64(token);
+
+    log.info("decoded : {}", decoded);
+
+    final StringTokenizer tokenizer = new StringTokenizer(decoded, "||");
+    final String id = tokenizer.nextToken();
+
+    log.info("user id : {}", id);
+
+    if (repository.exists(id)) {
+      final User user = repository.findOne(id);
+      final User afterPasswordChanged = new User();
+      BeanUtils.copyProperties(user, afterPasswordChanged);
+
+      afterPasswordChanged
+          .setPassword(passwordEncoder.encodePassword(newPassword, CommonUtil.SALT));
+
+      repository.save(afterPasswordChanged);
+
+      return user;
+    } else {
+      throw new RuntimeException("user not found");
+    }
+
+  }
+
+  @Override
+  public boolean checkUserByToken(String token) throws Exception {
+
+    final String decoded = CommonUtil.decodeToBase64(token);
+
+    log.info("decoded : {}", decoded);
+
+    final StringTokenizer tokenizer = new StringTokenizer(decoded, "||");
+    final String id = tokenizer.nextToken();
+
+    return repository.exists(id);
+  }
+
 
 
 }
+
+

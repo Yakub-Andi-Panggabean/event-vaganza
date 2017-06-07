@@ -5,11 +5,12 @@
 				th:text="${#strings.append(#strings.toUpperCase(package_type),' DESCRIPTION')}"></h3>
 			<hr class="headline-line">
 		</div>
-		
-		
-		<div class="row" th:remove="${packageDetail.image == null||packageDetail.image.equals('')}?'all':'none'">
+
+
+		<div class="row"
+			th:remove="${packageDetail.image == null||packageDetail.image.equals('')}?'all':'none'">
 			<div id="image-slide" class="carousel slide" data-ride="carousel">
-			
+
 				<!-- Wrapper for slides -->
 				<div th:unless="${packageDetail.image == null}"
 					class="carousel-inner" role="listbox">
@@ -21,14 +22,16 @@
 							style="height: 350px;">
 					</div>
 				</div>
-				
+
 
 				<!-- Left and right controls -->
 				<div class="carousel-control">
-						<img th:src="@{/image/icon-slide-prev.png}" href="#image-slide" data-slide="prev" style="float:left;cursor:pointer"></img>
-						<img th:src="@{/image/icon-slide-next.png}" href="#image-slide" data-slide="next" style="float:right;cursor:pointer"></img>
+					<img th:src="@{/image/icon-slide-prev.png}" href="#image-slide"
+						data-slide="prev" style="float: left; cursor: pointer"></img> <img
+						th:src="@{/image/icon-slide-next.png}" href="#image-slide"
+						data-slide="next" style="float: right; cursor: pointer"></img>
 				</div>
-				
+
 				<!-- Indicators -->
 				<div class="carousel-indicators">
 					<li
@@ -36,18 +39,25 @@
 						th:classappend="${status.index==0}?'active':''"
 						data-target="#image-slide" th:attr="data-slide-to=${status.index}"></li>
 				</div>
-				
+
 			</div>
-			
+
 			<div class="carousel-description" th:inline="text">
 				[[${#strings.toUpperCase(packageDetail.name)}]] <small>[[${#strings.capitalize(packageDetail.room)}]]
+				
 			</div>
-			
+
 		</div>
-		
+
 		<div class="row">
 			<div class="col-sm-4" style="padding: 0px">
 				<div class="row">
+					<div class="col-xs-4 col-sm-12" style="padding: 0px 5px">
+						<div class="info-box">
+							<h6 th:text="${#strings.append('Rp. ',#numbers.formatDecimal(packageDetail.price,3,'POINT',2,'COMMA'))}">1000</h6>
+							<p>total price</p>
+						</div>
+					</div>
 					<div class="col-xs-4 col-sm-12" style="padding: 0px 5px">
 						<div class="info-box">
 							<h6
@@ -80,8 +90,9 @@
 				<div class="row">
 					<div class="item-description-title" th:inline="text">[[${#strings.toUpperCase(packageDetail.name)}]],
 						[[${#strings.toUpperCase(packageDetail.location)}]]</div>
-					<div class="item-description" th:utext="${#strings.capitalize(#strings.replace(packageDetail.description,'&#10;','&lt;br&gt;'))}">
-						</div>												
+					<div class="item-description"
+						th:utext="${#strings.capitalize(#strings.replace(packageDetail.description,'&#10;','&lt;br&gt;'))}">
+					</div>
 				</div>
 			</div>
 		</div>

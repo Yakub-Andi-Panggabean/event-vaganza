@@ -50,7 +50,8 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
 
     if (!originalViewName.contains("redirect:") && !originalViewName.startsWith("partial")) {
 
-      if (originalViewName.contains("/outer") || originalViewName.contains("error")) {
+      if (originalViewName.contains("/outer") || originalViewName.contains("outer")
+          || originalViewName.contains("error")) {
         // define header
         modelAndView.addObject(DEFAULT_HEADER_ATTRIBUTE_NAME, OUTER_HEADER_VALUE);
 

@@ -6,6 +6,8 @@ import java.text.NumberFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.security.crypto.codec.Base64;
+
 import com.special.gift.app.domain.User;
 
 public class CommonUtil {
@@ -56,6 +58,19 @@ public class CommonUtil {
       formatter.setMaximumFractionDigits(0);
     }
     return formatter.format(dPrice);
+  }
+
+
+  public static String encodeToBase64(String token) {
+    final StringBuilder generatedToken = new StringBuilder();
+    final byte[] encodedValue = Base64.encode(token.getBytes());
+    return generatedToken.append(new String(encodedValue)).toString();
+  }
+
+  public static String decodeToBase64(String token) {
+    final StringBuilder generatedToken = new StringBuilder();
+    final byte[] decodedValue = Base64.decode(token.getBytes());
+    return generatedToken.append(new String(decodedValue)).toString();
   }
 
 }

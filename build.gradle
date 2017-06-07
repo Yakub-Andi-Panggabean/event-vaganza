@@ -29,8 +29,16 @@ targetCompatibility = 1.7
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/'
+	}
+	maven {
+		url 'http://jasperreports.sourceforge.net/maven2'
+	}
+	maven {
+		url 'http://repository.jboss.org/maven2/'
+	}
 }
-
 
 dependencies {
 	compile ('org.springframework.security:spring-security-core:4.2.0.RELEASE')
@@ -41,5 +49,6 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile ('mysql:mysql-connector-java:5.1.6')
 	compile ('javax.inject:javax.inject:1')
+	compile ('net.sf.jasperreports:jasperreports:6.4.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

@@ -5,7 +5,7 @@ var pagingPageSize = 12;
 // visible pagination number
 var pagingNumber = 5;
 
-var imagePathLocation = "http://139.59.241.223:8080/kado-cms/image/";
+var imagePathLocation = "http://128.199.192.252:8080/kado-cms/image/";
 // var imagePathLocation='http://localhost:8080/kado-web/image/'
 
 /**
@@ -79,7 +79,16 @@ function init() {
 	$('#button_cancel_vendor_type').click(function() {
 		$('#choosen_category_list').cancelCategory('available_category_list');
 	});
-
+	
+	
+	$('#button_forgot_password').click(function() {
+		validatePasswordReset();
+	});
+	
+	$('#button_forgot_password_new').click(function() {
+		resetPassword();
+	});
+	
 }
 
 /**
@@ -106,6 +115,14 @@ function showModal() {
 
 	$('#button-booking').click(function() {
 		$('#book_modal').modal();
+	});
+	
+	$('#activate_user_button').click(function(){
+		$('#login_modal').modal();
+	});
+	
+	$('#button_password_reset_success').click(function() {
+		$('#login_modal').modal();
 	});
 }
 
@@ -777,3 +794,51 @@ function createPlanBookingTransaction() {
 
 	$('#booking_planned_transaction_form').submit();
 }
+
+function validatePasswordReset(){
+	
+	var email=$('#forgot_password_email').val();
+	
+	if(email==null||email===''){
+		
+		$("#forgot_password_email_error_message").show();
+		$("#forgot_password_email_error_message").html("email may not be empty");
+	}else{
+	
+		var encodedMail=window.btoa(email);
+		$.ajax({
+			url: '/' + servletContext + '/api/user/email/'+encodedMail,
+			method:'GET',
+			success:function(data){
+				if(data.success===false){
+					$("#forgot_password_email_error_message").show();
+					$("#forgot_password_email_error_message").html(data.message);
+				}else{
+					$("#main_forgot_password_body").remove();
+					$("#forgot_password_title").html("Thanks "+data.content.username+", We already sent email to "+data.content.email+", Please check your email.");
+				}
+			},error:function(jqXHR, textStatus, errorThrown){
+				console.log("error occured : " + errorThrown);
+			}
+		});
+	
+	}
+	
+}
+
+function resetPassword(){
+	
+	var newPassword = $('#forgot_password_new').val();
+	var confirm = $('#forgot_password_new_confirm').val();
+	
+	if(newPassword===confirm){
+		
+		$('#password_reset_form').submit();
+		
+	}else{
+		swal("","password confirmation is not matched","error");
+	}
+	
+	
+}
+

@@ -80,20 +80,26 @@ public class AuthenticationFilter implements Filter {
 
           final User user = userService.findUserByPrincipal(principal);
 
-          if (passwordEncoder.isPasswordValid(user.getPassword(), credential, CommonUtil.SALT)) {
-
-            final List<Vendor> vendors = vendorService.findByUser(user);
-
-            request.setAttribute("isVendorExist", vendors.size() > 0);
-            request.setAttribute("user", user.getUsername());
-            request.setAttribute("userEmail", user.getEmail());
-
-            chain.doFilter(request, response);
-
+          if (user.getStatus() != '1') {
+            printResponse(res, HttpServletResponse.SC_FORBIDDEN, " user is not activated yet");
           } else {
-            printResponse(res, HttpServletResponse.SC_FORBIDDEN, new StringBuilder("user : ")
-                .append(principal).append(" username and password is not matched").toString());
+            if (passwordEncoder.isPasswordValid(user.getPassword(), credential, CommonUtil.SALT)) {
+
+              final List<Vendor> vendors = vendorService.findByUser(user);
+
+              request.setAttribute("isVendorExist", vendors.size() > 0);
+              request.setAttribute("user", user.getUsername());
+              request.setAttribute("userEmail", user.getEmail());
+
+              chain.doFilter(request, response);
+
+            } else {
+              printResponse(res, HttpServletResponse.SC_FORBIDDEN,
+                  new StringBuilder().append(" username and password is not matched").toString());
+            }
           }
+
+
 
         } else {
           printResponse(res, HttpServletResponse.SC_FORBIDDEN, "email is not valid or registered");

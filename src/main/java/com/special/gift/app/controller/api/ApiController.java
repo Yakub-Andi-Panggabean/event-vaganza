@@ -31,6 +31,7 @@ import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
 import com.special.gift.app.service.VenueService;
+import com.special.gift.app.util.CommonUtil;
 import com.special.gift.app.util.response.GenericMultipleResponse;
 import com.special.gift.app.util.response.GenericResponse;
 import com.special.gift.app.util.response.GenericSingleResponse;
@@ -50,6 +51,7 @@ public class ApiController {
   public static final String VENUE_LIST_API = "/venues";
   public static final String FIND_PACKAGE_BY_ID_PATH = "/packages/{packageId}";
   public static final String IMAGE_DISCOVERY_PATH = "/image/path";
+  public static final String USER_BY_EMAIL_API = USER_API + "/email/{mail:.+}";
 
   @Inject
   private UserService userService;
@@ -215,6 +217,24 @@ public class ApiController {
   @GetMapping(value = IMAGE_DISCOVERY_PATH)
   public GenericSingleResponse<String> findImagePath() {
     return new GenericSingleResponse<String>(true, "success", imagePath);
+  }
+
+  @GetMapping(value = USER_BY_EMAIL_API)
+  public GenericSingleResponse<UserDto> findUserByEmail(@PathVariable(name = "mail") String email) {
+    final UserDto dto = new UserDto();
+    try {
+      final String decoded = CommonUtil.decodeToBase64(email);
+      final User user = userService.findByEmail(decoded);
+      user.setPassword("");
+      user.setUserId("");
+      user.setPhone("");
+      BeanUtils.copyProperties(user, dto);
+    } catch (final Exception exception) {
+      log.error("error occured with message : {}", exception.getMessage());
+      return new GenericSingleResponse<UserDto>(false, exception.getMessage(), null);
+    }
+
+    return new GenericSingleResponse<UserDto>(true, "success", dto);
   }
 
 

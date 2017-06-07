@@ -22,4 +22,13 @@ public interface UserService {
 
   void deleteUser(String id) throws Exception;
 
+  User activateUser(String token) throws Exception;
+
+  User findByEmail(String email) throws Exception;
+
+  User resetPassword(String token, String newPassword) throws Exception;
+
+  boolean checkUserByToken(String token) throws Exception;
+
+
 }

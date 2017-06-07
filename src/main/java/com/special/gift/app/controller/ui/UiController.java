@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -71,6 +72,11 @@ public class UiController {
   public static final String PLAN_EVENT_CATEGORIES = "event-categories";
   public static final String PLAN_FORWARDER = "plan-forwarder/{venue_category}";
   public static final String PLAN_MY_EVENT = "plan-event";
+
+  public static final String ACTIVATE_USER_PATH = "registration/confirmation/{token}";
+  public static final String FORGOT_PASSWORD_PATH = "/password-reset";
+  public static final String RESET_PASSWORD_PATH = "/password/reset/{token}";
+
 
 
   @Inject
@@ -506,6 +512,42 @@ public class UiController {
     attributes.addFlashAttribute("venueCategory", venueCategories);
 
     return "redirect:/plan-event";
+  }
+
+
+  @GetMapping(value = ACTIVATE_USER_PATH)
+  public String activateUser(Model model, @PathVariable(value = "token") String token) {
+
+    try {
+      final User user = userService.activateUser(token);
+      model.addAttribute("userName", user.getUsername());
+    } catch (final Exception ex) {
+      log.info("activating user error : {}", ex.getMessage());
+      return "error";
+    }
+
+    return "outer/activated_notification";
+  }
+
+  @GetMapping(value = FORGOT_PASSWORD_PATH)
+  public String forgotPassword() {
+    return "contents/forgot-password";
+  }
+
+  @GetMapping(value = RESET_PASSWORD_PATH)
+  public String resetPassword(Model model, @PathVariable(value = "token") String token) {
+    try {
+
+      if (userService.checkUserByToken(token)) {
+        model.addAttribute("token", token);
+        return "contents/reset_password";
+      }
+
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+      log.info("activating user error : {}", ex.getMessage());
+    }
+    return "error";
   }
 
 

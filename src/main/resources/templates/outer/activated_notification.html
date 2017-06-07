@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container" th:fragment="content">
+		<h1>User Activated</h1>
+		<blockquote>
+			<p style="font-size: 15px;" th:inline="text">Welcome
+				[[${userName}]], please login to try your account.</p>
+		</blockquote>
+		<button id="activate_user_button" type="button"
+			class="btn btn-warning" style="width: 30%">Login</button>
+	</div>
+</body>
+</html>

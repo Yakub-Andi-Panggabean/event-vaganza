@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = Vendor.TABLE_NAME)
 public class Vendor {
@@ -44,6 +46,7 @@ public class Vendor {
 
   @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", nullable = true)
+  @JsonBackReference
   private User user;
 
   public String getName() {

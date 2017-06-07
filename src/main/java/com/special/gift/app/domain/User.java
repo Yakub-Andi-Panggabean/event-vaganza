@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = User.TABLE_NAME)
 public class User {
@@ -47,6 +49,7 @@ public class User {
   @OneToMany(targetEntity = Vendor.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY,
       mappedBy = "user")
   // @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "vendor_type")})
+  @JsonManagedReference
   private List<Vendor> vendor;
 
   public String getUserId() {
@@ -128,7 +131,6 @@ public class User {
   public void setVendor(List<Vendor> vendor) {
     this.vendor = vendor;
   }
-
 
 
 }

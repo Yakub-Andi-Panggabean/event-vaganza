@@ -169,7 +169,7 @@ public class AjaxfiedController {
       if (items.size() > 0)
         images = items.get(0).getImage();
 
-      final String[] imageList = images.replaceAll(":", "").split(",");
+      final String[] imageList = images.split(":");
 
       final List<String> fullImage = new ArrayList<>();
 
@@ -178,6 +178,7 @@ public class AjaxfiedController {
       }
 
       model.addAttribute("images", fullImage);
+      model.addAttribute("imageExist", images != null && !images.equals(""));
 
     } catch (final Exception exception) {
       exception.printStackTrace();

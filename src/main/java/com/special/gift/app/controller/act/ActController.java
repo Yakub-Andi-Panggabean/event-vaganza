@@ -77,6 +77,8 @@ public class ActController {
   public static final String PLAN_PACKAGE_PAYMENT = "plan/booking/payment";
   public static final String PLAN_BOOKING_TRANSACTION = "plan/booking/transaction";
 
+  public static final String RESET_PASSWORD = "/password/reset";
+
 
   @Inject
   private UserService userService;
@@ -767,6 +769,33 @@ public class ActController {
     return "redirect:/vendor-view";
   }
 
+
+  @PostMapping(value = RESET_PASSWORD)
+  public String passwordReset(@RequestBody MultiValueMap<String, String> formData) {
+
+
+    try {
+
+
+      final String newPassword = formData.getFirst("forgot_password_new");
+      final String newPasswordConfirmation = formData.getFirst("forgot_password_new_confirm");
+      final String token = formData.getFirst("forgot_password_token");
+
+      if (!newPassword.equals(newPasswordConfirmation)) {
+        throw new RuntimeException("password confirmation is different");
+      }
+
+
+      userService.resetPassword(token, newPassword);
+
+      return "outer/password_reset_success";
+    } catch (final Exception exception) {
+      log.debug("exception occured with message : {}", exception.getMessage());
+      return "error";
+    }
+
+
+  }
 
 
 }

@@ -57,6 +57,11 @@ public class ListingServiceBean implements ListingService {
       // add package vendor
       for (final PackageVendor packages : pVendorRepository.findAll()) {
 
+        final Double discount = new Double(new Double(packages.getPackagePrice())
+            * (packages.getDiscountRate() / new Double(100)));
+
+        final Integer price = (packages.getPackagePrice()) - discount.intValue();
+
         final ItemListDto dto = new ItemListDto();
         final Vendor vendor = vendorRepository.findSingleVendorById(packages.getVendorId());
 
@@ -72,7 +77,10 @@ public class ListingServiceBean implements ListingService {
         dto.setName(packages.getPackageName());
         dto.setPackageType(CommonUtil.PACKAGE_VENDOR);
         dto.setPaxPrice(0);
-        dto.setPrice(packages.getPackagePrice());
+
+
+        dto.setPrice(price);
+
         dto.setRentDuration(String.valueOf(packages.getTimePackage()));
         dto.setRoom("");
         dto.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")
@@ -91,6 +99,13 @@ public class ListingServiceBean implements ListingService {
 
         final ItemListDto dto = new ItemListDto();
 
+        final Double discount = new Double(
+            new Double(venue.getRentalPrice()) * (venue.getDiscountRate() / new Double(100)));
+
+        final Integer price = (venue.getRentalPrice()) - discount.intValue();
+
+        log.debug("discount for {} is {}", venue.getVenueName(), discount);
+
         dto.setCapacity(Integer.parseInt(venue.getRoomCapacity()));
         dto.setCategory(venue.getVendorDesc().getVendorType());
         dto.setDescription(venue.getVenuePackage());
@@ -103,7 +118,9 @@ public class ListingServiceBean implements ListingService {
         dto.setName(venue.getVenueName());
         dto.setPackageType(CommonUtil.PACKAGE_VENUE);
         dto.setPaxPrice(venue.getPaxPrice());
-        dto.setPrice(venue.getRentalPrice());
+
+        dto.setPrice(price);
+
         dto.setRentDuration(venue.getTimeRent());
         dto.setRoom(venue.getVenueRoom());
         dto.setUrl(new StringBuilder(request.getContextPath()).append("/packages/")

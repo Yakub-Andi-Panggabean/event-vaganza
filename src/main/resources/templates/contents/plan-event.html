@@ -32,24 +32,48 @@
 						<div id="wizard_content">
 							<!-- dynamic content -->
 
-							<div class="row">
+							<div class="row" style="margin-bottom: 50px;">
 								<div class="quote-info">
 									<label id="plan-quote-info">Please define your event
-										date and time</label>
+										detail</label>
 								</div>
 							</div>
 							<div class="col-sm-8 col-sm-offset-2">
-								<label>EVENT DATE & TIME</label>
+
+								<label>CITY</label>
 								<div class="form-group">
+									<select id="wizard-city" name="plan-event-city"
+										class="form-control">
+									</select>
+								</div>
+								<label>GUEST</label>
+								<div class="form-group">
+									<select id="wizard-guest" name="plan-event-guest"
+										class="form-control">
+										<option></option>
+										<option value="<,300">< 300</option>
+										<option value="<,500">< 500</option>
+										<option value="<,1000">< 1000</option>
+										<option value="<,2000">< 2000</option>
+										<option value="<,3000">< 3000</option>
+										<option value="<,4000">< 4000</option>
+										<option value="<,5000">< 5000</option>
+										<option value=">,5000">> 5000</option>
+									</select>
+								</div>
+								<label>EVENT DATE & TIME</label>
+								<div style="margin-bottom: 60px;" class="form-group">
 									<input id="wizard-date" name="plan-event-date" type="text"
 										class="form-control" placeholder="Select Event Date" value="">
 									<span class="input-icon pe-7s-date"></span>
 								</div>
+
 							</div>
 
 							<div class="row">
 								<div class="col-sm-4 col-sm-offset-4">
-									<button id="wizard-process-button" class="btn btn-next"
+									<button style="margin-top: 50px;" id="wizard-process-button"
+										class="btn btn-next"
 										onclick="processWizardTransaction(1,true)">NEXT</button>
 								</div>
 							</div>

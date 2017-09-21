@@ -46,6 +46,9 @@ public class User {
   @Column(name = "user_status", nullable = false)
   private char status;
 
+  @Column(name = "full_name", nullable = false)
+  private String fullName;
+
   @OneToMany(targetEntity = Vendor.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY,
       mappedBy = "user")
   // @JoinColumns({@JoinColumn(name = "vendor_id"), @JoinColumn(name = "vendor_type")})
@@ -131,6 +134,15 @@ public class User {
   public void setVendor(List<Vendor> vendor) {
     this.vendor = vendor;
   }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
+
 
 
 }

@@ -85,7 +85,8 @@ public class UserServiceBean implements UserService {
           .append(user.getUsername()).append(" already exist").toString(), existExceptionEntity);
     }
 
-    user.setPassword(passwordEncoder.encodePassword(user.getPassword(), CommonUtil.SALT));
+    // user.setPassword(passwordEncoder.encodePassword(user.getPassword(), CommonUtil.SALT));
+    user.setPassword(CommonUtil.encryptHashSHA(user.getPassword()));
     user.setUserId(CommonUtil.generateFakeId(repository.findAll()));
     user.setStatus('0');
     repository.save(user);
@@ -181,8 +182,10 @@ public class UserServiceBean implements UserService {
       final User afterPasswordChanged = new User();
       BeanUtils.copyProperties(user, afterPasswordChanged);
 
-      afterPasswordChanged
-          .setPassword(passwordEncoder.encodePassword(newPassword, CommonUtil.SALT));
+      // afterPasswordChanged
+      // .setPassword(passwordEncoder.encodePassword(newPassword, CommonUtil.SALT));
+
+      afterPasswordChanged.setPassword(CommonUtil.encryptHashSHA(newPassword));
 
       repository.save(afterPasswordChanged);
 

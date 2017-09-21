@@ -31,4 +31,6 @@ public interface WizardService {
 
   void updateCustomLocationWizardValue(CustomLocationDto customLocationDto) throws Exception;
 
+  void updateWizardPreview(String previewedId) throws Exception;
+
 }

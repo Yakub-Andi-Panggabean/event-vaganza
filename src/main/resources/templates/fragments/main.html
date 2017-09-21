@@ -41,8 +41,10 @@
 					<a th:href="@{/quick-booking}"><button class="btn btn-quick">Quick
 							Event Booking</button></a>
 				</div>
-				<div class="row">
-					<button class="btn btn-history">My History</button>
+				<div th:if="${isLogin}" class="row">
+					<a th:href="@{/booking-history}">
+						<button class="btn btn-history">My History</button>
+					</a>
 				</div>
 			</div>
 		</div>

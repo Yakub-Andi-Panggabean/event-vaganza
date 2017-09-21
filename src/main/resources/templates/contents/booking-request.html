@@ -86,12 +86,12 @@
 							<div class="cost-estimate-content">
 								<div class="row">
 									<div class="col-xs-7">
-										<p th:inline="text">Rental for [[${package.rentDuration}]]
-											Hours</p>
+										<p th:inline="text">[[${package.name}]]
+											x [[${qty}]]</p>
 									</div>
 									<div class="col-xs-5">
 										<p
-											th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.000</p>
+											th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price * qty,3,'POINT',2,'COMMA'))}">Rp.000</p>
 									</div>
 								</div>
 							</div>
@@ -105,7 +105,7 @@
 								</div>
 								<div class="col-xs-5">
 									<p class="box-info"
-										th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price,3,'POINT',2,'COMMA'))}">Rp.
+										th:text="${#strings.append('Rp. ',#numbers.formatDecimal(package.price * qty,3,'POINT',2,'COMMA'))}">Rp.
 										000</p>
 								</div>
 							</div>
@@ -124,6 +124,7 @@
 								<input name="event_date" type="hidden"
 									th:value="${#dates.format(packageStartime,
 									'yyyy/MM/dd HH:mm')}">
+								<input name="package_qty" type="hidden" th:value="${qty}">
 								<button class="btn btn-action">CONFIRM REQUEST</button>
 							</form>
 

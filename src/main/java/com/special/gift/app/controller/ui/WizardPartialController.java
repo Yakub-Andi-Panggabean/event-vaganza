@@ -1,13 +1,11 @@
 package com.special.gift.app.controller.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +23,7 @@ import com.special.gift.app.domain.WizardStepMaster;
 import com.special.gift.app.domain.WizardValue;
 import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
+import com.special.gift.app.dto.PlanPreview;
 import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.WizardService;
 import com.special.gift.app.util.CommonUtil;
@@ -58,8 +57,8 @@ public class WizardPartialController {
 
   @GetMapping(value = WIZARD_STEP_PATH, produces = MediaType.TEXT_HTML_VALUE)
   public String renderStep(Model model, @RequestParam(value = "category") String category,
-      javax.servlet.http.HttpServletRequest request) {
-
+      @RequestParam(value = "venueId", required = false) String venueId,
+      javax.servlet.http.HttpServletRequest request, HttpSession session) {
 
 
     final List<ItemListDto> items = new ArrayList<>();
@@ -75,14 +74,28 @@ public class WizardPartialController {
     String stepTitle = "";
     String categoryCriteria = category;
 
+    final String venueCategory = (String) session.getAttribute("venueCategory");
+    final String wizardCity = session.getAttribute("wizardCity").toString();
+    final String wizardGuest = session.getAttribute("wizardGuest").toString();
+
+
+    log.info("venue category : {}, wizard city : {}, wizard guest : {}", venueCategory, wizardCity,
+        wizardGuest);
+
 
     try {
 
-      if (category != null && category.substring(0, 2).equals("00"))
-        categoryCriteria = "000";
 
+      if (category != null && !category.isEmpty()) {
 
-      log.debug("category  {}", category);
+        if (category.substring(0, 2).equals("00"))
+          categoryCriteria = "000";
+
+      } else {
+        categoryCriteria = venueCategory;
+      }
+
+      log.debug("category criteria : {}", categoryCriteria);
 
       final WizardStepMaster wizardStepMaster = wizardService.findStepByCategory(categoryCriteria);
 
@@ -94,9 +107,19 @@ public class WizardPartialController {
 
 
       filter.setCategory(category);
+      filter.setCity(wizardCity);
 
 
-      items.addAll(listingItemService.findAllList(request, null, filter));
+      if (venueId == null || venueId.isEmpty()) {
+
+        items.addAll(listingItemService.findAllList(request, null, filter));
+
+      } else {
+
+        items.addAll(listingItemService.findListByCategoryAndVenue(request, categoryCriteria,
+            venueId, wizardCity, wizardGuest));
+      }
+
 
 
       log.debug("previous step : {}", previousStep);
@@ -112,6 +135,7 @@ public class WizardPartialController {
 
     } catch (final Exception ex) {
       ex.printStackTrace();
+      log.error("error message : {}", ex.getMessage());
     }
 
 
@@ -142,7 +166,8 @@ public class WizardPartialController {
 
       String eventDate = "";
 
-      final List<Map<String, ItemListDto>> items = new LinkedList<>();
+      // final List<Map<String, ItemListDto>> items = new LinkedList<>();
+      final List<PlanPreview> previews = new ArrayList<>();
 
       String customLocation = "";
 
@@ -152,6 +177,7 @@ public class WizardPartialController {
         log.debug("id : {}, value : {}", stepValues[i].split("=")[0], stepValues[i].split("=")[1]);
 
         if (stepValues[i].split("=")[0].equals("1")) {
+
           eventDate = stepValues[i].split("=")[1];
 
         } else {
@@ -163,6 +189,7 @@ public class WizardPartialController {
 
             if (master.getPackageCategory().equals(CommonUtil.VENUE_WIZARD_PACKAGE_CATEGORY)
                 && !stepValues[i].split("=")[1].matches("[0-9]+"))
+
               customLocation = stepValues[i].split("=")[1];
 
 
@@ -177,9 +204,15 @@ public class WizardPartialController {
 
             if (!list.isEmpty()) {
 
-              final Map<String, ItemListDto> contents = new HashMap<>();
-              contents.put(stepMaster.getStepName(), list.get(0));
-              items.add(contents);
+              // final Map<String, ItemListDto> contents = new HashMap<>();
+              // contents.put(stepMaster.getStepName(), list.get(0));
+              // items.add(contents);
+              final PlanPreview preview = new PlanPreview();
+              preview.setStepOrder(stepMaster.getStepOrder());
+              preview.setStepName(stepMaster.getStepName());
+              preview.setChosenItem(list.get(0));
+              previews.add(preview);
+
 
             }
 
@@ -193,12 +226,12 @@ public class WizardPartialController {
       }
 
 
-      log.debug("content : {}", items.toString());
+      log.debug("content : {}", previews.toString());
 
       model.addAttribute("customLocation", customLocation);
       model.addAttribute("transactionId", transactionId);
       model.addAttribute("imageRoot", imagePath);
-      model.addAttribute("items", items);
+      model.addAttribute("items", previews);
       model.addAttribute("eventDate", eventDate);
 
     } catch (final Exception ex) {

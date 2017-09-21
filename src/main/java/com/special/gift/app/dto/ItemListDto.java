@@ -19,6 +19,7 @@ public class ItemListDto {
   private String description;
   private String room;
   private String vendorStyle;
+  private String unit;
 
   public ItemListDto() {
     super();
@@ -27,7 +28,7 @@ public class ItemListDto {
   public ItemListDto(String id, String name, String packageType, String category, String image,
       String url, Integer price, Integer capacity, String location, Integer discountRate,
       Integer minimumPayment, Integer paxPrice, String rentDuration, String description,
-      String room, String vendorStyle, String vendorId) {
+      String room, String vendorStyle, String vendorId, String unit) {
     super();
     this.id = id;
     this.name = name;
@@ -46,6 +47,7 @@ public class ItemListDto {
     this.room = room;
     this.vendorStyle = vendorStyle;
     this.vendorId = vendorId;
+    unit = unit;
   }
 
   public String getId() {
@@ -185,6 +187,14 @@ public class ItemListDto {
     this.vendorId = vendorId;
   }
 
+  public String getUnit() {
+    return unit;
+  }
+
+  public void setUnit(String unit) {
+    this.unit = unit;
+  }
+
   @Override
   public String toString() {
     return "ItemListDto [id=" + id + ", name=" + name + ", packageType=" + packageType
@@ -192,7 +202,7 @@ public class ItemListDto {
         + ", price=" + price + ", capacity=" + capacity + ", location=" + location
         + ", discountRate=" + discountRate + ", minimumPayment=" + minimumPayment + ", paxPrice="
         + paxPrice + ", rentDuration=" + rentDuration + ", description=" + description + ", room="
-        + room + ", vendorStyle=" + vendorStyle + "]";
+        + room + ", vendorStyle=" + vendorStyle + ", unit=" + unit + "]";
   }
 
 

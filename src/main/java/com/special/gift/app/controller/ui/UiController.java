@@ -1,12 +1,19 @@
 package com.special.gift.app.controller.ui;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mashape.unirest.http.JsonNode;
 import com.special.gift.app.domain.PackageVenue;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
@@ -29,13 +37,14 @@ import com.special.gift.app.dto.FilterDto;
 import com.special.gift.app.dto.ItemListDto;
 import com.special.gift.app.dto.UserDto;
 import com.special.gift.app.dto.VendorDto;
-import com.special.gift.app.service.BookingTransactionService;
 import com.special.gift.app.service.ListingService;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorDescService;
 import com.special.gift.app.service.VendorService;
 import com.special.gift.app.service.VenueService;
 import com.special.gift.app.service.WizardService;
+import com.special.gift.app.util.CommonUtil;
+import com.special.gift.app.util.HttpUtil;
 
 @Controller
 @SessionAttributes(value = {"menus"})
@@ -58,10 +67,7 @@ public class UiController {
   public static final String USER_UPDATE = "user-update";
   public static final String USER_VIEW = "user-view";
 
-  // used for category > child > grandchild
-  public static final String CATEGORIES = "categories";
-  public static final String DETAIL = "categories/{criteria}";
-  public static final String DETAIL_CHILD = "categories/{criteria}/{child}";
+
 
   // package
   public static final String PACKAGE_DETAIL = "/packages/{type}/{packageId}";
@@ -72,10 +78,16 @@ public class UiController {
   public static final String PLAN_EVENT_CATEGORIES = "event-categories";
   public static final String PLAN_FORWARDER = "plan-forwarder/{venue_category}";
   public static final String PLAN_MY_EVENT = "plan-event";
+  public static final String BOOKING_HISTORY = "booking-history";
 
   public static final String ACTIVATE_USER_PATH = "registration/confirmation/{token}";
   public static final String FORGOT_PASSWORD_PATH = "/password-reset";
   public static final String RESET_PASSWORD_PATH = "/password/reset/{token}";
+
+  // used for category > child > grandchild
+  public static final String CATEGORIES = "categories";
+  public static final String DETAIL = "categories/{criteria}";
+  public static final String DETAIL_CHILD = "categories/{criteria}/{child}";
 
 
 
@@ -95,9 +107,6 @@ public class UiController {
   private VenueService venueService;
 
   @Inject
-  private BookingTransactionService bookingService;
-
-  @Inject
   private WizardService wizardService;
 
   @Value("${image.path.location}")
@@ -112,8 +121,11 @@ public class UiController {
    * @return
    */
   @RequestMapping(method = RequestMethod.GET)
-  public String renderIndex() {
+  public String renderIndex(Model model, HttpSession session) {
     log.debug("main page visited");
+
+    model.addAttribute("isLogin", session.getAttribute("user") != null);
+
     return "/fragments/main";
   }
 
@@ -155,125 +167,6 @@ public class UiController {
 
   /**
    *
-   * mapping for root category page
-   *
-   * @param model
-   * @param session
-   * @return
-   */
-  @RequestMapping(value = CATEGORIES, method = RequestMethod.GET)
-  public String renderCategoriesPage(Model model) {
-    return "/contents/parent-categories";
-  }
-
-  /**
-   *
-   * mapping for detail category page
-   *
-   * @param model
-   * @param criteria
-   * @param id
-   * @param session
-   * @return
-   */
-  @RequestMapping(value = DETAIL, method = RequestMethod.GET)
-  public String renderDetailPage(Model model, @PathVariable(value = "criteria") String name,
-      @RequestParam(value = "c") String id) {
-
-    if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
-      return "redirect:/";
-    } else {
-
-      final VendorDesc vendorDesc = vendorDescService.findById(id);
-
-      log.debug("parent_from detail : {}", name);
-
-      if (vendorDesc == null) {
-        return "redirect:/";
-      } else {
-
-        // used for url
-        model.addAttribute("parent", name.replace(" ", "-"));
-
-        // used for banner
-        model.addAttribute("category_name", name.replace("-", " "));
-        model.addAttribute("category_description", vendorDesc.getVendorDescription());
-
-        model.addAttribute("children",
-            vendorDescService.findAllChildren(vendorDesc.getVendorType()));
-
-        log.debug("vendor desc : {}", vendorDesc.toString());
-
-        return "/contents/finder";
-      }
-    }
-  }
-
-
-  /**
-   *
-   * mapping for second level detail category page
-   *
-   * @param model
-   * @param criteria
-   * @param child
-   * @param id
-   * @param session
-   * @return
-   */
-  @RequestMapping(value = DETAIL_CHILD, method = RequestMethod.GET)
-  public String renderDetailChildPage(Model model, @PathVariable(value = "criteria") String name,
-      @PathVariable(value = "child") String child, @RequestParam(value = "c") String id) {
-
-    if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
-      return "redirect:/";
-    } else {
-
-      final VendorDesc parent = vendorDescService.findById(id.substring(0, 2).concat("0"));
-
-      if (parent == null) {
-        log.debug("parent is null");
-        return "redirect:/";
-      } else {
-        final VendorDesc vendorDesc = vendorDescService.findById(id);
-
-        if (vendorDesc == null) {
-          return "redirect:/".concat("categories/")
-              .concat(parent.getVendorTypeName().replace(" ", "-").toLowerCase()).concat("?")
-              .concat("c=").concat(parent.getVendorType());
-        } else {
-
-          // for request param
-          model.addAttribute("root_type", parent.getVendorType());
-
-          // child name banner
-          log.debug("child name : {}", child.replace("-", " "));
-          model.addAttribute("child_name", child.replace("-", " "));
-
-          model.addAttribute("child_description", vendorDesc.getVendorDescription());
-
-          // parent for parent url
-          model.addAttribute("parent", parent.getVendorTypeName().replace(" ", "-").toLowerCase());
-
-          // parent for parent banner
-          model.addAttribute("parentName", parent.getVendorTypeName());
-
-
-          model.addAttribute("children",
-              vendorDescService.findAllChildren(vendorDesc.getVendorType()));
-
-          log.debug("vendor desc : {}", vendorDesc.toString());
-
-          return "/contents/finder";
-        }
-
-
-      }
-    }
-  }
-
-  /**
-   *
    * mapping for help page
    *
    * @param model
@@ -302,6 +195,78 @@ public class UiController {
     }
 
     return "/outer/notification";
+  }
+
+
+  @RequestMapping(value = BOOKING_HISTORY, method = RequestMethod.GET)
+  public String renderBookingHistoryPage(HttpSession session, Model model) {
+
+    final com.mashape.unirest.http.JsonNode json = HttpUtil.findTransactionHistory(
+        session.getAttribute("accessToken").toString(), session.getAttribute("userId").toString());
+
+    final Locale locale = new Locale("in", "ID");
+
+    final SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+    final SimpleDateFormat displayFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", locale);
+    final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+
+    try {
+
+      final List<Map<String, String>> contents = new ArrayList<>();
+
+      final JSONArray jsonArr = new JSONArray(json.getObject().get("data").toString());
+
+      log.info("history detail :{}",
+          HttpUtil.findHistoryDetail(session.getAttribute("accessToken").toString(),
+              session.getAttribute("userId").toString(), "3000000576"));
+
+      for (int i = 0; i < jsonArr.length(); i++) {
+
+        final Map<String, String> result = new HashMap<>();
+
+
+        final JsonNode node = new JsonNode(jsonArr.get(i).toString());
+
+        final Date date = format.parse(node.getObject().get("transaction_date").toString());
+        final Date bookingDate = format.parse(node.getObject().get("date_booking").toString());
+
+
+        result.put("transactionId", node.getObject().get("transaction_id").toString());
+        result.put("transactionDate", displayFormat.format(date));
+        result.put("bookingDate", displayFormat.format(bookingDate));
+
+        if (node.getObject().get("methode_payment").toString().equals("t")) {
+          result.put("methodPayment", "transfer");
+        } else {
+          result.put("methodPayment", "tunai");
+        }
+
+        if (node.getObject().get("status_payment").toString().equals("0")) {
+          result.put("statusPayment", "10% Done");
+        } else {
+          result.put("methodPayment", "100% Done");
+        }
+
+        final Long amount = Long.parseLong(node.getObject().get("price_all").toString());
+
+        result.put("totalAmount", currencyFormatter.format(amount));
+
+        contents.add(result);
+
+      }
+
+
+      log.debug("data : {}", contents.toString());
+      model.addAttribute("contents", contents);
+
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+      return "error";
+    }
+
+
+
+    return "/contents/booking-history";
   }
 
 
@@ -386,6 +351,9 @@ public class UiController {
       model.addAttribute("package_type", Character.toUpperCase(type.charAt(0)) + type.substring(1));
       model.addAttribute("packageId", id);
       model.addAttribute("imageRoot", imagePath);
+      model.addAttribute("isRentable", Integer.parseInt(item.getRentDuration()) > 0);
+      model.addAttribute("isCountable", item.getCapacity() > 0);
+
     } catch (final Exception e) {
       e.printStackTrace();
     }
@@ -465,7 +433,6 @@ public class UiController {
   @RequestMapping(value = PLAN_MY_EVENT, method = RequestMethod.GET)
   public String renderPlanPage(Model model, HttpSession session, HttpServletRequest request) {
 
-
     if (session.getAttribute("user") == null) {
 
       return "redirect:/";
@@ -476,7 +443,9 @@ public class UiController {
 
         final User user =
             userService.findUserByPrincipal((String) session.getAttribute("userEmail"));
-        final String venueCategories = (String) model.asMap().get("venueCategory");
+
+        // final String venueCategories = (String) model.asMap().get("venueCategory");
+        final String venueCategories = (String) session.getAttribute("venueCategory");
 
         model.addAttribute("imageRoot", imagePath);
         model.addAttribute("steps", wizardService.findWizardSteps());
@@ -506,10 +475,11 @@ public class UiController {
 
   @RequestMapping(value = PLAN_FORWARDER, method = RequestMethod.GET)
   public String eventForwarder(RedirectAttributes attributes,
-      @PathVariable("venue_category") String venueCategories) {
+      @PathVariable("venue_category") String venueCategories, HttpSession session) {
 
 
     attributes.addFlashAttribute("venueCategory", venueCategories);
+    session.setAttribute("venueCategory", venueCategories);
 
     return "redirect:/plan-event";
   }
@@ -548,6 +518,175 @@ public class UiController {
       log.info("activating user error : {}", ex.getMessage());
     }
     return "error";
+  }
+
+
+
+  /**
+   *
+   * mapping for root category page
+   *
+   * @param model
+   * @param session
+   * @return
+   */
+  @RequestMapping(value = CATEGORIES, method = RequestMethod.GET)
+  public String renderCategoriesPage(Model model) {
+    return "/contents/parent-categories";
+  }
+
+  /**
+   *
+   * mapping for detail category page
+   *
+   * @param model
+   * @param criteria
+   * @param id
+   * @param session
+   * @return
+   */
+  @RequestMapping(value = DETAIL, method = RequestMethod.GET)
+  public String renderDetailPage(Model model, @PathVariable(value = "criteria") String name,
+      @RequestParam(value = "c") String id,
+      @RequestParam(value = "start", defaultValue = "0", required = false) int start,
+      @RequestParam(value = "limit", defaultValue = "12", required = false) int limit,
+      HttpServletRequest request) {
+
+
+    try {
+
+      if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
+        return "redirect:/";
+      } else {
+
+        final VendorDesc vendorDesc = vendorDescService.findById(id);
+
+        log.debug("parent_from detail : {}", name);
+
+
+
+        if (vendorDesc == null) {
+          return "redirect:/";
+        } else {
+
+          final List<ItemListDto> categoryList =
+              listingService.findAllList(request, vendorDesc.getVendorType());
+
+          // used for url
+          model.addAttribute("parent", name.replace(" ", "-"));
+
+          // used for banner
+          model.addAttribute("category_name", name.replace("-", " "));
+          model.addAttribute("category_description", vendorDesc.getVendorDescription());
+          model.addAttribute("children",
+              vendorDescService.findAllChildren(vendorDesc.getVendorType()));
+
+          model.addAttribute("itemList",
+              categoryList.subList(
+                  categoryList.size() > start ? start
+                      : categoryList.size() > 0 ? categoryList.size() - 1 : 0,
+                  categoryList.size() > limit ? limit : categoryList.size()));
+
+          model.addAttribute("totalPage",
+              new Double(Math.ceil((double) categoryList.size() / limit)).intValue());
+          model.addAttribute("totalDisplayItem", start > limit ? start - limit : limit);
+          model.addAttribute("pagingNumber", CommonUtil.PAGING_NUMBER);
+          model.addAttribute("imagePath", imagePath);
+
+          return "/contents/finder";
+        }
+      }
+
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+      return "redirect:/";
+    }
+  }
+
+
+  /**
+   *
+   * mapping for second level detail category page
+   *
+   * @param model
+   * @param criteria
+   * @param child
+   * @param id
+   * @param session
+   * @return
+   */
+  @RequestMapping(value = DETAIL_CHILD, method = RequestMethod.GET)
+  public String renderDetailChildPage(Model model, @PathVariable(value = "criteria") String name,
+      @PathVariable(value = "child") String child, @RequestParam(value = "c") String id,
+      @RequestParam(value = "start", defaultValue = "0", required = false) int start,
+      @RequestParam(value = "limit", defaultValue = "12", required = false) int limit,
+      HttpServletRequest request) {
+
+    try {
+
+      if (id == null || name == null || id.isEmpty() || name.isEmpty()) {
+        return "redirect:/";
+      } else {
+
+
+        final VendorDesc parent = vendorDescService.findById(id.substring(0, 2).concat("0"));
+
+        if (parent == null) {
+          log.debug("parent is null");
+          return "redirect:/";
+        } else {
+
+          final VendorDesc vendorDesc = vendorDescService.findById(id);
+
+          if (vendorDesc == null) {
+            return "redirect:/".concat("categories/")
+                .concat(parent.getVendorTypeName().replace(" ", "-").toLowerCase()).concat("?")
+                .concat("c=").concat(parent.getVendorType());
+          } else {
+
+            final List<ItemListDto> categoryList =
+                listingService.findAllList(request, vendorDesc.getVendorType());
+
+            // for request param
+            model.addAttribute("root_type", parent.getVendorType());
+
+            // child name banner
+            log.debug("child name : {}", child.replace("-", " "));
+            model.addAttribute("child_name", child.replace("-", " "));
+
+            model.addAttribute("child_description", vendorDesc.getVendorDescription());
+            // parent for parent url
+            model.addAttribute("parent",
+                parent.getVendorTypeName().replace(" ", "-").toLowerCase());
+            // parent for parent banner
+            model.addAttribute("parentName", parent.getVendorTypeName());
+            model.addAttribute("children",
+                vendorDescService.findAllChildren(vendorDesc.getVendorType()));
+
+
+            model.addAttribute("itemList",
+                categoryList.subList(
+                    categoryList.size() > start ? start
+                        : categoryList.size() > 0 ? categoryList.size() - 1 : 0,
+                    categoryList.size() > limit ? limit : categoryList.size()));
+
+            model.addAttribute("totalPage",
+                new Double(Math.ceil(categoryList.size() / (double) limit)).intValue());
+            model.addAttribute("totalDisplayItem", start > limit ? start - limit : limit);
+            model.addAttribute("pagingNumber", CommonUtil.PAGING_NUMBER);
+            model.addAttribute("imagePath", imagePath);
+
+
+            return "/contents/finder";
+          }
+
+
+        }
+      }
+    } catch (final Exception ex) {
+      ex.printStackTrace();
+      return "redirect:/";
+    }
   }
 
 

@@ -14,6 +14,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -21,11 +23,13 @@ import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.mashape.unirest.http.JsonNode;
 import com.special.gift.app.domain.User;
 import com.special.gift.app.domain.Vendor;
 import com.special.gift.app.service.UserService;
 import com.special.gift.app.service.VendorService;
 import com.special.gift.app.util.CommonUtil;
+import com.special.gift.app.util.HttpUtil;
 
 @WebFilter(urlPatterns = "/login")
 public class AuthenticationFilter implements Filter {
@@ -83,13 +87,24 @@ public class AuthenticationFilter implements Filter {
           if (user.getStatus() != '1') {
             printResponse(res, HttpServletResponse.SC_FORBIDDEN, " user is not activated yet");
           } else {
-            if (passwordEncoder.isPasswordValid(user.getPassword(), credential, CommonUtil.SALT)) {
+
+            if (CommonUtil.encryptHashSHA(credential).equals(user.getPassword())) {
 
               final List<Vendor> vendors = vendorService.findByUser(user);
 
+
+              final JSONObject jsonObject = HttpUtil.getApiToken(principal, credential).getObject();
+
+              log.info(jsonObject.toString());
+
+              final JsonNode json = new JsonNode(jsonObject.get("data").toString());
+
+
               request.setAttribute("isVendorExist", vendors.size() > 0);
               request.setAttribute("user", user.getUsername());
+              request.setAttribute("userId", user.getUserId());
               request.setAttribute("userEmail", user.getEmail());
+              request.setAttribute("accessToken", json.getObject().get("access_token"));
 
               chain.doFilter(request, response);
 
@@ -108,6 +123,13 @@ public class AuthenticationFilter implements Filter {
       } else {
         printResponse(res, HttpServletResponse.SC_FORBIDDEN, "Autentikasi Gagal");
       }
+
+    } catch (final JSONException exception) {
+      log.error("api exception occured : {}", exception.getMessage());
+      final String message =
+          exception.getMessage() != null && !exception.getMessage().equals("null")
+              ? exception.getMessage() : "Forbidden";
+      printResponse(res, HttpServletResponse.SC_FORBIDDEN, "api exception :" + message);
 
     } catch (final Exception exception) {
       exception.printStackTrace();

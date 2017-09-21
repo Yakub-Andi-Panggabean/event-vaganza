@@ -18,6 +18,7 @@ public class UserDto implements Serializable {
   private String email;
   private char status;
   private List<Vendor> vendor;
+  private String fullName;
 
   public UserDto() {
     super();
@@ -26,7 +27,7 @@ public class UserDto implements Serializable {
 
   public UserDto(String userId, String password, String username, String userZip,
       String userAddress, String handphone, String phone, String email, char status,
-      List<Vendor> vendor) {
+      List<Vendor> vendor, String fullName) {
     super();
     this.userId = userId;
     this.password = password;
@@ -38,7 +39,10 @@ public class UserDto implements Serializable {
     this.email = email;
     this.status = status;
     this.vendor = vendor;
+    this.fullName = fullName;
   }
+
+
 
   public String getUserId() {
     return userId;
@@ -120,12 +124,20 @@ public class UserDto implements Serializable {
     this.vendor = vendor;
   }
 
+  public String getFullName() {
+    return fullName;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
+
   @Override
   public String toString() {
     return "UserDto [userId=" + userId + ", password=" + password + ", username=" + username
         + ", userZip=" + userZip + ", userAddress=" + userAddress + ", handphone=" + handphone
         + ", phone=" + phone + ", email=" + email + ", status=" + status + ", vendor=" + vendor
-        + "]";
+        + ", fullName=" + fullName + "]";
   }
 
 

@@ -26,47 +26,68 @@
 	<div class="panel-group" id="accordion" role="tablist"
 		aria-multiselectable="true">
 
-		<div class="panel panel-default" th:each="item,row:${items}">
+		<div class="panel panel-default" th:each="item,row:${items}"
+			th:id="${#strings.append(#strings.append(transactionId,'-preview-'),item.stepOrder)}">
 
-			<div th:each="element:${item}">
-
-
-				<div class="panel-heading" role="tab" id="headingOne"
-					style="background-color: #f9c41f; color: #fff;">
+			<!-- 			<div th:each="element:${item}"> -->
 
 
-					<h4 class="panel-title">
-						<a role="button" data-toggle="collapse" data-parent="#accordion"
-							th:href="${#strings.append('#',element.value.id)}"
-							aria-expanded="true" aria-controls="collapseOne" th:inline="text">
-							[[${element.key}]] </a>
-					</h4>
+			<div class="panel-heading" role="tab" id="headingOne"
+				style="background-color: #f9c41f; color: #fff;">
 
-				</div>
 
-				<div th:id="${element.value.id}"
-					th:class="${row.index >0?'panel-collapse collapse':'panel-collapse collapse in'}"
-					role="tabpanel" aria-labelledby="headingOne">
-					<div class="panel-body">
+				<h4 class="panel-title">
+					<a role="button" data-toggle="collapse" data-parent="#accordion"
+						th:href="${#strings.append('#',item.chosenItem.id)}"
+						aria-expanded="true" aria-controls="collapseOne" th:inline="text">
+						[[${item.stepName}]] </a>
+				</h4>
 
-						<div class="col-sm-4 col-xs-6" style="padding: 0px">
-							<div class="item-thumbnail">
-								<div class="item-name" th:inline="text">[[${element.value.name}]]</div>
-								<div class="item-image">
-									<img
-										th:src="${#strings.arraySplit(element.value.image,':').length>0}?${#strings.append(imageRoot,#strings.arraySplit(element.value.image,':')[0])}:''" />
-								</div>
-								<div class="item-desc" th:inline="text">[[${element.value.description}]]</div>
-								<div class="item-price" th:inline="text">[[${#strings.append('Rp.
-									',#numbers.formatDecimal(element.value.minimumPayment,3,'POINT',2,'COMMA'))}]]</div>
-								<div class="item-unit" th:inline="text">/ Pax</div>
-								<a><div class="item-detail" data-toggle="modal"
-										data-target="#item-detail">See More Detail</div></a>
+			</div>
+
+			<div th:id="${item.chosenItem.id}"
+				th:class="${row.index >0?'panel-collapse collapse':'panel-collapse collapse in'}"
+				role="tabpanel" aria-labelledby="headingOne">
+
+				<div class="panel-body">
+
+					<div class="col-sm-4 col-xs-4" style="padding: 0px">
+						<div class="item-thumbnail">
+							<div class="item-name" th:inline="text">[[${item.chosenItem.name}]]</div>
+							<div class="item-image">
+								<img
+									th:src="${#strings.arraySplit(item.chosenItem.image,':').length>0}?${#strings.append(imageRoot,#strings.arraySplit(item.chosenItem.image,':')[0])}:''" />
 							</div>
+							<div class="item-desc" th:inline="text">[[${item.chosenItem.description}]]</div>
+							<div class="item-price" th:inline="text">[[${#strings.append('Rp.
+								',#numbers.formatDecimal(item.chosenItem.price,3,'POINT',2,'COMMA'))}]]</div>
+							<div class="item-unit" th:inline="text"></div>
+							<a><div class="item-detail" data-toggle="modal"
+									data-target="#item-detail">See More Detail</div></a>
 						</div>
 					</div>
+
+					<div class="col-sm-4 col-xs-2">
+
+						<div
+							th:remove="${item.chosenItem.packageType.equals('venue')}?all:none">
+
+							<label for="usr">Quantity:</label> <input type="text"
+								class="form-control"
+								th:id="${#strings.append('pkg-',item.chosenItem.id)}" value="1">
+							<br />
+							<button type="button" class="btn btn-warning"
+								th:onclick="'Javascript:removePreview('+${item.stepOrder}+','+${transactionId}+')'">Remove</button>
+
+						</div>
+					</div>
+
+
+
 				</div>
+
 			</div>
+			<!-- 			</div> -->
 
 		</div>
 	</div>
@@ -76,9 +97,13 @@
 	<form id="plan_event_transaction_form"
 		th:action="@{/plan/booking/payment}" method="POST">
 		<input name="plan_event_transaction_id" type="hidden"
+			th:value="${transactionId}"> <input
+			name="plan_event_transaction_quantity"
+			id="plan_event_transaction_quantity" type="hidden"
 			th:value="${transactionId}">
 	</form>
 
 	<input id="preview_approval_button" type="button"
-		class="btn btn-action" value="CONFIRM REQUEST" th:onclick="'Javascript:finalizeWizardStep('+${transactionId}+')'">
+		class="btn btn-action" value="PRE-APPROVAL"
+		th:onclick="'Javascript:finalizeWizardStep('+${transactionId}+')'">
 </div>

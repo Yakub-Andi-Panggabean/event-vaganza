@@ -209,3 +209,7 @@ hr {
 .detail-package .panel-heading {
 	background-color: #fff;
 }
+
+#ui-datepicker-div{
+	top: 50px!important;
+}

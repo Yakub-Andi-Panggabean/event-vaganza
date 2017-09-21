@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="content" th:fragment="content">
+		<div class="container">
+			<div class="row">
+				<h3 class="headline">BOOKING HISTORY</h3>
+				<hr class="headline-line">
+			</div>
+
+			<div class="row">
+
+
+				<div th:each="content:${contents}" class="well">
+
+					<dl class="dl-horizontal">
+						<dt style="text-align: left" th:text="${content['transactionId']}"></dt>
+						<dd th:text="${content['transactionDate']}"></dd>
+					</dl>
+					<hr class="headline-line">
+					<dl class="dl-horizontal">
+						<dt style="text-align: left">Booking Datetime</dt>
+						<dd th:text="${content['bookingDate']}"></dd>
+						<dt style="text-align: left">Method Payment</dt>
+						<dd th:text="${content['methodPayment']}"></dd>
+						<dt style="text-align: left">Status Payment</dt>
+						<dd th:text="${content['statusPayment']}"></dd>
+						<dt style="text-align: left">Total Amount</dt>
+						<dd th:text="${content['totalAmount']}"></dd>
+					</dl>
+
+				</div>
+
+			</div>
+
+
+		</div>
+	</div>
+</body>
+</html>

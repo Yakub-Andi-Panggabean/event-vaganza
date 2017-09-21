@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -28,6 +29,18 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
 
   private static final String NOT_FOUND_PAGE = "unexpected/not-found";
 
+  @Value("${image.path.location}")
+  private String imagePath;
+
+  @Value("${app.paging.number}")
+  private int pagingNumber;
+
+  @Value("${app.paging.pagesize}")
+  private int pagingPageSize;
+
+  @Value("${server.contextPath}")
+  private String contextPath;
+
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
@@ -46,7 +59,10 @@ public class ThymeleafViewInterceptor extends HandlerInterceptorAdapter {
 
     log.debug("view name : {}", originalViewName);
 
-
+    modelAndView.addObject("servletContext", new StringBuilder(contextPath).append("/").toString());
+    modelAndView.addObject("imagePath", imagePath);
+    modelAndView.addObject("pagingNumber", pagingNumber);
+    modelAndView.addObject("pagingPageSize", pagingPageSize);
 
     if (!originalViewName.contains("redirect:") && !originalViewName.startsWith("partial")) {
 

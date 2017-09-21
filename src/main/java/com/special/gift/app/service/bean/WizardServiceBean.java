@@ -165,6 +165,7 @@ public class WizardServiceBean implements WizardService {
 
     }
 
+    log.info("last order : {}", result);
     return result;
   }
 
@@ -248,6 +249,49 @@ public class WizardServiceBean implements WizardService {
       exception.printStackTrace();
       throw new RuntimeException(exception.getMessage());
     }
+  }
+
+
+  @Override
+  @Transactional(readOnly = false)
+  public void updateWizardPreview(String previewItem) {
+
+    log.info("=================== preview item : {}", previewItem);
+
+    final String wizardValueId = previewItem.split("-")[0];
+    final String wizardValueOrder = previewItem.split("-")[2];
+
+
+    final WizardValue value = valueRepository.findOne(wizardValueId);
+    final StringBuilder newContent = new StringBuilder();
+
+    final String contents[] = value.getContent().split(",");
+
+    for (String content : contents) {
+
+
+      if (wizardValueOrder.equals(content.split("=")[0])) {
+        content = wizardValueOrder.concat("=skipped");
+      }
+
+      newContent.append(content).append(",");
+
+    }
+
+
+    log.info("new content after removed preview item : {}", newContent.toString());
+
+
+    if (valueRepository.exists(value.getTransactionId())) {
+
+      log.info("updating value with transaction id : {}", value.getTransactionId());
+      value.setContent(newContent.substring(0, newContent.length() - 2));
+      valueRepository.save(value);
+
+    }
+
+
+
   }
 
 

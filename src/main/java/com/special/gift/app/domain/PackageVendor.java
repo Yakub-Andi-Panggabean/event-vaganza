@@ -53,6 +53,9 @@ public class PackageVendor {
   @Column(name = "vendor_id", nullable = false, length = 60)
   private String vendorId;
 
+  @Column(name = "stn_pkg", nullable = false, length = 20)
+  private String unit;
+
   @ManyToOne
   @JoinColumn(name = "vendor_type", referencedColumnName = "vendor_type")
   private VendorDesc vendorDesc;
@@ -169,6 +172,14 @@ public class PackageVendor {
     this.vendorDesc = vendorDesc;
   }
 
+  public String getUnit() {
+    return unit;
+  }
+
+  public void setUnit(String unit) {
+    this.unit = unit;
+  }
+
   @Override
   public String toString() {
     return "PackageVendor [packageId=" + packageId + ", packageName=" + packageName
@@ -176,8 +187,8 @@ public class PackageVendor {
         + ", packageCategory=" + packageCategory + ", packageStyle=" + packageStyle
         + ", packagePrice=" + packagePrice + ", packageImg=" + packageImg + ", packagePromo="
         + packagePromo + ", discountRate=" + discountRate + ", minimumPayment=" + minimumPayment
-        + ", timePackage=" + timePackage + ", vendorId=" + vendorId + ", vendorDesc=" + vendorDesc
-        + "]";
+        + ", timePackage=" + timePackage + ", vendorId=" + vendorId + ", unit=" + unit
+        + ", vendorDesc=" + vendorDesc + "]";
   }
 
 

@@ -218,7 +218,7 @@ public class SearchController {
               displayedItemList.size() > limit ? limit : displayedItemList.size()));
 
 
-      log.debug("item size : {}", itemList.size());
+      log.info("item size : {}", itemList.size());
 
 
     } catch (final Exception ex) {

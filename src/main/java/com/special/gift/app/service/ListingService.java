@@ -17,4 +17,8 @@ public interface ListingService {
   // List<ItemListDto> findAllList(HttpServletRequest request, String category, FilterDto filter,
   // String venueId) throws Exception;
 
+
+  List<ItemListDto> findListByCategoryAndVenue(HttpServletRequest request, String category,
+      String venue, String city, String capacity) throws Exception;
+
 }

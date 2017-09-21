@@ -5,8 +5,8 @@
 	</div>
 	<div class="nav-user">
 <!-- 		<a th:href="@{/help}">Bantuan</a> -->
-		 <a th:href="@{/vendor-registration}"
-			th:remove="${session.isVendor}?all:none"> Vendor</a>
+		 <a style="display: none;" th:href="@{/vendor-registration}"
+			th:remove="${session.isVendor}?all:none">Register as Vendor</a>
 	</div>
 	<div class="nav-shop">
 		<a data-toggle="dropdown"><img th:src="@{/image/button-user.png}"

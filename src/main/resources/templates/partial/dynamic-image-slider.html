@@ -1,13 +1,19 @@
 <div class="carousel slide" id="image-slide">
 
 	<div class="carousel-inner">
-
+ 
 		<div th:each="image,row:${images}"
 			th:class="${row.count == 1}?'item active':'item'">
 			
+<!-- 			<div th:if="${imageExist}" class="image-slide-container"> -->
+<!-- 				<img th:src="${image}"></img> -->
+<!-- 			</div> -->
+			
 			<div th:if="${imageExist}" class="image-slide-container">
-				<img th:src="${image}"></img>
+				<img th:src="${T(com.special.gift.app.util.CommonUtil).httpResponseChecker(image)}?
+								 ${image}:@{/image/no_image.png}"></img>
 			</div>
+			
 			
 			<div th:if="${!imageExist}" class="image-slide-container">
 				<img th:src="@{/image/no_image.jpg}"></img>

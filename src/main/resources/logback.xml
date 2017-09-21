@@ -30,7 +30,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.special" level="INFO" additivity="false">
+	<logger name="com.special" level="DEBUG" additivity="false">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</logger>

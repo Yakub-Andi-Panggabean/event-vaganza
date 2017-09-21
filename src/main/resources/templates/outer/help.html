@@ -5,8 +5,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div class="container" th:fragment="content">
-		<h1>Success</h1>
+	<div class="container" th:fragment="content">
+		<div class="well">
+
+			<h5>
+				Transaksi berhasil, silakan check riwayat transaksi anda di menu <a
+					th:href="@{/booking-history}">My history</a>
+			</h5>
+
+		</div>
 	</div>
 </body>
 </html>

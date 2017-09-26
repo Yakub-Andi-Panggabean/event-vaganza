@@ -285,6 +285,7 @@
 		$('input[type="radio"]').change(function() {
 			radioChecked();
 		});
+		
 		function radioChecked() {
 			if ($('#fee-amount').prop("checked") == true) {
 				$('#fee').show();
@@ -294,6 +295,7 @@
 				$('#full').show();
 			}
 		}
+		
 	});
 
 	$(document).ready(function() {
@@ -301,6 +303,7 @@
 		$('input[type="radio"]').change(function() {
 			radioChecked();
 		});
+		
 		function radioChecked() {
 			if ($('#credit-method').prop("checked") == true) {
 				$('#credit').show();
@@ -310,13 +313,35 @@
 				$('#transfer').show();
 			}
 		}
+		
 	});
-
+	
+	
 	$(document).ready(function() {
 		radioChecked();
 		$('input[type="radio"]').change(function() {
 			radioChecked();
 		});
+		
+		function radioChecked() {
+			if ($('#book-credit-method').prop("checked") == true) {
+				$('#book-credit').show();
+				$('#book-transfer').hide();
+			} else {
+				$('#book-credit').hide();
+				$('#book-transfer').show();
+			}
+		}
+		
+	});
+
+	$(document).ready(function() {
+		radioChecked();
+		
+		$('input[type="radio"]').change(function() {
+			radioChecked();
+		});
+		
 		function radioChecked() {
 			if ($('#booking-fee-amount').prop("checked") == true) {
 				$('#booking-fee').show();
@@ -326,6 +351,7 @@
 				$('#booking-full').show();
 			}
 		}
+		
 	});
 </script>
 

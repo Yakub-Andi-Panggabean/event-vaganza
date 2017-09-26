@@ -85,8 +85,7 @@
 
 								<div class="col-xs-6">
 
-									<div th:inline="text">
-										[[${package.name}]] x [[${qty}]]</div>
+									<div th:inline="text">[[${package.name}]] x [[${qty}]]</div>
 
 								</div>
 								<div class="col-xs-6">
@@ -154,46 +153,77 @@
 					<br />
 
 					<div class="row">
-
-						<p th:inline="text">Full payment should be transferred before
-							[[${#dates.format(maxPaymentDate, 'yyyy - MM -dd')}]] (D-30 of
-							the event date) to Event Vaganza account</p>
-						<p th:inline="text">
-							<img th:src="@{/image/logo-bca.png}" width="40px" height="auto"
-								style="margin-right: 10px"></img>Account Number : [[${norek1}]]
-							| Account Name : [[${acc1}]]
-						</p>
-						<p th:inline="text">
-							<img th:src="@{/image/logo-mandiri.png}" width="40px"
-								height="auto" style="margin-right: 10px"></img>Account Number :
-							[[${norek2}]] | Account Name : [[${acc2}]]
-						</p>
-					</div>
-					<br>
-					<div class="row">
 						<p>
 							<strong>SELECT YOUR PAYMENT METHOD</strong>
 						</p>
 						<label class="radio"> <input type="radio" value="C"
-							name="pay-method" data-toggle="radio" checked /> Credit Card <img
+							id="book-credit-method" name="pay-method" data-toggle="radio" checked /> Credit Card <img
 							th:src="@{/image/logo-visa.png}" width="48px" height="auto"></img>
 							<img th:src="@{/image/logo-mastercard.png}" width="48px"
 							height="auto"></img>
 						</label> <label class="radio"> <input type="radio" value="T"
-							name="pay-method" data-toggle="radio" checked />Bank Transfer <img
+							id="book-transfer-method" name="pay-method" data-toggle="radio" checked />Bank Transfer <img
 							th:src="@{/image/logo-bank-transfer.png}" width="24px"
 							height="auto"></img>
 						</label>
 					</div>
+
+					<div class="pay-credit" id="book-credit">
+
+						<div class="col-sm-12">
+							<div class="form-group">
+								<input type="text" class="form-control"
+									placeholder="Card Number" value="">
+							</div>
+						</div>
+						<div class="col-sm-8">
+							<div class="form-group">
+								<input type="text" class="form-control"
+									placeholder="Expiry Date" value="">
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="CVV"
+									value="">
+							</div>
+						</div>
+
+					</div>
+
+					<div class="pay-transfer" id="book-transfer">
+
+						<div class="row">
+
+							<p th:inline="text">Full payment should be transferred before
+								[[${#dates.format(maxPaymentDate, 'yyyy - MM -dd')}]] (D-30 of
+								the event date) to Event Vaganza account</p>
+							<p th:inline="text">
+								<img th:src="@{/image/logo-bca.png}" width="40px" height="auto"
+									style="margin-right: 10px"></img>Account Number : [[${norek1}]]
+								| Account Name : [[${acc1}]]
+							</p>
+							<p th:inline="text">
+								<img th:src="@{/image/logo-mandiri.png}" width="40px"
+									height="auto" style="margin-right: 10px"></img>Account Number :
+								[[${norek2}]] | Account Name : [[${acc2}]]
+							</p>
+						</div>
+						<br>
+
+
+					</div>
+
 					<div class="row">
 						<form id="booking_transaction_form"
 							th:action="@{/booking/transaction}" method="POST">
 							<input type="hidden" name="package_id" th:value="${package.id}">
 							<input type="hidden" name="booking_date"
 								th:value="${#dates.format(packageStartime,'yyyy/MM/dd HH:mm')}">
-							<input id="payment_qty" type="hidden" name="payment_qty" th:value="${qty}">	
-							<input id="payment_amount" type="hidden" name="payment_amount">
-							<input id="payment_method" type="hidden" name="payment_method">
+							<input id="payment_qty" type="hidden" name="payment_qty"
+								th:value="${qty}"> <input id="payment_amount"
+								type="hidden" name="payment_amount"> <input
+								id="payment_method" type="hidden" name="payment_method">
 						</form>
 					</div>
 					<div class="row">
